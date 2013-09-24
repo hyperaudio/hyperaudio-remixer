@@ -1,0 +1,34 @@
+{
+  "name": "hyperaudio-pad",
+  "version": "0.0.1",
+  "description": "The Hyperaudio Pad Library.",
+  "homepage": "http://hyperaud.io", 
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hyperaudio-dev/hyperaudio-pad.git"
+  },
+  "keywords": [
+    "audio",
+    "video",
+    "transcript"
+  ],
+  "author": "Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io)",
+  "contributors": [
+    "Mark Panaghiston <markp@happyworm.com> (http://happyworm.com)",
+    "Matteo Spinelli <matteo@cubiq.org> (http://cubiq.org)"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hyperaudio-dev/hyperaudio-pad/issues"
+  },
+  "dependencies": {
+    "dragdrop": "git://github.com/hyperaudio-dev/hyperaudio.git#master",
+    "transcripts": "git://github.com/hyperaudio-dev/transcripts.git#master"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-contrib-uglify": "~0.2.4"
+  }
+}
