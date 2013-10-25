@@ -250,6 +250,72 @@ h1 input:focus {
 	display: block;
 }
 
+/* [START] Player CSS from hyperaudio lib - with edits to use common font */
+
+.hyperaudio-player-play:before,
+.hyperaudio-player-pause:before {
+	font-family: "fontello";
+	font-style: normal;
+	font-weight: normal;
+	speak: none;
+ 
+	display: inline-block;
+	text-decoration: inherit;
+	width: 32px;
+	text-align: center;
+	/* opacity: .8; */
+
+	/* For safety - reset parent styles, that can break glyph codes*/
+	font-variant: normal;
+	text-transform: none;
+
+	/* fix buttons height, for twitter bootstrap */
+	line-height: 1em;
+
+	/* Uncomment for 3D effect */
+	text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3);
+}
+
+.hyperaudio-player-play:before { content: '\71'; } /* 'q' */
+.hyperaudio-player-pause:before { content: '\65'; } /* 'e' */
+
+.hyperaudio-player-play,
+.hyperaudio-player-pause {
+	color:#aaa;
+	cursor:pointer;
+}
+
+.hyperaudio-player-play:hover,
+.hyperaudio-player-pause:hover {
+	color:#ccc;
+}
+/*
+.hyperaudio-player-container video {
+	width:100%;
+	height:100%;
+}
+*/
+.hyperaudio-player-gui {
+	position:absolute;
+	bottom:0;
+	left:0;
+	/* width:480px; */
+	width:32px;
+	height:32px;
+	font-size:16px;
+	line-height:32px;
+	/* background-color:#aaa; */
+	/* display:none; */
+}
+
+.hyperaudio-player-controls {
+	width:32px;
+	height:100%;
+	background-color:#666;
+}
+
+/* [END] Player CSS from hyperaudio lib - with edits to use common font */
+
 .video-transition-servo {
 	position: absolute;
 	width: 100%;
