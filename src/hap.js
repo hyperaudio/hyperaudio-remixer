@@ -9,6 +9,8 @@ HAP.init = (function (window, document) {
 	var transcript;
 
 	var sidemenu;
+
+	var mixTitle;
 	var saveButton;
 
 	var fade;
@@ -40,6 +42,7 @@ HAP.init = (function (window, document) {
 			player: player
 		});
 
+		mixTitle = document.getElementById('mix-title');
 		saveButton = document.getElementById('save-button');
 
 		function mediaSelect (el) {
@@ -53,6 +56,16 @@ HAP.init = (function (window, document) {
 			el: '#sidemenu',
 			stage: stage,
 			callback: mediaSelect
+		});
+
+		// Title
+		mixTitle.addEventListener('change', function(e) {
+			stage.mixDetails({
+				title: this.value
+			});
+		});
+		stage.target.addEventListener(HA.event.load, function(e) {
+			mixTitle.value = HA.api.mix.label;
 		});
 
 		// Save button
