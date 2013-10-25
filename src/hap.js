@@ -96,7 +96,7 @@ HAP.init = (function (window, document) {
 					return;
 				}
 				el.className += ' effect';
-				el.innerHTML = '<form><label>Fade Effect: <span class="value">1</span>s</label><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.parentNode.querySelector(\'span\').innerHTML = this.value"></form>';
+				el.innerHTML = '<form onsubmit="return false"><label>Fade Effect: <span class="value">1</span>s</label><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
 				stage.dropped(el, 'Fade');
 			}
 		});
@@ -113,7 +113,7 @@ HAP.init = (function (window, document) {
 					return;
 				}
 				el.className += ' effect';
-				el.innerHTML = '<form><label>Pause: <span class="value">1</span>s</label><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.parentNode.querySelector(\'span\').innerHTML = this.value"></form>';
+				el.innerHTML = '<form onsubmit="return false"><label>Pause: <span class="value">1</span>s</label><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
 				stage.dropped(el, 'Pause');
 			}
 		});
