@@ -92,14 +92,6 @@ body {
 	line-height: 1;
 }
 
-pre {
-	white-space: pre-wrap;
-	white-space: -moz-pre-wrap;
-	white-space: -pre-wrap;
-	white-space: -o-pre-wrap;
-	word-wrap: break-word;
-}
-
 p {
 	margin-bottom: 1em;
 }
@@ -436,10 +428,20 @@ h1 input:focus {
 	margin-right: 5px;
 }
 
+.transcript-grey {
+	color:#999;
+}
+
 #transcript a {
 	display: inline-block;
 	position: relative;
 	z-index: 1;
+
+	white-space: pre-wrap;
+	white-space: -moz-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	word-wrap: break-word;
 }
 
 #transcript a:hover {
