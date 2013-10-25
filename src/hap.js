@@ -58,11 +58,14 @@ HAP.init = (function (window, document) {
 		// Save button
 		saveButton._tap = new HA.Tap({el: saveButton});
 		saveButton.addEventListener('tap', function () {
+			stage.save();
+/*
 			// this is just for testing
 			HA.titleFX({
 				el: '#titleFXHelper',
 				text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,'
 			});
+*/
 		}, false);
 
 		// Init special fx
