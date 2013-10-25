@@ -17,6 +17,8 @@ HAP.init = (function (window, document) {
 	var pause;
 	var title;
 
+	var mixId = HA.getURLParameter('mix');
+
 	function loaded () {
 
 		// Init the API utility
@@ -132,6 +134,10 @@ HAP.init = (function (window, document) {
 				stage.dropped(el, 'Title');
 			}
 		});
+
+		if(mixId) {
+			stage.load(mixId);
+		}
 	}
 
 	// kickstart
