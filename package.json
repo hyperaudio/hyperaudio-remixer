@@ -1,6 +1,6 @@
 {
   "name": "hyperaudio-pad",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "The Hyperaudio Pad Library.",
   "homepage": "http://hyperaud.io", 
   "repository": {
@@ -22,13 +22,10 @@
     "url": "https://github.com/hyperaudio-dev/hyperaudio-pad/issues"
   },
   "dependencies": {
-    "dragdrop": "git://github.com/hyperaudio-dev/hyperaudio.git#master",
-    "transcripts": "git://github.com/hyperaudio-dev/transcripts.git#master"
+    "hyperaudio": "git://github.com/hyperaudio-dev/hyperaudio.git#master"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-jshint": "~0.6.4",
-    "grunt-contrib-uglify": "~0.2.4"
+    "jshint": "~2.1.10",
+    "uglify-js": "~2.4.0"
   }
 }

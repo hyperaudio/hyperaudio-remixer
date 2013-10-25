@@ -1,0 +1,10 @@
+build/*
+dist/*
+font/*
+videos/*
+css/*.css
+*.md
+*.html
+*.tmp
+.gitignore
+package.json
