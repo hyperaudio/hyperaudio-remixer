@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.1.1 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 25th October 2013 21:41:23 */
-/*! hyperaudio v0.1.7 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 25th October 2013 21:15:20 */
+/*! hyperaudio-pad v0.1.1 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 26th October 2013 01:47:58 */
+/*! hyperaudio v0.1.9 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 26th October 2013 01:43:34 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -5081,7 +5081,7 @@ var Stage = (function(document, hyperaudio) {
 
 	Stage.prototype = {
 		mixDetails: function(details) {
-			// [SHOULD] only really used to set the lebel, desc and type of the mix being saved.
+			// [SHOULD] only really used to set the label, desc and type of the mix being saved.
 			hyperaudio.extend(this.options, details);
 		},
 		load: function(id) {
@@ -5100,6 +5100,11 @@ var Stage = (function(document, hyperaudio) {
 				hyperaudio.api.getMix(id, function(success) {
 					if(success) {
 						self.mix = hyperaudio.extend({}, this.mix);
+						self.mixDetails({
+							title: self.mix.label,
+							desc: self.mix.desc,
+							type: self.mix.type
+						});
 
 						// Need to maintain the existing article in the stage - Important for dragdrop.
 						var tmp = document.createElement('div'); // Temporary DOM element
@@ -5332,7 +5337,21 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 				this._error('Target not found : ' + this.options.target);
 			}
 		},
-		addGUI: Player.prototype.addGUI,
+		addGUI: function() {
+			var fxHelper = document.createElement('div');
+			fxHelper.id = 'fxHelper';
+			fxHelper.className = 'video-transition-servo';
+
+			var titleFXHelper = document.createElement('div');
+			titleFXHelper.id = 'titleFXHelper';
+			titleFXHelper.className = 'title-effect-servo';
+
+			this.target.appendChild(fxHelper);
+			this.target.appendChild(titleFXHelper);
+
+			// Add the default Player GUI
+			Player.prototype.addGUI.call(this);
+		},
 		load: function(media) {
 			var self = this;
 			if(media) {
@@ -5391,10 +5410,41 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 			this.player[0].currentTime(time, play);
 		},
 		setCurrent: function(index) {
+			var weHaveMoreVideo = false,
+				effectType;
+
 			this.current.index = index;
 
 			// Get the first section
 			this.current.section = this.current.sections[this.current.index];
+
+			effectType = this.current.section.getAttribute('data-effect');
+			if(effectType) {
+
+				var ipText = this.current.section.querySelector('input[type="text"]');
+				var ipDuration = this.current.section.querySelector('input[type="range"]');
+
+				switch(effectType) {
+					case 'title':
+						if(ipText && ipDuration) {
+							titleFX({
+								el: '#titleFXHelper',
+								text: ipText.value,
+								duration: ipDuration.value * 1000
+							});
+						}
+						break;
+					case 'fade':
+						break;
+					case 'pause':
+						break;
+				}
+
+				if(++this.current.index < this.current.sections.length) {
+					weHaveMoreVideo = this.setCurrent(this.current.index);
+				}
+				return weHaveMoreVideo;
+			}
 
 			// Get the ID
 			this.current.id = this.current.section.getAttribute(this.stage.options.idAttr);
@@ -5410,8 +5460,14 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 
 			// Still have attributes hard coded in here. Would need to pass from the transcript to stage and then to here.
 			var words = this.current.section.getElementsByTagName('a');
-			this.current.start = words[0].getAttribute('data-m') * unit;
-			this.current.end = words[words.length-1].getAttribute('data-m') * unit;
+			if(words.length) {
+				this.current.start = words[0].getAttribute('data-m') * unit;
+				this.current.end = words[words.length-1].getAttribute('data-m') * unit;
+				weHaveMoreVideo = true;
+			} else {
+				weHaveMoreVideo = false;
+			}
+			return weHaveMoreVideo;
 		},
 		manager: function(event) {
 			var self = this;
@@ -5420,9 +5476,8 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 				if(this.player[0].videoElem.currentTime > this.current.end + this.options.tPadding) {
 					// Goto the next section
 
-					if(++this.current.index < this.current.sections.length) {
-						this.setCurrent(this.current.index);
-
+					// Want to refactor the setCurrent() code... Maybe make it more like nextCurrent or something like that.
+					if(++this.current.index < this.current.sections.length && this.setCurrent(this.current.index)) {
 						this.load(this.current.media);
 						this._play(this.current.start);
 					} else {
@@ -5558,8 +5613,9 @@ HAP.init = (function (window, document) {
 				if ( !el ) {
 					return;
 				}
+				el.setAttribute('data-effect', 'fade');
 				el.className += ' effect';
-				el.innerHTML = '<form><label>Fade Effect: <span class="value">1</span>s</label><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.parentNode.querySelector(\'span\').innerHTML = this.value"></form>';
+				el.innerHTML = '<form onsubmit="return false"><label>Fade Effect: <span class="value">1</span>s</label><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
 				stage.dropped(el, 'Fade');
 			}
 		});
@@ -5575,8 +5631,9 @@ HAP.init = (function (window, document) {
 				if ( !el ) {
 					return;
 				}
+				el.setAttribute('data-effect', 'pause');
 				el.className += ' effect';
-				el.innerHTML = '<form><label>Pause: <span class="value">1</span>s</label><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.parentNode.querySelector(\'span\').innerHTML = this.value"></form>';
+				el.innerHTML = '<form onsubmit="return false"><label>Pause: <span class="value">1</span>s</label><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
 				stage.dropped(el, 'Pause');
 			}
 		});
@@ -5592,8 +5649,9 @@ HAP.init = (function (window, document) {
 				if ( !el ) {
 					return;
 				}
+				el.setAttribute('data-effect', 'title');
 				el.className += ' effect';
-				el.innerHTML = '<form><label>Title: <span class="value">1</span>s</label><input type="text" value="Title"><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.parentNode.querySelector(\'span\').innerHTML = this.value"></form>';
+				el.innerHTML = '<form onsubmit="return false"><label>Title: <span class="value">1</span>s</label><input type="text" value="Title" onchange="this.setAttribute(\'value\', this.value);"><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
 				stage.dropped(el, 'Title');
 			}
 		});
