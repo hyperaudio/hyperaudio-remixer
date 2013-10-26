@@ -322,7 +322,7 @@ h1 input:focus {
 	height: 100%;
 	top: 0;
 	left: 0;
-	z-index: 9999;
+	/* z-index: 9999; */
 }
 
 .title-effect-servo {
@@ -333,7 +333,7 @@ h1 input:focus {
 	bottom: 0;
 	font-size: 1.2em;
 	left: -9999px;
-	z-index: 9998;
+	/* z-index: 9998; */
 	line-height: 140%;
 	-webkit-transition-property: -webkit-transform;
 	-moz-transition-property: -moz-transform;
