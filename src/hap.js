@@ -26,7 +26,7 @@ HAP.init = (function (window, document) {
 
 		player = HA.Player({
 			target: "#video-source",
-			guiNative: true
+			gui: true
 		});
 
 		projector = HA.Projector({
