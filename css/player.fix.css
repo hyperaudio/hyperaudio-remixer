@@ -1,0 +1,15 @@
+.hyperaudio-player {
+	width:50%;
+	height:280px;
+}
+
+.hyperaudio-player-video-wrapper,
+.hyperaudio-player-youtube-wrapper {
+	top:10px;
+	width:90%;
+	height:260px;
+}
+
+.hyperaudio-player .solution {
+	left:5%;
+}
