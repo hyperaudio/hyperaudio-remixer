@@ -13,3 +13,15 @@
 .hyperaudio-player .solution {
 	left:5%;
 }
+
+.hyperaudio-player:-webkit-full-screen .hyperaudio-player-video-wrapper { top:0; width:100%; height:100%; }
+.hyperaudio-player:-moz-full-screen .hyperaudio-player-video-wrapper { top:0; width:100%; height:100%; }
+.hyperaudio-player:-ms-full-screen .hyperaudio-player-video-wrapper { top:0; width:100%; height:100%; }
+.hyperaudio-player:-o-full-screen .hyperaudio-player-video-wrapper { top:0; width:100%; height:100%; }
+.hyperaudio-player:full-screen .hyperaudio-player-video-wrapper { top:0; width:100%; height:100%; }
+
+.hyperaudio-player:-webkit-full-screen .hyperaudio-player-youtube-wrapper { top:0; width:100%; height:100%; }
+.hyperaudio-player:-moz-full-screen .hyperaudio-player-youtube-wrapper { top:0; width:100%; height:100%; }
+.hyperaudio-player:-ms-full-screen .hyperaudio-player-youtube-wrapper { top:0; width:100%; height:100%; }
+.hyperaudio-player:-o-full-screen .hyperaudio-player-youtube-wrapper { top:0; width:100%; height:100%; }
+.hyperaudio-player:full-screen .hyperaudio-player-youtube-wrapper { top:0; width:100%; height:100%; }
