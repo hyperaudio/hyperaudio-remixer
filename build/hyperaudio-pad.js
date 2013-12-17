@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.2.1 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 17th December 2013 12:07:45 */
-/*! hyperaudio v0.2.4 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 17th December 2013 12:06:45 */
+/*! hyperaudio-pad v0.2.1 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 17th December 2013 19:11:19 */
+/*! hyperaudio v0.2.7 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 17th December 2013 19:09:18 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -7118,6 +7118,9 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 						if(this.isPastEffect(section.effect)) {
 							// Have we got a previous section to affect?
 							if(this.content.length) {
+
+								console.log('getContent: this.content[len-1]=%o | session.effect=%o',this.content[this.content.length-1],section.effect);
+
 								this.effectContent(this.content[this.content.length-1], section.effect);
 							}
 						} else {
@@ -7223,12 +7226,18 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 			var effectTypes = 'trim',
 				past = false;
 
-			hyperaudio.each(effectTypes.split(/\s+/g), function() {
-				if(effect.type === this) {
+			hyperaudio.each(effectTypes.split(/\s+/g), function(i,type) {
+
+				console.log('isPastEffect: [loop] effect.type=%s | type=%s | ===%s',effect.type,this,(effect.type === type));
+
+				if(effect.type === type) {
 					past = true;
 					return false; // exit each
 				}
 			});
+
+			console.log('isPastEffect: effect.type=%s | past=%s',effect.type,past);
+
 			return past;
 		},
 
