@@ -14,7 +14,7 @@ HAP.init = (function (window, document) {
 	var saveButton;
 
 	var fade;
-	var pause;
+	var trim;
 	var title;
 
 	var mixId = HA.getURLParameter('mix');
@@ -102,8 +102,8 @@ HAP.init = (function (window, document) {
 			}
 		});
 
-		pause = new HA.DragDrop({
-			handle: '#pauseFX',
+		trim = new HA.DragDrop({
+			handle: '#trimFX',
 			dropArea: stage.target,
 			draggableClass: 'draggableEffect',
 			onDragStart: function (e) {
@@ -113,10 +113,10 @@ HAP.init = (function (window, document) {
 				if ( !el ) {
 					return;
 				}
-				el.setAttribute('data-effect', 'pause');
+				el.setAttribute('data-effect', 'trim');
 				el.className += ' effect';
-				el.innerHTML = '<form onsubmit="return false"><label>Pause: <span class="value">1</span>s</label><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
-				stage.dropped(el, 'Pause');
+				el.innerHTML = '<form onsubmit="return false"><label>Trim: <span class="value">1</span>s</label><input type="range" value="1" min="0" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
+				stage.dropped(el, 'Trim');
 			}
 		});
 
