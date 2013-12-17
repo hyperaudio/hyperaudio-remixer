@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.2.1 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 17th December 2013 11:18:48 */
-/*! hyperaudio v0.2.2 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 17th December 2013 10:36:41 */
+/*! hyperaudio-pad v0.2.1 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 17th December 2013 12:07:45 */
+/*! hyperaudio v0.2.4 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 17th December 2013 12:06:45 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -7199,12 +7199,13 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 				// Get the effect details
 				var effectType = el.getAttribute('data-effect');
 				if(effectType) {
+					// This bit should be refactored, maybe with IDs or classes to indicate the input elements.
 					var effectText = el.querySelector('input[type="text"]');
-					var effectDuration = el.querySelector('input[type="range"]');
+					var effectRange = el.querySelector('input[type="range"]');
 					section.effect = {
 						type: effectType,
-						text: effectText.value,
-						duration: effectDuration.value * 1 // Convert to number
+						text: effectText ? effectText.value : '',
+						duration: effectRange ? effectRange.value * 1 : 0 // Convert to number
 					};
 				} else {
 					section.effect = false;
@@ -7247,7 +7248,7 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 						content.effect.push(effect[i]);
 						break;
 					case 'trim':
-						content.trim = effect[i].trim;
+						content.trim = effect[i].duration;
 						break;
 				}
 			}
