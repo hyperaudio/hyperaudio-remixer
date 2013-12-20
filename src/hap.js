@@ -17,7 +17,7 @@ HAP.init = (function (window, document) {
 	var trim;
 	var title;
 
-	var mixId = HA.getURLParameter('mix');
+	var mixId = HA.getURLParameter('m');
 
 	function loaded () {
 
