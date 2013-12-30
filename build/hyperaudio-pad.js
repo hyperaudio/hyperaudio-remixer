@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.2.2 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 20th December 2013 19:58:03 */
-/*! hyperaudio v0.2.11 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 20th December 2013 19:57:01 */
+/*! hyperaudio-pad v0.3.0 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 30th December 2013 19:39:36 */
+/*! hyperaudio v0.3.0 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 30th December 2013 19:33:30 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -5329,8 +5329,7 @@ var api = (function(hyperaudio) {
 	return {
 		init: function(options) {
 			this.options = hyperaudio.extend({
-				// api: 'http://data.hyperaud.io/',
-				api: 'http://api.hyperaud.io/',
+				api: 'http://api.hyperaud.io/v1/',
 				transcripts: 'transcripts/',
 				mixes: 'mixes/',
 				whoami: 'whoami/'
@@ -5370,7 +5369,7 @@ var api = (function(hyperaudio) {
 						var json = JSON.parse(this.responseText);
 						self.guest = !json.user;
 						if(!self.guest) {
-							self.username = json.user.username;
+							self.username = json.user;
 						} else {
 							self.username = '';
 						}
