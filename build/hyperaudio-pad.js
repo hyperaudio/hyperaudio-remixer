@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.3.0 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 30th December 2013 19:39:36 */
-/*! hyperaudio v0.3.0 ~ (c) 2012-2013 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 30th December 2013 19:33:30 */
+/*! hyperaudio-pad v0.3.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 1st January 2014 19:52:40 */
+/*! hyperaudio v0.3.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 1st January 2014 19:28:25 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -3965,6 +3965,7 @@ var hyperaudio = (function() {
 			ready: 'ha:ready',
 			load: 'ha:load',
 			save: 'ha:save',
+			unauthenticated: 'ha:unauthenticated',
 			error: 'ha:error'
 		},
 		_commonMethods: {
@@ -5283,7 +5284,7 @@ var xhr = (function(hyperaudio) {
 		var xhr = new XMLHttpRequest();
 
 		xhr.addEventListener('load', function(event) {
-			if(this.status === 200) {
+			if(200 <= this.status && this.status < 300) {
 				if(typeof options.complete === 'function') {
 					options.complete.call(this, event);
 				}
@@ -5332,6 +5333,7 @@ var api = (function(hyperaudio) {
 				api: 'http://api.hyperaud.io/v1/',
 				transcripts: 'transcripts/',
 				mixes: 'mixes/',
+				signin: 'login/',
 				whoami: 'whoami/'
 			}, options);
 
@@ -5352,6 +5354,30 @@ var api = (function(hyperaudio) {
 			if(typeof callback === 'function') {
 				callback.call(this, success);
 			}
+		},
+		signin: function(auth, callback) {
+			var self = this;
+			// auth = {username,password}
+			xhr({
+				url: this.options.api + this.options.signin,
+				type: 'POST',
+				data: JSON.stringify(auth),
+				complete: function(event) {
+					var json = JSON.parse(this.responseText);
+					self.guest = !json.user;
+					if(!self.guest) {
+						self.username = json.user;
+						self.callback(callback, true);
+					} else {
+						self.username = '';
+						self.callback(callback, false);
+					}
+				},
+				error: function(event) {
+					self.error = true;
+					self.callback(callback, false);
+				}
+			});
 		},
 		getUsername: function(callback, force) {
 			var self = this;
@@ -5390,6 +5416,8 @@ var api = (function(hyperaudio) {
 				}, 0);
 			} else {
 				xhr({
+					// In future may want a version that returns only your own transcripts.
+					// url: self.options.api + (self.guest ? '' : self.username + '/') + self.options.transcripts,
 					url: this.options.api + this.options.transcripts,
 					complete: function(event) {
 						var json = JSON.parse(this.responseText);
@@ -5410,10 +5438,12 @@ var api = (function(hyperaudio) {
 					self.callback(callback, true);
 				}, 0);
 			} else {
+				// Do not need to get username for an ID specific request.
 				this.getUsername(function(success) {
 					if(success && id) {
 						xhr({
-							url: self.options.api + (self.guest ? '' : self.username + '/') + self.options.transcripts + id,
+							// url: self.options.api + (self.guest ? '' : self.username + '/') + self.options.transcripts + id,
+							url: self.options.api + self.options.transcripts + id,
 							complete: function(event) {
 								var json = JSON.parse(this.responseText);
 								self.transcript = json;
@@ -5438,6 +5468,7 @@ var api = (function(hyperaudio) {
 					self.callback(callback, true);
 				}, 0);
 			} else {
+				// Do not need to get username for a general request.
 				this.getUsername(function(success) {
 					if(success) {
 						xhr({
@@ -5466,6 +5497,7 @@ var api = (function(hyperaudio) {
 					self.callback(callback, true);
 				}, 0);
 			} else {
+				// Do not need to get username for an ID specific request.
 				this.getUsername(function(success) {
 					if(success && id) {
 						xhr({
@@ -5500,13 +5532,13 @@ var api = (function(hyperaudio) {
 
 				this.getUsername(function(success) {
 
-					if(success && !this.guest && this.username) {
+					if(success && !self.guest && self.username) {
 
 						// Check: Mix IDs match and user is owner.
 
-						if(this.mix && this.mix._id && this.mix._id === mix._id && this.username === mix.owner) {
+						if(self.mix && self.mix._id && self.mix._id === mix._id && self.username === mix.owner) {
 							type = 'PUT';
-							id = this.mix._id;
+							id = self.mix._id;
 							// Check some stuff?
 						} else {
 							// Check some stuff?
@@ -5519,12 +5551,19 @@ var api = (function(hyperaudio) {
 							complete: function(event) {
 								var json = JSON.parse(this.responseText);
 								self.mix = json;
-								self.callback(callback, true);
+								self.callback(callback, {
+									saved: true
+								});
 							},
 							error: function(event) {
 								self.error = true;
 								self.callback(callback, false);
 							}
+						});
+					} else if(success) {
+						// The user needs to login
+						self.callback(callback, {
+							needLogin: true
 						});
 					} else {
 						self.callback(callback, false);
@@ -6270,7 +6309,9 @@ var Transcript = (function(document, hyperaudio) {
 
 					var media = hyperaudio.api.transcript.media;
 
-					this.options.media = {};
+					this.options.media = {
+						id: media ? media._id : '' // Store the media ID
+					};
 
 					if(media && media.source) {
 						for(var type in media.source) {
@@ -6359,8 +6400,8 @@ var Transcript = (function(document, hyperaudio) {
 										return;
 									}
 
-									if(opts.id) {
-										el.setAttribute(opts.stage.options.idAttr, opts.id); // Pass the transcript ID
+									if(opts.media.id) {
+										el.setAttribute(opts.stage.options.idAttr, opts.media.id); // Pass the media ID
 									}
 									if(opts.media.transcript) {
 										el.setAttribute(opts.stage.options.transAttr, opts.media.transcript); // Pass the transcript url
@@ -6533,7 +6574,7 @@ var Stage = (function(document, hyperaudio) {
 						self.initDragDrop();
 						self._trigger(hyperaudio.event.load, {msg: 'Loaded mix'});
 					} else {
-						self._error(this.status + ' ' + this.statusText + ' : "' + url + '"');
+						self._error(this.status + ' ' + this.statusText + ' : "' + id + '"');
 					}
 				});
 			}
@@ -6560,13 +6601,19 @@ var Stage = (function(document, hyperaudio) {
 
 				hyperaudio.api.putMix(this.mix, function(success) {
 					if(success) {
-						self.mix = hyperaudio.extend({}, this.mix);
-						self._trigger(hyperaudio.event.save, {msg: 'Saved mix'});
-						self.callback(callback, true);
+						if(success.saved) {
+							self.mix = hyperaudio.extend({}, this.mix);
+							self._trigger(hyperaudio.event.save, {msg: 'Saved mix'});
+						} else if(success.needLogin) {
+							// We need to login
+							self._trigger(hyperaudio.event.unauthenticated, {msg: 'Sign In required to save'});
+						} else {
+							self._error('Stage: Save: Error with API putMix() response');
+						}
 					} else {
-						self._error(this.status + ' ' + this.statusText + ' : "' + url + '"');
-						self.callback(callback, false);
+						self._error('Stage: Save: Error with API putMix() request');
 					}
+					self.callback(callback, success);
 				});
 			}
 		},
@@ -7516,14 +7563,37 @@ HAP.init = (function (window, document) {
 		saveButton._tap = new HA.Tap({el: saveButton});
 		saveButton.addEventListener('tap', function () {
 			stage.save();
-/*
-			// this is just for testing
-			HA.titleFX({
-				el: '#titleFXHelper',
-				text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,'
-			});
-*/
 		}, false);
+
+		// Prompt login if attempting to save
+		var signin = document.querySelector('#signin-modal');
+
+		signin.querySelector('.modal-close').addEventListener('click', function(e) {
+			e.preventDefault();
+			signin.style.display = 'none';
+		});
+
+		signin.querySelector('#signin-form').addEventListener('submit', function(e) {
+			e.preventDefault();
+			signin.style.display = 'none';
+			HA.api.signin({
+				username: signin.querySelector('#username').value,
+				password: signin.querySelector('#password').value
+			}, function(success) {
+				if(success) {
+					// try and save again
+					stage.save();
+				} else {
+					// Show the prompt again
+					signin.style.display = 'block';
+				}
+			});
+		});
+
+		stage.target.addEventListener(HA.event.unauthenticated, function(e) {
+			// Prompt login
+			signin.style.display = 'block';
+		});
 
 		// Init special fx
 		fade = new HA.DragDrop({
