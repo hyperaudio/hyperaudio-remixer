@@ -74,14 +74,38 @@ HAP.init = (function (window, document) {
 		saveButton._tap = new HA.Tap({el: saveButton});
 		saveButton.addEventListener('tap', function () {
 			stage.save();
-/*
-			// this is just for testing
-			HA.titleFX({
-				el: '#titleFXHelper',
-				text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,'
-			});
-*/
 		}, false);
+
+		// Prompt login if attempting to save
+		var signin = document.querySelector('#signin-modal');
+
+		signin.querySelector('.modal-close').addEventListener('click', function(e) {
+			e.preventDefault();
+			signin.style.display = 'none';
+		});
+
+		signin.querySelector('#signin-form').addEventListener('submit', function(e) {
+			e.preventDefault();
+			console.log('submitted login');
+			signin.style.display = 'none';
+			hyperaudio.api.signin({
+				username: signin.querySelector('#username').value,
+				password: signin.querySelector('#password').value
+			}, function(success) {
+				if(success) {
+					// try and save again
+					stage.save();
+				} else {
+					// Show the prompt again
+					signin.style.display = 'block';
+				}
+			});
+		});
+
+		stage.target.addEventListener(hyperaudio.event.unauthenticated, function(e) {
+			// Prompt login
+			signin.style.display = 'block';
+		});
 
 		// Init special fx
 		fade = new HA.DragDrop({
