@@ -86,9 +86,8 @@ HAP.init = (function (window, document) {
 
 		signin.querySelector('#signin-form').addEventListener('submit', function(e) {
 			e.preventDefault();
-			console.log('submitted login');
 			signin.style.display = 'none';
-			hyperaudio.api.signin({
+			HA.api.signin({
 				username: signin.querySelector('#username').value,
 				password: signin.querySelector('#password').value
 			}, function(success) {
