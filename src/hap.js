@@ -101,7 +101,7 @@ HAP.init = (function (window, document) {
 			});
 		});
 
-		stage.target.addEventListener(hyperaudio.event.unauthenticated, function(e) {
+		stage.target.addEventListener(HA.event.unauthenticated, function(e) {
 			// Prompt login
 			signin.style.display = 'block';
 		});
