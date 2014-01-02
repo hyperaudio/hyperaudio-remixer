@@ -1,4 +1,4 @@
-/*! hyperaudio-pad v0.3.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 2nd January 2014 19:04:41 */
+/*! hyperaudio-pad v0.3.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 2nd January 2014 20:53:19 */
 /*! hyperaudio v0.3.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 1st January 2014 19:28:25 */
 (function(global, document) {
 
@@ -7582,17 +7582,18 @@ HAP.init = (function (window, document) {
 		signin.querySelector('#signin-form').addEventListener('submit', function(e) {
 			e.preventDefault();
 			signin.style.display = 'none';
+			savingAnim.style.display = 'block';
 			HA.api.signin({
 				username: signin.querySelector('#username').value,
 				password: signin.querySelector('#password').value
 			}, function(success) {
 				if(success) {
 					// try and save again
-					savingAnim.style.display = 'block';
 					stage.save();
 				} else {
 					// Show the prompt again
 					signin.style.display = 'block';
+					savingAnim.style.display = 'none';
 				}
 			});
 		});
