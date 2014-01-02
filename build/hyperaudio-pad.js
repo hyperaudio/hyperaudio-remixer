@@ -1,4 +1,4 @@
-/*! hyperaudio-pad v0.3.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 1st January 2014 19:52:40 */
+/*! hyperaudio-pad v0.3.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 2nd January 2014 19:04:41 */
 /*! hyperaudio v0.3.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 1st January 2014 19:28:25 */
 (function(global, document) {
 
@@ -7501,6 +7501,7 @@ HAP.init = (function (window, document) {
 
 	var mixTitle;
 	var saveButton;
+	var savingAnim;
 
 	var fade;
 	var trim;
@@ -7535,6 +7536,7 @@ HAP.init = (function (window, document) {
 
 		mixTitle = document.getElementById('mix-title');
 		saveButton = document.getElementById('save-button');
+		savingAnim = document.querySelector('#save-button-saving');
 
 		function mediaSelect (el) {
 			var id = el.getAttribute('data-id');
@@ -7558,10 +7560,14 @@ HAP.init = (function (window, document) {
 		stage.target.addEventListener(HA.event.load, function(e) {
 			mixTitle.value = HA.api.mix.label;
 		});
+		stage.target.addEventListener(HA.event.save, function(e) {
+			savingAnim.style.display = 'none';
+		});
 
 		// Save button
 		saveButton._tap = new HA.Tap({el: saveButton});
 		saveButton.addEventListener('tap', function () {
+			savingAnim.style.display = 'block';
 			stage.save();
 		}, false);
 
@@ -7582,6 +7588,7 @@ HAP.init = (function (window, document) {
 			}, function(success) {
 				if(success) {
 					// try and save again
+					savingAnim.style.display = 'block';
 					stage.save();
 				} else {
 					// Show the prompt again
@@ -7593,6 +7600,8 @@ HAP.init = (function (window, document) {
 		stage.target.addEventListener(HA.event.unauthenticated, function(e) {
 			// Prompt login
 			signin.style.display = 'block';
+			// Hide saving anim
+			savingAnim.style.display = 'none';
 		});
 
 		// Init special fx
