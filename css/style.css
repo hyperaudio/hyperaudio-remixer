@@ -179,6 +179,19 @@ h1 input:focus {
 	cursor: pointer;
 }
 
+#save-button-saving {
+	width: 48px;
+	height: 48px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: #387847;
+	background-image: url('../images/ajax-loader-ffffff-on-387847.gif');
+	background-position: center center;
+	background-repeat: no-repeat;
+	display:none;
+}
+
 #transcript {
 	font-family: 'Varela Round', 'helvetica neue', arial, sans-serif;
 	font-size: 1.3em;
