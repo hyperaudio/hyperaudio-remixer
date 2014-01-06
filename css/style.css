@@ -684,6 +684,25 @@ h1 input:focus {
 	background: #fff;
 }
 
+#stage a {
+	display: inline-block;
+	position: relative;
+	z-index: 1;
+	cursor:pointer;
+
+	white-space: pre-wrap;
+	white-space: -moz-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	word-wrap: break-word;
+}
+
+#stage a:hover {
+	background: #59be71;
+	color: #000;
+}
+
+
 .modal {
 	position: fixed;
 	top:0;
