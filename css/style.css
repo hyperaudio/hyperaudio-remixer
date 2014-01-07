@@ -603,6 +603,7 @@ h1 input:focus {
 	border: 2px solid #fff;
 	margin: -2px -2px 0 0;
 	cursor: pointer;
+	z-index: 1;
 }
 
 #stage .actions:after {
