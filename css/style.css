@@ -449,6 +449,7 @@ h1 input:focus {
 	display: inline-block;
 	position: relative;
 	z-index: 1;
+	cursor:pointer;
 
 	white-space: pre-wrap;
 	white-space: -moz-pre-wrap;
