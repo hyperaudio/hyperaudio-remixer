@@ -125,6 +125,7 @@ HAP.init = (function (window, document) {
 				HA.addClass(stage.target, 'dragdrop');
 			},
 			onDrop: function (el) {
+				HA.removeClass(stage.target, 'dragdrop');
 				if ( !el ) {
 					return;
 				}
@@ -143,6 +144,7 @@ HAP.init = (function (window, document) {
 				HA.addClass(stage.target, 'dragdrop');
 			},
 			onDrop: function (el) {
+				HA.removeClass(stage.target, 'dragdrop');
 				if ( !el ) {
 					return;
 				}
@@ -161,6 +163,7 @@ HAP.init = (function (window, document) {
 				HA.addClass(stage.target, 'dragdrop');
 			},
 			onDrop: function (el) {
+				HA.removeClass(stage.target, 'dragdrop');
 				if ( !el ) {
 					return;
 				}
