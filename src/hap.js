@@ -5,6 +5,7 @@ HAP.init = (function (window, document) {
 
 	var player;
 	var projector;
+	var music;
 	var stage;
 	var transcript;
 
@@ -30,8 +31,13 @@ HAP.init = (function (window, document) {
 			gui: true
 		});
 
+		music = hyperaudio.Music({
+			target: "#music-player"
+		});
+
 		projector = HA.Projector({
-			target: "#stage-videos"
+			target: "#stage-videos",
+			music: music
 		});
 
 		stage = HA.Stage({
