@@ -31,7 +31,7 @@ HAP.init = (function (window, document) {
 			gui: true
 		});
 
-		music = hyperaudio.Music({
+		music = HA.Music({
 			target: "#music-player"
 		});
 
