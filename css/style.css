@@ -791,3 +791,8 @@ h1 input:focus {
 	font-weight:normal;
 	cursor:pointer;
 }
+
+#music-player, #music-player audio {
+	width:0;
+	height:0;
+}
