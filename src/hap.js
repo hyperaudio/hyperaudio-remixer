@@ -131,7 +131,7 @@ HAP.init = (function (window, document) {
 				}
 				el.setAttribute('data-effect', 'fade');
 				el.className += ' effect';
-				el.innerHTML = '<form onsubmit="return false"><label>Fade Effect: <span class="value">1</span>s</label><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
+				el.innerHTML = '<form onsubmit="return false"><label>Fade Effect: <span class="value">1</span>s</label><input id="effect-duration" type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.previousSibling.querySelector(\'span\').innerHTML = this.value;"></form>';
 				stage.dropped(el, 'Fade');
 			}
 		});
@@ -150,7 +150,7 @@ HAP.init = (function (window, document) {
 				}
 				el.setAttribute('data-effect', 'trim');
 				el.className += ' effect';
-				el.innerHTML = '<form onsubmit="return false"><label>Trim: <span class="value">1</span>s</label><input type="range" value="1" min="0" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
+				el.innerHTML = '<form onsubmit="return false"><label>Trim: <span class="value">1</span>s</label><input id="effect-duration" type="range" value="1" min="0" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.previousSibling.querySelector(\'span\').innerHTML = this.value;"></form>';
 				stage.dropped(el, 'Trim');
 			}
 		});
@@ -169,7 +169,7 @@ HAP.init = (function (window, document) {
 				}
 				el.setAttribute('data-effect', 'title');
 				el.className += ' effect';
-				el.innerHTML = '<form onsubmit="return false"><label>Title: <span class="value">1</span>s</label><input type="text" value="Title" onchange="this.setAttribute(\'value\', this.value);"><input type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
+				el.innerHTML = '<form onsubmit="return false"><label>Title: <span class="value">1</span>s</label><input id="effect-title" type="text" value="Title" onchange="this.setAttribute(\'value\', this.value);"><input id="effect-duration" type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.previousSibling.querySelector(\'span\').innerHTML = this.value;"></form>';
 				stage.dropped(el, 'Title');
 			}
 		});
