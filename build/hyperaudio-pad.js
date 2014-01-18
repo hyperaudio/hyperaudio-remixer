@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.3.13 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 18th January 2014 22:00:13 */
-/*! hyperaudio v0.3.13 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 18th January 2014 21:45:55 */
+/*! hyperaudio-pad v0.3.14 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 18th January 2014 22:21:35 */
+/*! hyperaudio v0.3.14 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 18th January 2014 22:08:55 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -7867,7 +7867,7 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 
 						switch(effect[i].type) {
 							case 'title':
-								if(effect[i].text && effect[i].duration) {
+								if(effect[i].title && effect[i].duration) {
 									titleFX({
 										el: '#titleFXHelper',
 										text: effect[i].title,
@@ -8253,7 +8253,7 @@ HAP.init = (function (window, document) {
 				}
 				el.setAttribute('data-effect', 'title');
 				el.className += ' effect';
-				el.innerHTML = '<form onsubmit="return false"><label>Title: <span class="value">1</span>s</label><input id="effect-title" type="text" value="Title" onchange="this.setAttribute(\'value\', this.value);"><input id="effect-duration" type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.previousSibling.querySelector(\'span\').innerHTML = this.value;"></form>';
+				el.innerHTML = '<form onsubmit="return false"><label>Title: <span class="value">1</span>s</label><input id="effect-title" type="text" value="Title" onchange="this.setAttribute(\'value\', this.value);"><input id="effect-duration" type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
 				stage.dropped(el, 'Title');
 			}
 		});
