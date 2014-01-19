@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.3.14 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 18th January 2014 22:21:35 */
-/*! hyperaudio v0.3.14 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 18th January 2014 22:08:55 */
+/*! hyperaudio-pad v0.3.15 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 19th January 2014 21:43:33 */
+/*! hyperaudio v0.3.15 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 19th January 2014 21:41:51 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -4619,20 +4619,20 @@ var SideMenu = (function (document, hyperaudio) {
 		this.initMusic();
 	}
 
+	SideMenu.prototype.makeMenuFolder = function(parent, title) {
+		var li = document.createElement('li'),
+			div = document.createElement('div'),
+			ul = document.createElement('ul');
+		hyperaudio.addClass(li, 'folder');
+		div.innerHTML = title;
+		li.appendChild(div);
+		li.appendChild(ul);
+		parent.appendChild(li);
+		return ul;
+	};
+
 	SideMenu.prototype.initTranscripts = function () {
 		var self = this;
-
-		var mkdir = function(parent, title) {
-			var li = document.createElement('li'),
-				div = document.createElement('div'),
-				ul = document.createElement('ul');
-			hyperaudio.addClass(li, 'folder');
-			div.innerHTML = title;
-			li.appendChild(div);
-			li.appendChild(ul);
-			parent.appendChild(li);
-			return ul;
-		};
 
 		hyperaudio.api.getUsername(function(success) {
 
@@ -4649,14 +4649,14 @@ var SideMenu = (function (document, hyperaudio) {
 					var yourTrans, otherTrans, userTrans, elem, trans;
 
 					if(username) {
-						yourTrans = mkdir(self.transcripts, 'Your Transcripts');
+						yourTrans = self.makeMenuFolder(self.transcripts, 'Your Transcripts');
 					}
-					otherTrans = mkdir(self.transcripts, 'Other Transcripts');
+					otherTrans = self.makeMenuFolder(self.transcripts, 'Other Transcripts');
 
 					// Nesting not supported ATM.
-					// userTrans = mkdir(self.transcripts, 'By User');
-					// mkdir(userTrans, 'Scooby');
-					// mkdir(userTrans, 'Mark');
+					// userTrans = self.makeMenuFolder(self.transcripts, 'By User');
+					// self.makeMenuFolder(userTrans, 'Scooby');
+					// self.makeMenuFolder(userTrans, 'Mark');
 
 					for(var i = 0, l = this.transcripts.length; i < l; i++) {
 						trans = this.transcripts[i];
@@ -4723,6 +4723,7 @@ var SideMenu = (function (document, hyperaudio) {
 
 		if(stage.target) {
 			// add drag and drop to BGM
+/*
 			var items = document.querySelectorAll('#panel-bgm li');
 			for (var i = items.length-1; i >= 0; i-- ) {
 				if ( !this.isFolder(items[i]) ) {
@@ -4737,6 +4738,36 @@ var SideMenu = (function (document, hyperaudio) {
 			}
 			self.music._tap = new Tap({el: self.music});
 			self.music.addEventListener('tap', self.toggleFolder.bind(self), false);
+*/
+
+			hyperaudio.api.getBGM(function(success) {
+				if(success) {
+					var elem, bgms;
+
+					for(var i = 0, l = this.bgm.length; i < l; i++) {
+						bgms = this.bgm[i];
+						if(bgms.type === 'audio') {
+							elem = document.createElement('li');
+							elem.setAttribute('data-id', bgms._id);
+							if(bgms.source.mp3) elem.setAttribute('data-mp3', bgms.source.mp3.url);
+							if(bgms.source.mp4) elem.setAttribute('data-mp4', bgms.source.mp4.url);
+							if(bgms.source.ogg) elem.setAttribute('data-ogg', bgms.source.ogg.url);
+							elem.innerHTML = bgms.label;
+							elem._dragInstance = new DragDrop({
+								handle: elem,
+								dropArea: stage.target,
+								draggableClass: 'draggableEffect',
+								onDragStart: onDragStart,
+								onDrop: onDrop
+							});
+							self.music.appendChild(elem);
+						}
+					}
+
+					self.music._tap = new Tap({el: self.music});
+					self.music.addEventListener('tap', self.toggleFolder.bind(self), false);
+				}
+			});
 		}
 	};
 
@@ -5420,6 +5451,7 @@ var api = (function(hyperaudio) {
 				api: 'http://api.hyperaud.io/v1/',
 				transcripts: 'transcripts/',
 				mixes: 'mixes/',
+				bgm: 'bgm/media/',
 				signin: 'login/',
 				whoami: 'whoami/'
 			}, options);
@@ -5436,6 +5468,7 @@ var api = (function(hyperaudio) {
 			this.transcript = null;
 			this.mixes = null;
 			this.mix = null;
+			this.bgm = null;
 		},
 		callback: function(callback, success) {
 			if(typeof callback === 'function') {
@@ -5661,6 +5694,27 @@ var api = (function(hyperaudio) {
 					self.callback(callback, false);
 				}, 0);
 			}
+		},
+		getBGM: function(callback, force) {
+			var self = this;
+			if(!force && this.bgm) {
+				setTimeout(function() {
+					self.callback(callback, true);
+				}, 0);
+			} else {
+				xhr({
+					url: this.options.api + this.options.bgm,
+					complete: function(event) {
+						var json = JSON.parse(this.responseText);
+						self.bgm = json;
+						self.callback(callback, true);
+					},
+					error: function(event) {
+						self.error = true;
+						self.callback(callback, false);
+					}
+				});
+			}
 		}
 	};
 
@@ -5681,27 +5735,30 @@ var Music = (function(window, document, hyperaudio, Popcorn) {
 
 			target: '#music-player', // The selector of element where the audio is generated
 
-			start: 0,
-			duration: 6,
-			volume: 1,
-			fadeInDuration: 2,
-			fadeOutDuration: 2,
-
 			media: {
 				mp3: '', // The URL of the mp3 audio.
 				mp4: '', // The URL of the mp4 audio.
-				ogg:'' // The URL of the ogg audio.
+				ogg: '' // The URL of the ogg audio.
 			},
 
 			// Types valid in an audio element
 			mediaType: {
 				mp3: 'audio/mpeg', // The mp3 mime type.
 				mp4: 'audio/mp4', // The mp4 mime type.
-				ogg:'audio/ogg' // The ogg mime type.
+				ogg: 'audio/ogg' // The ogg mime type.
 			},
 
 			async: true // When true, some operations are delayed by a timeout.
 		}, options);
+
+		this.effect = {
+			start: 0,
+			duration: 6,
+			volume: 1,
+			fadeInDuration: 2,
+			fadeOutDuration: 2,
+			media: {}
+		};
 
 		// Properties
 		this.target = typeof this.options.target === 'string' ? document.querySelector(this.options.target) : this.options.target;
@@ -5729,7 +5786,7 @@ var Music = (function(window, document, hyperaudio, Popcorn) {
 
 				this.audioElem = document.createElement('audio');
 
-				this.audioElem.controls = true; // TMP during dev.
+				// this.audioElem.controls = true; // TMP during dev.
 
 				// Add listeners to the audio element
 				this.audioElem.addEventListener('progress', function(e) {
@@ -5881,19 +5938,19 @@ var Music = (function(window, document, hyperaudio, Popcorn) {
 
 			if(!this.paused) {
 
-				var end = this.options.start + this.options.duration;
+				var end = this.effect.start + this.effect.duration;
 
 				// The fade in/out code is WIP
 
 				// Fade In TimeZone
 				var fadeIn = {
-					start: this.options.start,
-					end: this.options.start + this.options.fadeInDuration
+					start: this.effect.start,
+					end: this.effect.start + this.effect.fadeInDuration
 				};
 
 				// Fade Out TimeZone
 				var fadeOut = {
-					start: end - this.options.fadeOutDuration,
+					start: end - this.effect.fadeOutDuration,
 					end: end
 				};
 
@@ -5902,11 +5959,11 @@ var Music = (function(window, document, hyperaudio, Popcorn) {
 				}
 			}
 		},
-		bgmFX: function(options) {
-			hyperaudio.extend(this.options, options);
-			this.load();
-			this.audioElem.volume = this.options.volume;
-			this.play(this.options.start);
+		bgmFX: function(effect) {
+			hyperaudio.extend(this.effect, effect);
+			this.load(this.effect.media);
+			this.audioElem.volume = this.effect.volume;
+			this.play(this.effect.start);
 		}
 	};
 
@@ -7391,6 +7448,10 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 
 				this._pause();
 				this.contentIndex = jumpTo.contentIndex;
+
+				if(this.options.music) {
+					this.options.music.pause();
+				}
 
 				if(this.contentIndex < this.content.length) {
 
