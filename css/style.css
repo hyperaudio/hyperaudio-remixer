@@ -695,6 +695,10 @@ h1 input:focus {
 	background: #fff;
 }
 
+#stage .effect span:before {
+	margin-right: 5px;
+}
+
 #stage a {
 	display: inline-block;
 	position: relative;
