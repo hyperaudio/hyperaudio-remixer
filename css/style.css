@@ -121,7 +121,7 @@ p {
 	left: 0;
 	width: 100%;
 	height: 48px;
-	background: #469659;
+	background: #2c3e50;
 }
 
 #footer {
@@ -130,7 +130,7 @@ p {
 	left: 0;
 	width: 100%;
 	height: 48px;
-	background: #469659;
+	background: #2c3e50;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
@@ -159,7 +159,7 @@ h1 input {
 }
 
 h1 input:focus {
-	background: #CEF2D6;
+	background: #CED6F2;
 	color: #222;
 	outline: none;
 }
@@ -171,12 +171,17 @@ h1 input:focus {
 	position: absolute;
 	top: 0;
 	right: 0px;
-	background: #387847;
+	background: #666;
 	text-align: center;
 	line-height: 48px;
 	font-size: 1.5em;
 	color: #fff;
 	cursor: pointer;
+}
+
+#save-button:hover {
+	background: #ccc;
+	color: #2c3e50;
 }
 
 #save-button-saving {
@@ -185,7 +190,7 @@ h1 input:focus {
 	position: absolute;
 	top: 0;
 	right: 0;
-	background-color: #387847;
+	background-color: #808080;
 	background-image: url('../images/ajax-loader-ffffff-on-387847.gif');
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -295,7 +300,7 @@ h1 input:focus {
 	height: 100%;
 	background: #222;
 	z-index: 100;
-	border-right: 4px solid #387847;
+	border-right: 4px solid #808080;
 	-webkit-transform: translate(-100%, 0) translateZ(0);
 	-moz-transform: translate(-100%, 0) translateZ(0);
 	-ms-transform: translate(-100%, 0) translateZ(0);
@@ -320,12 +325,17 @@ h1 input:focus {
 	position: absolute;
 	top: 0;
 	right: -50px;
-	background: #387847;
+	background: #666;
 	text-align: center;
 	line-height: 48px;
 	font-size: 1.5em;
 	color: #fff;
 	cursor: pointer;
+}
+
+#sidemenu-handle:hover {
+	background: #ccc;
+	color: #2c3e50;
 }
 
 #sidemenu.opened {
@@ -464,8 +474,7 @@ h1 input:focus {
 }
 
 #transcript .selected {
-	/*background: #CEF2D6 !important;*/
-	background: #CEF2D6 !important;
+	background: #CED6F2 !important;
 	color: #111 !important;
 }
 
@@ -487,7 +496,7 @@ h1 input:focus {
 	position: absolute;
 	width: 28px;
 	height: 24px;
-	background: #CEF2D6;
+	background: #CED6F2;
 	left: -2px;
 	top: -26px;
 	border-width: 2px 2px 0 2px;
@@ -506,7 +515,7 @@ h1 input:focus {
 	position: absolute;
 	width: 28px;
 	height: 24px;
-	background: #CEF2D6;
+	background: #CED6F2;
 	right: -2px;
 	bottom: -26px;
 	border-width: 0 2px 2px 2px;
@@ -522,7 +531,7 @@ h1 input:focus {
 	width: 30%;
 	max-height: 4.7em;
 	overflow: hidden;
-	background: #CEF2D6;
+	background: #CED6F2;
 	padding: 6px 10px;
 	line-height: 1.4em;
 	font-size: 1.3em;
@@ -535,7 +544,7 @@ h1 input:focus {
 }
 
 .draggable.draggableEffect {
-	background: #5FAF71;
+	background: #5F71AF;
 }
 
 #stage section {
@@ -545,9 +554,9 @@ h1 input:focus {
 }
 
 #stage .item {
-	/*border: 2px solid #469659;*/
+	/*border: 2px solid #2c3e50;*/
 	line-height: 140%;
-	background: #CEF2D6;
+	background: #CED6F2;
 	font-size: 1.1em;
 	/*box-shadow: 4px 4px 0 #eee;*/
 	cursor: default;
@@ -629,7 +638,7 @@ h1 input:focus {
 	color: #fff;
 	font-size: 1.4em;
 	line-height: 48px;
-	border-right: 2px solid #387847;
+	border-right: 2px solid #808080;
 }
 
 #effects {
@@ -640,7 +649,7 @@ h1 input:focus {
 	color: #fff;
 	font-size: 1.4em;
 	line-height: 48px;
-	border-left: 2px solid #387847;
+	border-left: 2px solid #808080;
 
 	display: -webkit-box;
 	display: -moz-box;
@@ -665,7 +674,7 @@ h1 input:focus {
 }
 
 #stage .effect {
-	background: #5FAF71;
+	background: #5F71AF;
 	border: 0;
 	color: #fff;
 }
@@ -700,7 +709,7 @@ h1 input:focus {
 }
 
 #stage a:hover {
-	background: #59be71;
+	background: #5971be;
 	color: #000;
 }
 
@@ -735,7 +744,7 @@ h1 input:focus {
 	overflow:auto;
 }
 .modal .modal-header {
-	background-color: #469659;
+	background-color: #2c3e50;
 	color:#fff;
 	display:block;
 	width:100%;
@@ -749,7 +758,7 @@ h1 input:focus {
 	font-family: 'fontello';
 	top:0;
 	right:0;
-	background-color: #387847;
+	background-color: #808080;
 	color:#fff;
 	display:block;
 	width:48px;
@@ -783,7 +792,7 @@ h1 input:focus {
 .modal .modal-input input[type="submit"] {
 	display:block;
 	text-align:center;
-	background-color: #387847;
+	background-color: #808080;
 	color: #fff;
 	margin:0 auto;
 	padding:5px 10px;
