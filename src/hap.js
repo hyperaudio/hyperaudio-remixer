@@ -73,7 +73,7 @@ HAP.init = (function (window, document) {
 
 		// Title handler
 		mixTitleHandler = function(e) {
-			e.preventDefault;
+			e.preventDefault();
 			stage.mixDetails({
 				title: mixTitle.value
 			});
