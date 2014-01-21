@@ -97,5 +97,5 @@ module.exports = function(grunt) {
 	grunt.registerTask('default', ['jshint:before', 'concat', 'uglify', 'jshint:after']);
 
 	grunt.registerTask('build', ['concat', 'uglify']);
-	grunt.registerTask('test', ['jshint']);
+	grunt.registerTask('test', ['jshint:before']);
 };
