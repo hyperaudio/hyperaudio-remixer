@@ -11,7 +11,9 @@ HAP.init = (function (window, document) {
 
 	var sidemenu;
 
+	var mixTitleForm;
 	var mixTitle;
+	var mixTitleHandler;
 	var saveButton;
 	var savingAnim;
 
@@ -51,6 +53,7 @@ HAP.init = (function (window, document) {
 			player: player
 		});
 
+		mixTitleForm = document.getElementById('mix-title-form');
 		mixTitle = document.getElementById('mix-title');
 		saveButton = document.getElementById('save-button');
 		savingAnim = document.querySelector('#save-button-saving');
@@ -68,18 +71,32 @@ HAP.init = (function (window, document) {
 			callback: mediaSelect
 		});
 
+		// Title handler
+		mixTitleHandler = function(e) {
+			e.preventDefault;
+			stage.mixDetails({
+				title: mixTitle.value
+			});
+			if(typeof mixTitle.blur === 'function') {
+				mixTitle.blur();
+			}
+		};
+
 		// Title
-		mixTitle.addEventListener('change', function(e) {
+		mixTitleForm.addEventListener('submit', mixTitleHandler, false);
+		mixTitleForm.addEventListener('change', mixTitleHandler, false);
+		mixTitle.addEventListener('keyup', function(e) {
 			stage.mixDetails({
 				title: this.value
 			});
-		});
+		}, false);
+
 		stage.target.addEventListener(HA.event.load, function(e) {
 			mixTitle.value = HA.api.mix.label;
-		});
+		}, false);
 		stage.target.addEventListener(HA.event.save, function(e) {
 			savingAnim.style.display = 'none';
-		});
+		}, false);
 
 		// Save button
 		saveButton._tap = new HA.Tap({el: saveButton});
