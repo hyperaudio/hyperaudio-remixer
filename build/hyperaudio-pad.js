@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.3.18 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 21st January 2014 18:53:35 */
-/*! hyperaudio v0.3.18 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 21st January 2014 18:49:42 */
+/*! hyperaudio-pad v0.3.18 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 22nd January 2014 00:19:06 */
+/*! hyperaudio v0.3.19 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 22nd January 2014 00:17:06 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -6985,7 +6985,7 @@ var Stage = (function(document, hyperaudio) {
 		// this.target.addEventListener('tap', function(event) {
 		this.target.addEventListener('click', function(event) {
 			var section, word, search;
-			event.preventDefault();
+			// event.preventDefault(); // Removed since it breaks checkbox clicks in effects.
 			if(event.target.nodeName.toLowerCase() === self.options.word) {
 				word = event.target;
 				search = word;
@@ -8378,7 +8378,15 @@ HAP.init = (function (window, document) {
 				}
 				el.setAttribute('data-effect', 'title');
 				el.className += ' effect';
-				el.innerHTML = '<form onsubmit="return false"><label>Title: <span class="value">1</span>s</label><input id="effect-title" type="text" value="Title" onchange="this.setAttribute(\'value\', this.value);"><input id="effect-duration" type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
+				var html = '<form onsubmit="return false">' +
+					'<label>Title: <span class="value">1</span>s</label>' +
+					'<div class="effect-checkboxes"><label>Full Screen:</label> <input id="effect-fullscreen" checked onchange="this.setAttribute(\'checked\', this.checked)"></div>' +
+					'<input id="effect-title" type="text" value="Title" onchange="this.setAttribute(\'value\', this.value);" onkeyup="this.setAttribute(\'value\', this.value);">' +
+					'<input id="effect-duration" type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;">' +
+					'</form>';
+
+				// el.innerHTML = '<form onsubmit="return false"><label>Title: <span class="value">1</span>s</label><input id="effect-title" type="text" value="Title" onchange="this.setAttribute(\'value\', this.value);"><input id="effect-duration" type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
+				el.innerHTML = html;
 				stage.dropped(el, 'Title');
 			}
 		});
