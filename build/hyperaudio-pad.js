@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.3.23 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 22nd January 2014 21:08:34 */
-/*! hyperaudio v0.3.23 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 22nd January 2014 21:07:31 */
+/*! hyperaudio-pad v0.3.24 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 22nd January 2014 21:13:44 */
+/*! hyperaudio v0.3.24 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) ~ Built: 22nd January 2014 21:12:19 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -4702,8 +4702,6 @@ var SideMenu = (function (document, hyperaudio) {
 			if ( !el ) {	// we dropped outside the stage
 				return;
 			}
-
-			console.log('handle(mp3): ' + this.handle.getAttribute('data-mp3'));
 
 			var title = el.innerHTML;
 			hyperaudio.addClass(el, 'effect');
