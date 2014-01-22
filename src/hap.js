@@ -194,7 +194,7 @@ HAP.init = (function (window, document) {
 				el.className += ' effect';
 				var html = '<form onsubmit="return false">' +
 					'<label>Title: <span class="value">1</span>s</label>' +
-					'<div class="effect-checkboxes"><label>Full Screen:</label> <input id="effect-fullscreen" checked onchange="this.setAttribute(\'checked\', this.checked)"></div>' +
+					'<div class="effect-checkboxes"><label for="effect-fullscreen">Full Screen:</label> <input type="checkbox" id="effect-fullscreen" checked onchange="if(this.checked) { this.setAttribute(\'checked\', true); } else { this.removeAttribute(\'checked\'); }"></div>' +
 					'<input id="effect-title" type="text" value="Title" onchange="this.setAttribute(\'value\', this.value);" onkeyup="this.setAttribute(\'value\', this.value);">' +
 					'<input id="effect-duration" type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;">' +
 					'</form>';

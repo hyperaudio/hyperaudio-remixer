@@ -679,7 +679,8 @@ h1 input:focus {
 	color: #fff;
 }
 
-#stage .effect input {
+#stage .effect input[type=text],
+#stage .effect input[type=range] {
 	display: block;
 	width: 100%;
 }
@@ -697,6 +698,10 @@ h1 input:focus {
 
 #stage .effect span:before {
 	margin-right: 5px;
+}
+
+#stage .effect .effect-checkboxes {
+	float:right;
 }
 
 #stage a {
