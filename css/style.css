@@ -274,6 +274,7 @@ h1 input:focus {
 	height: 100%;
 	top: 0;
 	left: 0;
+	font-size:1.2em;
 }
 .video-transition-servo div {
 	position: absolute;
@@ -283,6 +284,12 @@ h1 input:focus {
 	width: 80%;
 	text-align: center;
 }
+
+.hyperaudio-player:-webkit-full-screen .video-transition-servo { font-size:4em; }
+.hyperaudio-player:-moz-full-screen .video-transition-servo { font-size:4em; }
+.hyperaudio-player:-ms-full-screen .video-transition-servo { font-size:4em; }
+.hyperaudio-player:-o-full-screen .video-transition-servo { font-size:4em; }
+.hyperaudio-player:full-screen .video-transition-servo { font-size:4em; }
 
 .title-effect-servo {
 	position: absolute;
@@ -299,6 +306,12 @@ h1 input:focus {
 	-o-transition-property: -o-transform;
 	transition-property: transform;
 }
+
+.hyperaudio-player:-webkit-full-screen .title-effect-servo { font-size:4em; }
+.hyperaudio-player:-moz-full-screen .title-effect-servo { font-size:4em; }
+.hyperaudio-player:-ms-full-screen .title-effect-servo { font-size:4em; }
+.hyperaudio-player:-o-full-screen .title-effect-servo { font-size:4em; }
+.hyperaudio-player:full-screen .title-effect-servo { font-size:4em; }
 
 #sidemenu {
 	position: absolute;
