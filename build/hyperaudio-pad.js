@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.3.28 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 23rd January 2014 22:07:04 */
-/*! hyperaudio v0.3.28 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 23rd January 2014 22:05:43 */
+/*! hyperaudio-pad v0.4.0 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 23rd January 2014 22:45:44 */
+/*! hyperaudio v0.4.0 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 23rd January 2014 22:41:52 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
