@@ -1,4 +1,4 @@
-/*! hyperaudio-pad v0.3.25 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 22nd January 2014 22:36:09 */
+/*! hyperaudio-pad v0.3.25 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 23rd January 2014 16:48:39 */
 /*! hyperaudio v0.3.25 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 22nd January 2014 22:31:48 */
 (function(global, document) {
 
@@ -8267,6 +8267,9 @@ HAP.init = (function (window, document) {
 	var trim;
 	var title;
 
+	var defaultTranscriptId = 'XMVjtXOUSC-V0sSZBOKrBw';
+
+	var transcriptId = HA.getURLParameter('t');
 	var mixId = HA.getURLParameter('m');
 
 	function loaded () {
@@ -8450,6 +8453,12 @@ HAP.init = (function (window, document) {
 				stage.dropped(el, 'Title');
 			}
 		});
+
+		if(transcriptId) {
+			transcript.load(transcriptId);
+		} else {
+			transcript.load(defaultTranscriptId);
+		}
 
 		if(mixId) {
 			stage.load(mixId);
