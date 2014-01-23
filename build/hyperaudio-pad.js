@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.3.25 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 23rd January 2014 16:48:39 */
-/*! hyperaudio v0.3.25 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 22nd January 2014 22:31:48 */
+/*! hyperaudio-pad v0.3.26 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 23rd January 2014 21:29:23 */
+/*! hyperaudio v0.3.26 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 23rd January 2014 19:56:45 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -3965,6 +3965,8 @@ var hyperaudio = (function() {
 			ready: 'ha:ready',
 			load: 'ha:load',
 			save: 'ha:save',
+			change: 'ha:change',
+			// login: 'ha:login', // No DOM element relating to a login. It is handled by the api.signin when the stage fails to authenticate.
 			unauthenticated: 'ha:unauthenticated',
 			error: 'ha:error'
 		},
@@ -7224,6 +7226,7 @@ var Stage = (function(document, hyperaudio) {
 			if(this.options.projector) {
 				this.options.projector.requestUpdate(reset);
 			}
+			this._trigger(hyperaudio.event.change, {msg: 'The mix has changed'});
 		},
 
 		enable: function() {
@@ -8345,6 +8348,7 @@ HAP.init = (function (window, document) {
 		}, false);
 		stage.target.addEventListener(HA.event.save, function(e) {
 			savingAnim.style.display = 'none';
+			notify('save'); // Tell top frame the mix was saved
 		}, false);
 
 		// Save button
@@ -8372,6 +8376,7 @@ HAP.init = (function (window, document) {
 			}, function(success) {
 				if(success) {
 					// try and save again
+					notify('login'); // Tell top frame the user has logged in.
 					stage.save();
 				} else {
 					// Show the prompt again
@@ -8386,6 +8391,11 @@ HAP.init = (function (window, document) {
 			signin.style.display = 'block';
 			// Hide saving anim
 			savingAnim.style.display = 'none';
+			notify('unauthenticated'); // Tell top frame the user is not logged in.
+		});
+
+		stage.target.addEventListener(HA.event.change, function(e) {
+			notify('change'); // Tell top frame the mix (may have) changed
 		});
 
 		// Init special fx
@@ -8462,6 +8472,13 @@ HAP.init = (function (window, document) {
 
 		if(mixId) {
 			stage.load(mixId);
+		}
+	}
+
+	function notify(type) {
+		var topFrame = window.top;
+		if(typeof topFrame.notify === 'function') {
+			topFrame.notify(type);
 		}
 	}
 
