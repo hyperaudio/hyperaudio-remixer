@@ -99,6 +99,7 @@ HAP.init = (function (window, document) {
 		}, false);
 		stage.target.addEventListener(HA.event.save, function(e) {
 			savingAnim.style.display = 'none';
+			notify('save'); // Tell top frame the mix was saved
 		}, false);
 
 		// Save button
@@ -126,6 +127,7 @@ HAP.init = (function (window, document) {
 			}, function(success) {
 				if(success) {
 					// try and save again
+					notify('login'); // Tell top frame the user has logged in.
 					stage.save();
 				} else {
 					// Show the prompt again
@@ -140,6 +142,11 @@ HAP.init = (function (window, document) {
 			signin.style.display = 'block';
 			// Hide saving anim
 			savingAnim.style.display = 'none';
+			notify('unauthenticated'); // Tell top frame the user is not logged in.
+		});
+
+		stage.target.addEventListener(HA.event.change, function(e) {
+			notify('change'); // Tell top frame the mix (may have) changed
 		});
 
 		// Init special fx
@@ -216,6 +223,13 @@ HAP.init = (function (window, document) {
 
 		if(mixId) {
 			stage.load(mixId);
+		}
+	}
+
+	function notify(type) {
+		var topFrame = window.top;
+		if(typeof topFrame.notify === 'function') {
+			topFrame.notify(type);
 		}
 	}
 

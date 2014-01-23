@@ -21,9 +21,19 @@
 		bottom:0px;
 	}
 	</style>
+	<script type="text/javascript">
+		function notify(type) {
+			var header = document.getElementById("header").contentWindow;
+			if(typeof header.notify === 'function') {
+				header.notify(type);
+			} else {
+				console.log('No notify() in header: ' + type);
+			}
+		}
+	</script>
 </head>
 <body>
-	<iframe src="/commons/tools/header.html" height="100px" width="100%" frameborder="0" seamless scrolling="no"></iframe>
+	<iframe id="header" src="/commons/tools/header.html" height="100px" width="100%" frameborder="0" seamless scrolling="no"></iframe>
 	<iframe class="main" src="pad.html" height="100%" width="100%" frameborder="0" allowfullscreen seamless></iframe>
 </body>
 </html>
