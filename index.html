@@ -26,8 +26,6 @@
 			var header = document.getElementById("header").contentWindow;
 			if(typeof header.notify === 'function') {
 				header.notify(type);
-			} else {
-				console.log('No notify() in header: ' + type);
 			}
 		}
 	</script>
