@@ -96,6 +96,7 @@ HAP.init = (function (window, document) {
 
 		stage.target.addEventListener(HA.event.load, function(e) {
 			mixTitle.value = HA.api.mix.label;
+			notify('load'); // Tell top frame the mix was loaded
 		}, false);
 		stage.target.addEventListener(HA.event.save, function(e) {
 			savingAnim.style.display = 'none';
