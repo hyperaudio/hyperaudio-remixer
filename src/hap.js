@@ -21,6 +21,9 @@ HAP.init = (function (window, document) {
 	var trim;
 	var title;
 
+	var defaultTranscriptId = 'XMVjtXOUSC-V0sSZBOKrBw';
+
+	var transcriptId = HA.getURLParameter('t');
 	var mixId = HA.getURLParameter('m');
 
 	function loaded () {
@@ -204,6 +207,12 @@ HAP.init = (function (window, document) {
 				stage.dropped(el, 'Title');
 			}
 		});
+
+		if(transcriptId) {
+			transcript.load(transcriptId);
+		} else {
+			transcript.load(defaultTranscriptId);
+		}
 
 		if(mixId) {
 			stage.load(mixId);
