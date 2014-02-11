@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.4.0 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 23rd January 2014 22:45:44 */
-/*! hyperaudio v0.4.0 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 23rd January 2014 22:41:52 */
+/*! hyperaudio-pad v0.4.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th February 2014 16:29:24 */
+/*! hyperaudio v0.4.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th February 2014 16:22:57 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -3968,6 +3968,10 @@ var hyperaudio = (function() {
 			change: 'ha:change',
 			// login: 'ha:login', // No DOM element relating to a login. It is handled by the api.signin when the stage fails to authenticate.
 			unauthenticated: 'ha:unauthenticated',
+			userplay: 'ha:userplay',
+			userpause: 'ha:userpause',
+			usercurrenttime: 'ha:usercurrenttime',
+			userplayword: 'ha:userplayword',
 			error: 'ha:error'
 		},
 		_commonMethods: {
@@ -3982,6 +3986,10 @@ var hyperaudio = (function() {
 						bubbles: true,
 						cancelable: true
 					});
+				hyperaudio.gaEvent({
+					type: this.options.entity,
+					action: eventType + ' event: ' + (eventObject.msg ? eventObject.msg : '')
+				});
 				this.target.dispatchEvent(event);
 			},
 			_error: function(msg) {
@@ -4021,6 +4029,32 @@ var hyperaudio = (function() {
 			// return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
 			// Now looks at top window (frame).
 			return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.top.location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+		},
+
+		gaEvent: function(detail) {
+			// detail: {origin, type, action}
+
+			if(typeof detail !== 'object') {
+				if(typeof detail === 'string') {
+					detail = {
+						type: 'message',
+						action: detail
+					};
+				} else {
+					detail = {};
+				}
+			}
+
+			detail.origin = detail.origin ? detail.origin : 'Hyperaudio Lib';
+			detail.type = detail.type ? detail.type : 'no type';
+			detail.action = detail.action ? detail.action : 'no action';
+
+			var event = new CustomEvent("ga", {
+				detail: detail,
+				bubbles: true,
+				cancelable: true
+			});
+			document.dispatchEvent(event);
 		},
 
 		hasClass: function(e, c) {
@@ -4354,6 +4388,11 @@ var EditBlock = (function (document) {
 			return;
 		}
 
+		hyperaudio.gaEvent({
+			type: 'EDITBLOCK',
+			action: 'canceledit: Cancelled editing.'
+		});
+
 		this.destroy();
 	};
 
@@ -4410,6 +4449,11 @@ var EditBlock = (function (document) {
 		this.el.handleHTML = this.el.innerHTML;
 
 		this.stage.dropped(newBlock);
+
+		hyperaudio.gaEvent({
+			type: 'EDITBLOCK',
+			action: 'edit: Editted section.'
+		});
 
 		this.destroy();
 	};
@@ -4697,6 +4741,11 @@ var SideMenu = (function (document, hyperaudio) {
 
 		function onDragStart (e) {
 			hyperaudio.addClass(stage.target, 'dragdrop');
+
+			hyperaudio.gaEvent({
+				type: 'SIDEMENU',
+				action: 'bgmstartdrag: Began dragging BGM effect'
+			});
 		}
 
 		function onDrop (el) {
@@ -4727,6 +4776,11 @@ var SideMenu = (function (document, hyperaudio) {
 				'</form>';
 			el.innerHTML = html;
 			stage.dropped(el, '<span class="icon-music">' + title + '</span>');
+
+			hyperaudio.gaEvent({
+				type: 'SIDEMENU',
+				action: 'bgmdrop: Dropped BGM effect on to stage'
+			});
 		}
 
 		if(stage.target) {
@@ -4785,11 +4839,20 @@ var SideMenu = (function (document, hyperaudio) {
 	};
 
 	SideMenu.prototype.toggleMenu = function () {
+		var state;
+
 		if ( this.opened ) {
 			this.close();
+			state = 'Closed';
 		} else {
 			this.open();
+			state = 'Opened';
 		}
+
+		hyperaudio.gaEvent({
+			type: 'SIDEMENU',
+			action: 'togglemenu: ' + state
+		});
 	};
 
 	SideMenu.prototype.open = function () {
@@ -4821,6 +4884,12 @@ var SideMenu = (function (document, hyperaudio) {
 		hyperaudio.removeClass(current, 'selected');
 		incoming = document.querySelector('#' + panelID);
 		hyperaudio.addClass(incoming, 'selected');
+
+		var name = e.currentTarget.querySelector('span').innerHTML;
+		hyperaudio.gaEvent({
+			type: 'SIDEMENU',
+			action: 'selectpanel: Switched tab -> ' + name
+		});
 	};
 
 	SideMenu.prototype.selectMedia = function (e) {
@@ -4857,6 +4926,13 @@ var SideMenu = (function (document, hyperaudio) {
 		var folder = this.isFolder(e.target);
 		if(folder) {
 			hyperaudio.toggleClass(folder, 'open');
+
+			var name = folder.querySelector('div').innerHTML;
+			hyperaudio.gaEvent({
+				type: 'SIDEMENU',
+				action: 'togglefolder: ' + (hyperaudio.hasClass(folder, 'open') ? 'Opened' : 'Closed') + ' -> ' + name
+			});
+
 			return true;
 		}
 		return false;
@@ -5499,6 +5575,12 @@ var api = (function(hyperaudio) {
 					self.guest = !json.user;
 					if(!self.guest) {
 						self.username = json.user;
+
+						hyperaudio.gaEvent({
+							type: 'API',
+							action: 'login: User signed in'
+						});
+
 						self.callback(callback, true);
 					} else {
 						self.username = '';
@@ -6232,6 +6314,18 @@ var Player = (function(window, document, hyperaudio, Popcorn) {
 				el.removeChild(el.firstChild);
 			}
 		},
+		gui_play: function(time) {
+			this._trigger(hyperaudio.event.userplay, {msg: 'User clicked play'});
+			this.play(time);
+		},
+		gui_pause: function(time) {
+			this._trigger(hyperaudio.event.userpause, {msg: 'User clicked pause'});
+			this.pause(time);
+		},
+		gui_currentTime: function(time, play) {
+			this._trigger(hyperaudio.event.usercurrenttime, {msg: 'User clicked the progress bar'});
+			this.currentTime(time, play);
+		},
 		play: function(time) {
 			if(this.youtube) {
 				this.popcorn.play(time);
@@ -6472,12 +6566,12 @@ var PlayerGUI = (function (window, document, hyperaudio) {
 			// if ( !this.player.videoElem.paused ) {
 			if ( !this.status.paused ) {
 				hyperaudio.removeClass(this.wrapperElem, 'playing');
-				this.player.pause();
+				this.player.gui_pause();
 				return;
 			}
 
 			hyperaudio.addClass(this.wrapperElem, 'playing');
-			this.player.play();
+			this.player.gui_play();
 		},
 
 		timeUpdate: function () {
@@ -6561,7 +6655,7 @@ var PlayerGUI = (function (window, document, hyperaudio) {
 
 			// var current = Math.round(this.status.duration / width * x);
 			var current = Math.round(100 * this.status.duration * x / width) / 100;
-			this.player.currentTime(current);
+			this.player.gui_currentTime(current);
 		}
 	};
 
@@ -6823,6 +6917,7 @@ var Transcript = (function(document, hyperaudio) {
 						} else {
 							opts.player.currentTime(time);
 						}
+						self._trigger(hyperaudio.event.userplayword, {msg: 'User clicked on a word to play from'});
 					}
 				}, false);
 			}
@@ -6884,7 +6979,7 @@ var Transcript = (function(document, hyperaudio) {
 					}
 				});
 				this.ready = true;
-				this._trigger(hyperaudio.event.ready);
+				this._trigger(hyperaudio.event.ready, {msg: 'Transcript is ready.'});
 			}
 		},
 
@@ -7540,6 +7635,19 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 			}
 		},
 
+		gui_play: function(time) {
+			this._trigger(hyperaudio.event.userplay, {msg: 'User clicked play'});
+			this.play(time);
+		},
+		gui_pause: function(time) {
+			this._trigger(hyperaudio.event.userpause, {msg: 'User clicked pause'});
+			this.pause(time);
+		},
+		gui_currentTime: function(time, play) {
+			this._trigger(hyperaudio.event.usercurrenttime, {msg: 'User clicked the progress bar'});
+			this.currentTime(time, play);
+		},
+
 		play: function() {
 
 			var resume = false,
@@ -7625,6 +7733,7 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 					if(this.content[i].element === sectionElem) {
 						jumpTo.contentIndex = i;
 						jumpTo.start = wordElem.getAttribute(this.options.timeAttr) * this.content[i].unit;
+						this._trigger(hyperaudio.event.userplayword, {msg: 'User clicked on a word to play from'});
 						this.play(jumpTo);
 						break;
 					}
@@ -8274,6 +8383,8 @@ HAP.init = (function (window, document) {
 	var transcriptId = HA.getURLParameter('t');
 	var mixId = HA.getURLParameter('m');
 
+	// var ga_origin = 'Hyperaudio Pad'; // Will use the default HA Lib origin
+
 	function loaded () {
 
 		// Init the API utility
@@ -8331,6 +8442,10 @@ HAP.init = (function (window, document) {
 			if(typeof mixTitle.blur === 'function') {
 				mixTitle.blur();
 			}
+			HA.gaEvent({
+				type: 'HAP',
+				action: 'titlechange: Mix title changed'
+			});
 		};
 
 		// Title
@@ -8405,6 +8520,10 @@ HAP.init = (function (window, document) {
 			draggableClass: 'draggableEffect',
 			onDragStart: function (e) {
 				HA.addClass(stage.target, 'dragdrop');
+				HA.gaEvent({
+					type: 'HAP',
+					action: 'fadeeffectstartdrag: Start drag of Fade effect'
+				});
 			},
 			onDrop: function (el) {
 				HA.removeClass(stage.target, 'dragdrop');
@@ -8415,6 +8534,10 @@ HAP.init = (function (window, document) {
 				el.className += ' effect';
 				el.innerHTML = '<form onsubmit="return false"><label>Fade Effect: <span class="value">1</span>s</label><input id="effect-duration" type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.previousSibling.querySelector(\'span\').innerHTML = this.value;"></form>';
 				stage.dropped(el, 'Fade');
+				HA.gaEvent({
+					type: 'HAP',
+					action: 'fadeeffectdrop: Drop Fade effect on to stage'
+				});
 			}
 		});
 
@@ -8424,6 +8547,10 @@ HAP.init = (function (window, document) {
 			draggableClass: 'draggableEffect',
 			onDragStart: function (e) {
 				HA.addClass(stage.target, 'dragdrop');
+				HA.gaEvent({
+					type: 'HAP',
+					action: 'trimeffectstartdrag: Start drag of Trim effect'
+				});
 			},
 			onDrop: function (el) {
 				HA.removeClass(stage.target, 'dragdrop');
@@ -8434,6 +8561,10 @@ HAP.init = (function (window, document) {
 				el.className += ' effect';
 				el.innerHTML = '<form onsubmit="return false"><label>Trim: <span class="value">1</span>s</label><input id="effect-duration" type="range" value="1" min="0" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.previousSibling.querySelector(\'span\').innerHTML = this.value;"></form>';
 				stage.dropped(el, 'Trim');
+				HA.gaEvent({
+					type: 'HAP',
+					action: 'trimeffectdrop: Drop Trim effect on to stage'
+				});
 			}
 		});
 
@@ -8443,6 +8574,10 @@ HAP.init = (function (window, document) {
 			draggableClass: 'draggableEffect',
 			onDragStart: function (e) {
 				HA.addClass(stage.target, 'dragdrop');
+				HA.gaEvent({
+					type: 'HAP',
+					action: 'titleeffectstartdrag: Start drag of Title effect'
+				});
 			},
 			onDrop: function (el) {
 				HA.removeClass(stage.target, 'dragdrop');
@@ -8461,17 +8596,38 @@ HAP.init = (function (window, document) {
 				// el.innerHTML = '<form onsubmit="return false"><label>Title: <span class="value">1</span>s</label><input id="effect-title" type="text" value="Title" onchange="this.setAttribute(\'value\', this.value);"><input id="effect-duration" type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.parentNode.querySelector(\'span\').innerHTML = this.value;"></form>';
 				el.innerHTML = html;
 				stage.dropped(el, 'Title');
+				HA.gaEvent({
+					type: 'HAP',
+					action: 'titleeffectdrop: Drop Title effect on to stage'
+				});
 			}
 		});
 
 		if(transcriptId) {
+			HA.gaEvent({
+				type: 'HAP',
+				action: 'loadtranscript: Load Transcript given in URL param'
+			});
 			transcript.load(transcriptId);
 		} else {
+			HA.gaEvent({
+				type: 'HAP',
+				action: 'loaddefaulttranscript: Load default Transcript'
+			});
 			transcript.load(defaultTranscriptId);
 		}
 
 		if(mixId) {
+			HA.gaEvent({
+				type: 'HAP',
+				action: 'loadmix: Load Mix given in URL param'
+			});
 			stage.load(mixId);
+		} else {
+			HA.gaEvent({
+				type: 'HAP',
+				action: 'nomix: New pad opened'
+			});
 		}
 	}
 
