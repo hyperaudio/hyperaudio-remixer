@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.4.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th February 2014 16:29:24 */
-/*! hyperaudio v0.4.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th February 2014 16:22:57 */
+/*! hyperaudio-pad v0.4.2 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 23rd June 2014 14:40:57 */
+/*! hyperaudio v0.4.4 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 19th April 2014 19:10:55 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -7044,6 +7044,11 @@ var Stage = (function(document, hyperaudio) {
 			target: '#stage', // The selector of element for the staging area.
 
 			id: '', // The ID of the saved mix.
+			mix: {
+				//title, desc, type, editable
+				// url: [!content] The url of the mix
+				// content: [!url] The actual mix HTML
+			},
 
 			title: 'Title not set',
 			desc: 'Description not set',
@@ -7115,7 +7120,7 @@ var Stage = (function(document, hyperaudio) {
 			this.options.projector.setStage(this);
 		}
 
-		if(this.options.id) {
+		if(this.options.id || this.options.mix.url || this.options.mix.content) {
 			this.load();
 		}
 	}
@@ -7125,50 +7130,95 @@ var Stage = (function(document, hyperaudio) {
 			// [SHOULD] only really used to set the label, desc and type of the mix being saved.
 			hyperaudio.extend(this.options, details);
 		},
+		updateStage: function(content) {
+			// Need to maintain the existing article in the stage - Important for dragdrop.
+			var tmp = document.createElement('div'); // Temporary DOM element
+			tmp.innerHTML = content; // Add the content to the DOM element
+			var articleElem = tmp.querySelector('article'); // Find the article in the content.
+			// Can now insert the contents of the returned mix article into the maintained article.
+			this.article.innerHTML = articleElem.innerHTML;
+
+			// TODO: Should also clear any existing attributes on the article.
+
+			// Now copy over any attributes
+			var attr = articleElem.attributes;
+			for(var i=0, l=attr.length; i < l; i++ ) {
+				this.article.setAttribute(attr[i].name, attr[i].value);
+			}
+		},
 		load: function(id) {
 			var self = this;
 
-			if(id) {
-				this.options.id = id;
+			if(typeof id !== 'undefined') {
+				if(typeof id === 'string') {
+					this.options.id = id;
+					this.options.mix = {};
+				} else if(typeof id === 'object') {
+					this.options.id = '';
+					this.options.mix = id;
+				} else {
+					this.options.id = '';
+					this.options.mix = {};
+				}
 			}
 
 			if(this.target) {
 
-				// Fudge the user system since getUsername nay works.
-				// hyperaudio.api.guest = false;
-				// hyperaudio.api.username = 'tester';
+				if(this.options.id) {
 
-				hyperaudio.api.getMix(id, function(success) {
-					if(success) {
-						self.mix = hyperaudio.extend({}, this.mix);
-						self.mixDetails({
-							title: self.mix.label,
-							desc: self.mix.desc,
-							type: self.mix.type
-						});
+					hyperaudio.api.getMix(id, function(success) {
+						if(success) {
+							self.mix = hyperaudio.extend({}, this.mix);
+							self.mixDetails({
+								title: self.mix.label,
+								desc: self.mix.desc,
+								type: self.mix.type
+							});
+							self.updateStage(self.mix.content);
 
-						// Need to maintain the existing article in the stage - Important for dragdrop.
-						var tmp = document.createElement('div'); // Temporary DOM element
-						tmp.innerHTML = self.mix.content; // Add the content to the DOM element
-						var articleElem = tmp.querySelector('article'); // Find the article in the content.
-						// Can now insert the contents of the returned mix article into the maintained article.
-						self.article.innerHTML = articleElem.innerHTML;
-
-						// TODO: Should also clear any existing attributes on the article.
-
-						// Now copy over any attributes
-						var attr = articleElem.attributes;
-						for(var i=0, l=attr.length; i < l; i++ ) {
-							self.article.setAttribute(attr[i].name, attr[i].value);
+							// Setup the dragdrop on the loaded mix sections.
+							self.initDragDrop();
+							self._trigger(hyperaudio.event.load, {msg: 'Loaded mix'});
+						} else {
+							self._error(this.status + ' ' + this.statusText + ' : "' + id + '"');
 						}
-
-						// Setup the dragdrop on the loaded mix sections.
-						self.initDragDrop();
-						self._trigger(hyperaudio.event.load, {msg: 'Loaded mix'});
+					});
+				} else {
+					this.mixDetails({
+						title: this.options.mix.title,
+						desc: this.options.mix.desc,
+						type: this.options.mix.type
+					});
+					if(this.options.mix.url) {
+						hyperaudio.xhr({
+							url: this.options.mix.url,
+							complete: function(event) {
+								self.updateStage(this.responseText);
+								if(self.options.mix.editable) {
+									self.initDragDrop();
+								} else {
+									self.changed();
+								}
+								self._trigger(hyperaudio.event.load, {msg: 'Loaded "' + self.options.mix.url + '"'});
+							},
+							error: function(event) {
+								self.target.innerHTML = 'Problem with mix URL.'; // TMP - This sort of things should not be in the lib code, but acting off an error event hander.
+								self._error(this.status + ' ' + this.statusText + ' : "' + self.options.mix.url + '"');
+							}
+						});
+					} else if(this.options.mix.content) {
+						this.updateStage(this.options.mix.content);
+						if(this.options.mix.editable) {
+							this.initDragDrop();
+						} else {
+							this.changed();
+						}
+						this._trigger(hyperaudio.event.load, {msg: 'Loaded given content'});
 					} else {
-						self._error(this.status + ' ' + this.statusText + ' : "' + id + '"');
+						this.target.innerHTML = 'Problem with mix.'; // TMP - This sort of things should not be in the lib code, but acting off an error event hander.
+						this._error('Stage : No ID, URL or Content');
 					}
-				});
+				}
 			}
 		},
 
@@ -7290,8 +7340,10 @@ var Stage = (function(document, hyperaudio) {
 				// add edit action if needed
 				if ( !(/(^|\s)effect($|\s)/.test(el.className)) ) {
 					actions = el.querySelector('.actions');
-					actions._tap = new Tap({el: actions});
-					actions.addEventListener('tap', editBlock, false);
+					if(actions) {
+						actions._tap = new Tap({el: actions});
+						actions.addEventListener('tap', editBlock, false);
+					}
 				} else {
 					draggableClass = 'draggableEffect';
 				}
