@@ -22,7 +22,7 @@
     "url": "https://github.com/hyperaudio/hyperaudio-pad/issues"
   },
   "dependencies": {
-    "hyperaudio": "git://github.com/hyperaudio/hyperaudio.git#master"
+    "hyperaudio.js": "git://github.com/hyperaudio/hyperaudio.js.git#master"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
