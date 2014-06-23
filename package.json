@@ -1,11 +1,11 @@
 {
   "name": "hyperaudio-pad",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "The Hyperaudio Pad Library.",
   "homepage": "http://hyperaud.io", 
   "repository": {
     "type": "git",
-    "url": "https://github.com/hyperaudio-dev/hyperaudio-pad.git"
+    "url": "https://github.com/hyperaudio/hyperaudio-pad.git"
   },
   "keywords": [
     "audio",
@@ -19,10 +19,10 @@
   ],
   "license": "http://hyperaud.io/licensing/",
   "bugs": {
-    "url": "https://github.com/hyperaudio-dev/hyperaudio-pad/issues"
+    "url": "https://github.com/hyperaudio/hyperaudio-pad/issues"
   },
   "dependencies": {
-    "hyperaudio": "git://github.com/hyperaudio-dev/hyperaudio.git#master"
+    "hyperaudio": "git://github.com/hyperaudio/hyperaudio.git#master"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
