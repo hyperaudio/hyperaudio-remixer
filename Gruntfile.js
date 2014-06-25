@@ -18,9 +18,9 @@ module.exports = function(grunt) {
 					'build/<%= pkg.name %>.js': [
 
 						// The hyperaudio (HA) lib
-						'node_modules/hyperaudio/build/hyperaudio.js',
+						'node_modules/hyperaudio-lib/build/hyperaudio-lib.js',
 
-						// The Hyperaudio Lib Core
+						// The Hyperaudio Pad
 						'src/hap.js'
 					]
 				}

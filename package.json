@@ -1,6 +1,6 @@
 {
   "name": "hyperaudio-pad",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "The Hyperaudio Pad Library.",
   "homepage": "http://hyperaud.io", 
   "repository": {
@@ -22,7 +22,7 @@
     "url": "https://github.com/hyperaudio/hyperaudio-pad/issues"
   },
   "dependencies": {
-    "hyperaudio.js": "git://github.com/hyperaudio/hyperaudio.js.git#master"
+    "hyperaudio-lib": "git://github.com/hyperaudio/hyperaudio-lib.git#master"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
