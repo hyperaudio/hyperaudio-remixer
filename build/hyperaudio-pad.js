@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.4.4 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 30th June 2014 21:48:39 */
-/*! hyperaudio-lib v0.4.7 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 30th June 2014 21:45:58 */
+/*! hyperaudio-pad v0.4.5 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 30th June 2014 23:26:07 */
+/*! hyperaudio-lib v0.4.8 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 30th June 2014 23:24:14 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -4638,7 +4638,9 @@ var fadeFX = (function (window, document) {
 var SideMenu = (function (document, hyperaudio) {
 
 	var CLASS_ON_DEMAND = 'on-demand';
-	var CLASS_YOUR_ITEMS = 'owned-by-user';
+	var CLASS_YOUR_ITEM = 'owned-by-user';
+	var CLASS_YOUR_MEDIA = 'user-media';
+	var CLASS_OTHER_MEDIA = 'other-media';
 
 	var CHANNEL_OTHER_TITLE = 'Other...';
 	var CHANNEL_OTHER_API = 'nochannel';
@@ -4811,6 +4813,7 @@ var SideMenu = (function (document, hyperaudio) {
 
 		prepareUserChannels = function(channels) {
 			var owner = self.makeMenuFolder(self.transcripts, 'Your Media');
+			hyperaudio.addClass(owner, CLASS_YOUR_MEDIA);
 			if(channels && channels.length) {
 				for(var i = 0, l = channels.length; i < l; i++) {
 					self.makeMenuFolder(owner, channels[i], channels[i], true);
@@ -4822,6 +4825,7 @@ var SideMenu = (function (document, hyperaudio) {
 
 		prepareChannels = function(channels) {
 			var owner = self.makeMenuFolder(self.transcripts, 'Media');
+			hyperaudio.addClass(owner, CLASS_OTHER_MEDIA);
 			if(channels && channels.length) {
 				for(var i = 0, l = channels.length; i < l; i++) {
 					self.makeMenuFolder(owner, channels[i], channels[i], false);
@@ -4871,7 +4875,7 @@ var SideMenu = (function (document, hyperaudio) {
 								trans = transcripts[i];
 								item = self.makeMenuItem(trans.label, trans._id);
 								if(username && trans.owner === username) {
-									hyperaudio.addClass(item, CLASS_YOUR_ITEMS);
+									hyperaudio.addClass(item, CLASS_YOUR_ITEM);
 								}
 								folder.appendChild(item);
 							}
