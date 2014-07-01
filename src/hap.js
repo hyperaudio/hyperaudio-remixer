@@ -33,6 +33,9 @@ HAP.init = (function (window, document) {
 		// Init the API utility
 		HA.api.init();
 
+		// Init the Clipboard utility
+		HA.Clipboard.init();
+
 		player = HA.Player({
 			target: "#video-source",
 			gui: true

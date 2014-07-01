@@ -842,3 +842,19 @@ h1 input:focus {
 	width:0;
 	height:0;
 }
+
+/* CSS for the clipboard stuff */
+#clipboard-container {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 0px;
+	height: 0px;
+	z-index: 100;
+	opacity: 0;
+}
+#clipboard {
+	width: 1px;
+	height: 1px;
+	padding: 0px;
+}
