@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.4.8 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 1st July 2014 21:51:00 */
-/*! hyperaudio-lib v0.4.11 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 1st July 2014 21:49:43 */
+/*! hyperaudio-pad v0.4.9 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 2nd July 2014 12:37:42 */
+/*! hyperaudio-lib v0.4.12 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 2nd July 2014 12:36:55 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -6218,6 +6218,8 @@ var Clipboard = (function(hyperaudio) {
 	// Following the method used by Trello
 	// http://stackoverflow.com/questions/17527870/how-does-trello-access-the-users-clipboard
 
+	var DEBUG = false;
+
 	return {
 		init: function(options) {
 			var self = this;
@@ -6239,13 +6241,22 @@ var Clipboard = (function(hyperaudio) {
 				this.target.appendChild(this.container);
 			}
 
+			// Handlers for top frame
 			window.top.document.documentElement.addEventListener('keydown', function(event) {
 				self.onKeyDown(event);
 			}, false);
-
 			window.top.document.documentElement.addEventListener('keyup', function(event) {
 				self.onKeyUp(event);
 			}, false);
+
+			// Handlers for this window
+			document.documentElement.addEventListener('keydown', function(event) {
+				self.onKeyDown(event);
+			}, false);
+			document.documentElement.addEventListener('keyup', function(event) {
+				self.onKeyUp(event);
+			}, false);
+
 		},
 		copy: function(value) {
 			this.value = value;
@@ -6254,7 +6265,11 @@ var Clipboard = (function(hyperaudio) {
 			this.value = '';
 		},
 		onKeyDown: function(event) {
+
+			if(DEBUG) console.log('[onKeyDown] : Key pressed');
+
 			if(!this.value || !(event.ctrlKey || event.metaKey)) {
+				if(DEBUG) console.log('[onKeyDown] : Exit | value = "' + this.value + '"');
 				return;
 			}
 
@@ -6265,8 +6280,9 @@ var Clipboard = (function(hyperaudio) {
 			var ignoreKey = false;
 
 			if(typeof pageFocus !== 'undefined') {
-				if(pageFocus !== null && pageFocus.nodeName.toUpperCase() !== "BODY" && pageFocus.nodeName.toUpperCase() !== "IFRAME") {
+				if(pageFocus !== null && pageFocus.nodeName.toUpperCase() !== "BODY") {
 					ignoreKey = true;
+					if(DEBUG) console.log('[onKeyDown] : Exit | pageFocus = %o' + pageFocus);
 				}
 			} else {
 				// Fallback for no document.activeElement support.
@@ -6274,6 +6290,7 @@ var Clipboard = (function(hyperaudio) {
 					// The strings should already be uppercase.
 					if(event.target.nodeName.toUpperCase() === name.toUpperCase()) {
 						ignoreKey = true;
+						if(DEBUG) console.log('[onKeyDown] : Exit | nodeName = ' + name);
 						return false; // exit each.
 					}
 				});
@@ -6282,6 +6299,8 @@ var Clipboard = (function(hyperaudio) {
 			if(ignoreKey) {
 				return;
 			}
+
+			if(DEBUG) console.log('[onKeyDown] : Textarea prepared for copy | value = "' + this.value + '"');
 
 			// If we get this far, prepare the textarea ready for the copy.
 
@@ -6296,6 +6315,7 @@ var Clipboard = (function(hyperaudio) {
 			this.clipboard.select();
 		},
 		onKeyUp: function(event) {
+			if(DEBUG) console.log('[onKeyUp] : Key released');
 			if(event.target === this.clipboard) {
 				hyperaudio.empty(this.container);
 				this.container.style.display = 'none';
