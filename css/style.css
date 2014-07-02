@@ -260,14 +260,6 @@ h1 input:focus {
 	border-left: 2px solid #404040;
 }
 
-#stage-videos video {
-	display: none;
-}
-
-#stage-videos video.active {
-	display: block;
-}
-
 .video-transition-servo {
 	position: absolute;
 	width: 100%;
