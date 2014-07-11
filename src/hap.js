@@ -35,13 +35,9 @@ HAP.init = (function (window, document) {
 		  namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
 		}
 		
-		var prefix = '';
-		if (namespace) prefix = namespace + '.';
-		
 		// Init the API utility
 		HA.api.init({
-			namespace: namespace,
-			api: prefix + 'api.hyperaud.io/v1/',
+			org: namespace // The organisations namespace / sub-domain. EG. 'chattanooga'
 		});
 
 		// Init the Clipboard utility
