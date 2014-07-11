@@ -1,4 +1,4 @@
-/*! hyperaudio-pad v0.4.12 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th July 2014 15:09:33 */
+/*! hyperaudio-pad v0.4.12 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th July 2014 15:17:58 */
 /*! hyperaudio-lib v0.4.17 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th July 2014 14:40:42 */
 (function(global, document) {
 
@@ -9147,7 +9147,7 @@ HAP.init = (function (window, document) {
 		// Init the API utility
 		HA.api.init({
 			namespace: namespace,
-			api: prefix + 'api.hyperaud.io/v1',
+			api: prefix + 'api.hyperaud.io/v1/',
 		});
 
 		// Init the Clipboard utility
