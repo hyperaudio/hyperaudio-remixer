@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.4.12 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 3rd July 2014 19:42:31 */
-/*! hyperaudio-lib v0.4.16 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 3rd July 2014 19:41:38 */
+/*! hyperaudio-pad v0.4.12 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th July 2014 14:47:03 */
+/*! hyperaudio-lib v0.4.17 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th July 2014 14:40:42 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -5803,6 +5803,7 @@ var api = (function(hyperaudio) {
 				protocol: 'http://',
 				org: '', // The organisations namespace / sub-domain. EG. 'chattanooga.'
 				api: 'api.hyperaud.io/v1/',
+				namespace: null,
 				// Command syntax
 				transcripts: 'transcripts/',
 				transcripts_filter: '?type=html',
@@ -6150,6 +6151,11 @@ var api = (function(hyperaudio) {
 							// Check some stuff?
 						} else {
 							// Check some stuff?
+						}
+						
+						// Namespaced?
+						if (self.namespace) {
+							mix.namespace = self.namespace;
 						}
 
 						xhr({
@@ -9129,9 +9135,20 @@ HAP.init = (function (window, document) {
 	// var ga_origin = 'Hyperaudio Pad'; // Will use the default HA Lib origin
 
 	function loaded () {
-
+		
+		var namespace = null;
+		if (document.location.hostname.indexOf('hyperaud') > 0) {
+		  namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
+		}
+		
+		var prefix = '';
+		if (namespace) prefix = namespace + '.';
+		
 		// Init the API utility
-		HA.api.init();
+		HA.api.init({
+			namespace: namespace,
+			api: 'http://' + prefix + 'api.hyperaud.io/v1',
+		});
 
 		// Init the Clipboard utility
 		HA.Clipboard.init();
