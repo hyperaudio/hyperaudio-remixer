@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.4.12 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th July 2014 15:17:58 */
-/*! hyperaudio-lib v0.4.17 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th July 2014 14:40:42 */
+/*! hyperaudio-pad v0.4.13 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th July 2014 15:46:23 */
+/*! hyperaudio-lib v0.4.18 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th July 2014 15:42:53 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -5801,9 +5801,8 @@ var api = (function(hyperaudio) {
 		init: function(options) {
 			this.options = hyperaudio.extend({
 				protocol: 'http://',
-				org: '', // The organisations namespace / sub-domain. EG. 'chattanooga.'
+				org: '', // The organisations namespace / sub-domain. EG. 'chattanooga'
 				api: 'api.hyperaud.io/v1/',
-				namespace: null,
 				// Command syntax
 				transcripts: 'transcripts/',
 				transcripts_filter: '?type=html',
@@ -5850,7 +5849,8 @@ var api = (function(hyperaudio) {
 			this._updateInternals();
 		},
 		_updateInternals: function() {
-			this.url = this.options.protocol + this.options.org + this.options.api;
+			var namespace = this.options.org ? this.options.org + '.' : '';
+			this.url = this.options.protocol + namespace + this.options.api;
 		},
 		callback: function(callback, success) {
 			if(typeof callback === 'function') {
@@ -6153,11 +6153,6 @@ var api = (function(hyperaudio) {
 							// Check some stuff?
 						}
 						
-						// Namespaced?
-						if (self.namespace) {
-							mix.namespace = self.namespace;
-						}
-
 						xhr({
 							url: self.url + self.username + '/' + self.options.mixes + id,
 							type: type,
@@ -9141,13 +9136,9 @@ HAP.init = (function (window, document) {
 		  namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
 		}
 		
-		var prefix = '';
-		if (namespace) prefix = namespace + '.';
-		
 		// Init the API utility
 		HA.api.init({
-			namespace: namespace,
-			api: prefix + 'api.hyperaud.io/v1/',
+			org: namespace // The organisations namespace / sub-domain. EG. 'chattanooga'
 		});
 
 		// Init the Clipboard utility
