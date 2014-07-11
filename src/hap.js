@@ -29,9 +29,20 @@ HAP.init = (function (window, document) {
 	// var ga_origin = 'Hyperaudio Pad'; // Will use the default HA Lib origin
 
 	function loaded () {
-
+		
+		var namespace = null;
+		if (document.location.hostname.indexOf('hyperaud') > 0) {
+		  namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
+		}
+		
+		var prefix = '';
+		if (namespace) prefix = namespace + '.';
+		
 		// Init the API utility
-		HA.api.init();
+		HA.api.init({
+			namespace: namespace,
+			api: 'http://' + prefix + 'api.hyperaud.io/v1',
+		});
 
 		// Init the Clipboard utility
 		HA.Clipboard.init();
