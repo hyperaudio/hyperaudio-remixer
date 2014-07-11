@@ -41,7 +41,7 @@ HAP.init = (function (window, document) {
 		// Init the API utility
 		HA.api.init({
 			namespace: namespace,
-			api: 'http://' + prefix + 'api.hyperaud.io/v1',
+			api: prefix + 'api.hyperaud.io/v1',
 		});
 
 		// Init the Clipboard utility
