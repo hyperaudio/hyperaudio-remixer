@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.4.13 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th July 2014 15:46:23 */
-/*! hyperaudio-lib v0.4.18 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 11th July 2014 15:42:53 */
+/*! hyperaudio-pad v0.4.14 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 14th July 2014 13:01:21 */
+/*! hyperaudio-lib v0.4.19 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 14th July 2014 12:59:04 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -4859,9 +4859,13 @@ var SideMenu = (function (document, hyperaudio) {
 				return;
 			}
 
-			if ( !item.getAttribute('data-id') || !self.mediaCallback ) {
+			var id = item.getAttribute('data-id');
+
+			if ( !id || !self.mediaCallback ) {
 				return;
 			}
+
+			hyperaudio.Address.setParam('t', id);
 
 			self.mediaCallback(item);
 		};
