@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.4.17 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 15th July 2014 14:49:49 */
-/*! hyperaudio-lib v0.4.22 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 15th July 2014 14:48:57 */
+/*! hyperaudio-pad v0.4.18 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 16th July 2014 16:19:26 */
+/*! hyperaudio-lib v0.4.23 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 16th July 2014 16:17:43 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -8099,6 +8099,8 @@ var Stage = (function(document, hyperaudio) {
 
 var Projector = (function(window, document, hyperaudio, Popcorn) {
 
+	var DEBUG = true;
+
 	function Projector(options) {
 
 		this.options = hyperaudio.extend({}, this.options, {
@@ -8276,6 +8278,8 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 				hyperaudio.removeClass(this.player[i].target, 'active');
 			}
 			hyperaudio.addClass(this.player[this.activePlayer].target, 'active');
+
+			if(DEBUG) console.log('[Projector|load] contentIndex: %d | activePlayer: %d', this.contentIndex, this.activePlayer);
 		},
 		prepare: function(index) {
 			// Used when more than 1 player to prepare the next piece of media.
@@ -8307,12 +8311,16 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 					if(this.player[this.nextPlayer]) {
 						this.player[this.nextPlayer].load(media);
 						this.player[this.nextPlayer].pause(alignStart);
+
+						if(DEBUG) console.log('[Projector|prepare] prepared=false | nextPlayer: %d | alignStart: %d', this.nextPlayer, alignStart);
 					}
 				} else {
 					// Reset popcorn and move the video to the start time.
 					if(prepared !== this.activePlayer) {
 						this.player[prepared].initPopcorn();
-						this.player[this.nextPlayer].pause(alignStart);
+						this.player[prepared].pause(alignStart);
+
+						if(DEBUG) console.log('[Projector|prepare] prepared=' + prepared + ' | nextPlayer: %d | alignStart: %d', this.nextPlayer, alignStart);
 					}
 				}
 			}
@@ -8328,6 +8336,7 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 					}
 				}
 			}
+			if(DEBUG) console.log('[Projector|which] media: %o | index: ' + index, media); // %d no good since index can be boolean.
 			return index;
 		},
 
@@ -8673,7 +8682,7 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 
 		getSection: function(index) {
 
-			var stageOptions = this.stage ? this.stage.options : {};
+			var stageOptions = this.stage ? this.stage.options : {},
 				section = {
 					index: index
 				};
