@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.4.18 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 16th July 2014 16:19:26 */
-/*! hyperaudio-lib v0.4.23 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 16th July 2014 16:17:43 */
+/*! hyperaudio-pad v0.4.19 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 16th July 2014 16:53:29 */
+/*! hyperaudio-lib v0.4.24 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 16th July 2014 16:52:23 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -8099,7 +8099,7 @@ var Stage = (function(document, hyperaudio) {
 
 var Projector = (function(window, document, hyperaudio, Popcorn) {
 
-	var DEBUG = true;
+	var DEBUG = false;
 
 	function Projector(options) {
 
