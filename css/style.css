@@ -236,6 +236,12 @@ h1 input:focus {
 	user-select: none;
 }
 
+/* Fix iScroll bug due to wrapper having padding */
+#transcript article,
+#stage article {
+	padding-bottom:100px;
+}
+
 .video {
 	position: absolute;
 	top: 48px;
