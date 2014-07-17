@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.4.21 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 17th July 2014 20:51:57 */
-/*! hyperaudio-lib v0.4.26 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 17th July 2014 20:50:27 */
+/*! hyperaudio-pad v0.4.22 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 17th July 2014 21:15:47 */
+/*! hyperaudio-lib v0.4.27 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 17th July 2014 21:14:35 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -9458,6 +9458,7 @@ var Transcript = (function(document, hyperaudio) {
 			click: true
 		};
 		this.iScrollSpeed = 800; // ms
+		this.iScrollOffsetY = -20; // pixels
 		this.iScroll = new IScroll(this.target, this.iScrollOptions);
 
 		// Setup Debug
@@ -9607,7 +9608,7 @@ var Transcript = (function(document, hyperaudio) {
 					i, l = wordList.length;
 
 				var onNewPara = function(parent) {
-					self.iScroll.scrollToElement(parent, self.iScrollSpeed);
+					self.iScroll.scrollToElement(parent, self.iScrollSpeed, null, self.iScrollOffsetY);
 				};
 
 				for(i = 0; i < l; i++) {
@@ -10180,6 +10181,7 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 			click: true
 		};
 		this.iScrollSpeed = 800; // ms
+		this.iScrollOffsetY = -20; // pixels
 		this.iScroll = null;
 
 		if(this.options.DEBUG) {
@@ -10267,7 +10269,7 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 			var self = this;
 			var elems, e, eLen;
 			var onNewPara = function(parent) {
-				self.iScroll.scrollToElement(parent, self.iScrollSpeed);
+				self.iScroll.scrollToElement(parent, self.iScrollSpeed, null, self.iScrollOffsetY);
 			};
 
 			if(index < this.content.length && player < this.player.length) {
