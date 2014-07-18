@@ -207,7 +207,7 @@ h1 input:focus {
 	padding: 2em;
 	line-height: 1.7em;
 	width: 50%;
-	overflow: auto;
+	overflow: hidden;
 	color: #444;
 	border-right: 2px solid #ccc;
 	-webkit-touch-callout: none;
@@ -226,7 +226,7 @@ h1 input:focus {
 	padding: 1em;
 	font-size: 1.2em;
 	width: 50%;
-	overflow: auto;
+	overflow: hidden;
 	border-left: 2px solid #ccc;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
