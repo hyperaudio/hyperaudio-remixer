@@ -1,29 +1,30 @@
+/* Hyperaudio Viewer */
 
 var HAP = {};
 
 HAP.init = (function (window, document) {
 
-	var player;
+	// var player;
 	var projector;
 	var music;
 	var stage;
-	var transcript;
+	// var transcript;
 
-	var sidemenu;
+	// var sidemenu;
 
-	var mixTitleForm;
+	// var mixTitleForm;
 	var mixTitle;
-	var mixTitleHandler;
-	var saveButton;
-	var savingAnim;
+	// var mixTitleHandler;
+	// var saveButton;
+	// var savingAnim;
 
-	var fade;
-	var trim;
-	var title;
+	// var fade;
+	// var trim;
+	// var title;
 
-	var defaultTranscriptId = 'XMVjtXOUSC-V0sSZBOKrBw';
+	// var defaultTranscriptId = 'XMVjtXOUSC-V0sSZBOKrBw';
 
-	var transcriptId = HA.getURLParameter('t');
+	// var transcriptId = HA.getURLParameter('t');
 	var mixId = HA.getURLParameter('m');
 
 	// var ga_origin = 'Hyperaudio Pad'; // Will use the default HA Lib origin
@@ -45,12 +46,12 @@ HAP.init = (function (window, document) {
 
 		// Init the Address utility
 		HA.Address.init();
-
+/*
 		player = HA.Player({
 			target: "#video-source",
 			gui: true
 		});
-
+*/
 		music = HA.Music({
 			target: "#music-player"
 		});
@@ -64,18 +65,18 @@ HAP.init = (function (window, document) {
 			target: "#stage",
 			projector: projector
 		});
-
+/*
 		transcript = HA.Transcript({
 			target: "#transcript",
 			stage: stage,
 			player: player
 		});
-
-		mixTitleForm = document.getElementById('mix-title-form');
+*/
+		// mixTitleForm = document.getElementById('mix-title-form');
 		mixTitle = document.getElementById('mix-title');
-		saveButton = document.getElementById('save-button');
-		savingAnim = document.querySelector('#save-button-saving');
-
+		// saveButton = document.getElementById('save-button');
+		// savingAnim = document.querySelector('#save-button-saving');
+/*
 		function mediaSelect (el) {
 			var id = el.getAttribute('data-id');
 			sidemenu.close();
@@ -112,16 +113,17 @@ HAP.init = (function (window, document) {
 				title: this.value
 			});
 		}, false);
-
+*/
 		stage.target.addEventListener(HA.event.load, function(e) {
-			mixTitle.value = HA.api.mix.label;
+			// mixTitle.value = HA.api.mix.label;
+			mixTitle.innerHTML = HA.api.mix.label;
 			notify('load'); // Tell top frame the mix was loaded
 		}, false);
 		stage.target.addEventListener(HA.event.save, function(e) {
-			savingAnim.style.display = 'none';
+			// savingAnim.style.display = 'none';
 			notify('save'); // Tell top frame the mix was saved
 		}, false);
-
+/*
 		// Save button
 		saveButton._tap = new HA.Tap({el: saveButton});
 		saveButton.addEventListener('tap', function () {
@@ -272,7 +274,7 @@ HAP.init = (function (window, document) {
 			});
 			transcript.load(defaultTranscriptId);
 		}
-
+*/
 		if(mixId) {
 			HA.gaEvent({
 				type: 'HAP',
@@ -298,12 +300,12 @@ HAP.init = (function (window, document) {
 	function init () {
 		// nothing to do
 	}
-
+/*
 	// Not sure if this findDraggable() function is ever called.
 	function findDraggable (el) {
 		return (/(^|\s)item($|\s)/).test(el.className) ? el : false;
 	}
-
+*/
 	window.addEventListener('load', loaded, false);
 	document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
