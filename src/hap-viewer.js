@@ -288,14 +288,14 @@ HAP.init = (function (window, document) {
 			});
 		}
 	}
-
+/*
 	function notify(type) {
 		var topFrame = window.top;
 		if(typeof topFrame.notify === 'function') {
 			topFrame.notify(type);
 		}
 	}
-
+*/
 	// kickstart
 	function init () {
 		// nothing to do
