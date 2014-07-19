@@ -1,5 +1,5 @@
-/*! hyperaudio-pad *PAD* v0.4.29 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 19th July 2014 19:36:45 */
-/*! hyperaudio-lib v0.4.31 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 18th July 2014 17:59:02 */
+/*! hyperaudio-pad *PAD* v0.4.30 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 19th July 2014 19:45:48 */
+/*! hyperaudio-lib v0.4.32 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 19th July 2014 19:35:44 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -6130,8 +6130,18 @@ var hyperaudio = (function() {
 		// http://stackoverflow.com/questions/1403888/get-url-parameter-with-javascript-or-jquery
 		getURLParameter: function(name) {
 			// return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+
 			// Now looks at top window (frame).
-			return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.top.location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+			var win = window.top;
+
+			// See if security allowed via same domain policy.
+			try {
+				win.document.createElement('div');
+			} catch(error) {
+				win = window;
+			}
+
+			return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(win.location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
 		},
 
 		gaEvent: function(detail) {
