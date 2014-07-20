@@ -1,5 +1,5 @@
-/*! hyperaudio-pad *VIEWER* v0.4.35 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 20th July 2014 18:05:47 */
-/*! hyperaudio-lib v0.4.34 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 20th July 2014 18:03:43 */
+/*! hyperaudio-pad *VIEWER* v0.4.36 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 20th July 2014 18:23:43 */
+/*! hyperaudio-lib v0.4.35 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 20th July 2014 18:20:34 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -9575,7 +9575,12 @@ var Transcript = (function(document, hyperaudio) {
 		this.iScrollOptions = {
 			scrollbars: true,
 			mouseWheel: true,
-			interactiveScrollbars: true
+			interactiveScrollbars: true,
+
+			// Options to disable grabbing the page and moving it.
+			disableMouse: true,
+			disablePointer: true,
+			disableTouch: true
 		};
 		this.iScrollSpeed = 800; // ms
 		this.iScrollOffsetY = -20; // pixels
@@ -10299,7 +10304,12 @@ var Projector = (function(window, document, hyperaudio, Popcorn) {
 		this.iScrollOptions = {
 			scrollbars: true,
 			mouseWheel: true,
-			interactiveScrollbars: true
+			interactiveScrollbars: true,
+
+			// Options to disable grabbing the page and moving it.
+			disableMouse: true,
+			disablePointer: true,
+			disableTouch: true
 		};
 		this.iScrollSpeed = 800; // ms
 		this.iScrollOffsetY = -20; // pixels
