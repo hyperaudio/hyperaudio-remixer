@@ -63,7 +63,8 @@ HAP.init = (function (window, document) {
 
 		stage = HA.Stage({
 			target: "#stage",
-			projector: projector
+			projector: projector,
+			editable: false
 		});
 /*
 		transcript = HA.Transcript({
