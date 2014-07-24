@@ -5,8 +5,7 @@ module.exports = function(grunt) {
 
 		// https://github.com/felixge/node-dateformat
 		dateFormat: 'dS mmmm yyyy HH:MM:ss',
-		banner_pad: '/*! <%= pkg.name %> *PAD* v<%= pkg.version %> ~ (c) 2012-<%= grunt.template.today("yyyy") %> <%= pkg.author %> <%= pkg.license %> ~ Built: <%= grunt.template.today(dateFormat) %> */\n',
-		banner_viewer: '/*! <%= pkg.name %> *VIEWER* v<%= pkg.version %> ~ (c) 2012-<%= grunt.template.today("yyyy") %> <%= pkg.author %> <%= pkg.license %> ~ Built: <%= grunt.template.today(dateFormat) %> */\n',
+		banner_pad: '/*! <%= pkg.name %> v<%= pkg.version %> ~ (c) 2012-<%= grunt.template.today("yyyy") %> <%= pkg.author %> <%= pkg.license %> ~ Built: <%= grunt.template.today(dateFormat) %> */\n',
 
 		concat: {
 
@@ -28,21 +27,6 @@ module.exports = function(grunt) {
 						'src/hap.js'
 					]
 				}
-			},
-			viewer: {
-				options: {
-					banner: '<%= banner_viewer %>'
-				},
-				files: {
-					'build/<%= pkg.name %>-viewer.js': [
-
-						// The hyperaudio (HA) lib
-						'node_modules/hyperaudio-lib/build/hyperaudio-lib.js',
-
-						// The Hyperaudio Pad
-						'src/hap-viewer.js'
-					]
-				}
 			}
 		},
 
@@ -62,14 +46,6 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'dist/<%= pkg.name %>.min.js': ['build/<%= pkg.name %>.js']
-				}
-			},
-			viewer: {
-				options: {
-					banner: '<%= banner_viewer %>'
-				},
-				files: {
-					'dist/<%= pkg.name %>-viewer.min.js': ['build/<%= pkg.name %>-viewer.js']
 				}
 			}
 		},
