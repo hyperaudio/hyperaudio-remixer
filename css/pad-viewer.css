@@ -15,12 +15,18 @@ h1 {
 	text-shadow: 0 -1px 0 rgba(0,0,0,0.35);
 }
 
+#transcript,
 #stage {
 	left: 0;
 	top: 294px;
 	bottom: 0;
 	width: 100%;
 	border-left: none;
+	border-right: none;
+}
+
+#transcript article {
+	padding-bottom: 8em;
 }
 
 #stage article {
