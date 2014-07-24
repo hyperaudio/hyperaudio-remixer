@@ -5,6 +5,7 @@ HAP = (function (window, document, HA) {
 	var HAP = {
 		options: {
 			viewer: false, // True for read only viewer
+			targetViewer: '#viewer-wrapper',
 			defaultTranscriptId: 'XMVjtXOUSC-V0sSZBOKrBw',
 			ga_origin: 'Pad'
 		}
@@ -58,44 +59,58 @@ HAP = (function (window, document, HA) {
 			target: "#music-player"
 		});
 
-		projector = HA.Projector({
-			target: "#stage-videos",
-			music: music
-		});
+		if(!HAP.options.viewer || transcriptId || mixId) {
 
-		stage = HA.Stage({
-			target: "#stage",
-			projector: projector,
-			editable: !HAP.options.viewer
-		});
+			if(!HAP.options.viewer || mixId) {
+				projector = HA.Projector({
+					target: "#stage-videos",
+					music: music
+				});
 
-		stage.target.addEventListener(HA.event.load, function(e) {
-			if(!HAP.options.viewer) {
-				mixTitle.value = HA.api.mix.label;
-				notify('load'); // Tell top frame the mix was loaded
-			} else {
-				mixTitle.innerHTML = HA.api.mix.label;
+				stage = HA.Stage({
+					target: "#stage",
+					projector: projector,
+					editable: !HAP.options.viewer
+				});
+
+				stage.target.addEventListener(HA.event.load, function(e) {
+					if(!HAP.options.viewer) {
+						mixTitle.value = HA.api.mix.label;
+						notify('load'); // Tell top frame the mix was loaded
+					} else {
+						mixTitle.innerHTML = HA.api.mix.label;
+					}
+				}, false);
+
+				if(!HAP.options.viewer) {
+					stage.target.addEventListener(HA.event.save, function(e) {
+						savingAnim.style.display = 'none';
+						notify('save'); // Tell top frame the mix was saved
+					}, false);
+				}
 			}
-		}, false);
 
-		if(!HAP.options.viewer) {
-			stage.target.addEventListener(HA.event.save, function(e) {
-				savingAnim.style.display = 'none';
-				notify('save'); // Tell top frame the mix was saved
-			}, false);
+			if(!HAP.options.viewer || (transcriptId && !mixId)) {
+				player = HA.Player({
+					target: "#video-source",
+					gui: true
+				});
+
+				transcript = HA.Transcript({
+					target: "#transcript",
+					stage: stage,
+					player: player
+				});
+
+				if(HAP.options.viewer) {
+					transcript.target.addEventListener(HA.event.load, function(e) {
+						mixTitle.innerHTML = HA.api.transcript.label;
+					}, false);
+				}
+			}
 		}
 
 		if(!HAP.options.viewer) {
-			player = HA.Player({
-				target: "#video-source",
-				gui: true
-			});
-
-			transcript = HA.Transcript({
-				target: "#transcript",
-				stage: stage,
-				player: player
-			});
 
 			function mediaSelect (el) {
 				var id = el.getAttribute('data-id');
@@ -277,37 +292,47 @@ HAP = (function (window, document, HA) {
 					});
 				}
 			});
-
-			if(transcriptId) {
-				HA.gaEvent({
-					origin: HAP.options.ga_origin,
-					type: 'HAP',
-					action: 'loadtranscript: Load Transcript given in URL param'
-				});
-				transcript.load(transcriptId);
-			} else {
-				HA.gaEvent({
-					origin: HAP.options.ga_origin,
-					type: 'HAP',
-					action: 'loaddefaulttranscript: Load default Transcript'
-				});
-				transcript.load(HAP.options.defaultTranscriptId);
-			}
 		}
 
-		if(mixId) {
-			HA.gaEvent({
-				origin: HAP.options.ga_origin,
-				type: 'HAP',
-				action: 'loadmix: Load Mix given in URL param'
-			});
-			stage.load(mixId);
-		} else {
-			HA.gaEvent({
-				origin: HAP.options.ga_origin,
-				type: 'HAP',
-				action: 'nomix: New pad opened'
-			});
+
+
+
+		if(!HAP.options.viewer || transcriptId || mixId) {
+
+			if(!HAP.options.viewer || mixId) {
+				if(mixId) {
+					HA.gaEvent({
+						origin: HAP.options.ga_origin,
+						type: 'HAP',
+						action: 'loadmix: Load Mix given in URL param'
+					});
+					stage.load(mixId);
+				} else {
+					HA.gaEvent({
+						origin: HAP.options.ga_origin,
+						type: 'HAP',
+						action: 'nomix: New pad opened'
+					});
+				}
+			}
+
+			if(!HAP.options.viewer || (transcriptId && !mixId)) {
+				if(transcriptId) {
+					HA.gaEvent({
+						origin: HAP.options.ga_origin,
+						type: 'HAP',
+						action: 'loadtranscript: Load Transcript given in URL param'
+					});
+					transcript.load(transcriptId);
+				} else {
+					HA.gaEvent({
+						origin: HAP.options.ga_origin,
+						type: 'HAP',
+						action: 'loaddefaulttranscript: Load default Transcript'
+					});
+					transcript.load(HAP.options.defaultTranscriptId);
+				}
+			}
 		}
 	}
 
@@ -337,6 +362,24 @@ HAP = (function (window, document, HA) {
 	HAP.init = function(options) {
 
 		this.options = HA.extend({}, this.options, options);
+
+		if(this.options.viewer) {
+			var viewer = document.querySelector(this.options.targetViewer);
+			var video = document.createElement('div');
+			var text = document.createElement('div');
+			if(mixId) {
+				video.setAttribute('id', 'stage-videos');
+				HA.addClass(video, 'video');
+				text.setAttribute('id', 'stage');
+			} else {
+				video.setAttribute('id', 'video-source');
+				HA.addClass(video, 'video');
+				text.setAttribute('id', 'transcript');
+				text.appendChild(document.createElement('p')); // Otherwise iScroll complains.
+			}
+			viewer.appendChild(video);
+			viewer.appendChild(text);
+		}
 
 		if(pageReady) {
 			loaded();
