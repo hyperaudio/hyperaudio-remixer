@@ -66,7 +66,8 @@ HAP = (function (window, document, HA) {
 
 		stage = HA.Stage({
 			target: "#stage",
-			projector: projector
+			projector: projector,
+			editable: !HAP.options.viewer
 		});
 
 		stage.target.addEventListener(HA.event.load, function(e) {
@@ -325,7 +326,7 @@ HAP = (function (window, document, HA) {
 
 	HAP.init = function(options) {
 
-		this.options = hyperaudio.extend({}, this.options, options);
+		this.options = HA.extend({}, this.options, options);
 
 		if(pageReady) {
 			loaded();
