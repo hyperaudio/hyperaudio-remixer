@@ -5,7 +5,8 @@ HAP = (function (window, document, HA) {
 	var HAP = {
 		options: {
 			viewer: false, // True for read only viewer
-			defaultTranscriptId: 'XMVjtXOUSC-V0sSZBOKrBw'
+			defaultTranscriptId: 'XMVjtXOUSC-V0sSZBOKrBw',
+			ga_origin: 'Pad'
 		}
 	};
 
@@ -29,8 +30,6 @@ HAP = (function (window, document, HA) {
 
 	var transcriptId = HA.getURLParameter('t');
 	var mixId = HA.getURLParameter('m');
-
-	// var ga_origin = 'Hyperaudio Pad'; // Will use the default HA Lib origin
 
 	function loaded () {
 		
@@ -121,6 +120,7 @@ HAP = (function (window, document, HA) {
 					mixTitle.blur();
 				}
 				HA.gaEvent({
+					origin: HAP.options.ga_origin,
 					type: 'HAP',
 					action: 'titlechange: Mix title changed'
 				});
@@ -190,6 +190,7 @@ HAP = (function (window, document, HA) {
 				onDragStart: function (e) {
 					HA.addClass(stage.target, 'dragdrop');
 					HA.gaEvent({
+						origin: HAP.options.ga_origin,
 						type: 'HAP',
 						action: 'fadeeffectstartdrag: Start drag of Fade effect'
 					});
@@ -204,6 +205,7 @@ HAP = (function (window, document, HA) {
 					el.innerHTML = '<form onsubmit="return false"><label>Fade Effect: <span class="value">1</span>s</label><input id="effect-duration" type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.previousSibling.querySelector(\'span\').innerHTML = this.value;"></form>';
 					stage.dropped(el, 'Fade');
 					HA.gaEvent({
+						origin: HAP.options.ga_origin,
 						type: 'HAP',
 						action: 'fadeeffectdrop: Drop Fade effect on to stage'
 					});
@@ -217,6 +219,7 @@ HAP = (function (window, document, HA) {
 				onDragStart: function (e) {
 					HA.addClass(stage.target, 'dragdrop');
 					HA.gaEvent({
+						origin: HAP.options.ga_origin,
 						type: 'HAP',
 						action: 'trimeffectstartdrag: Start drag of Trim effect'
 					});
@@ -231,6 +234,7 @@ HAP = (function (window, document, HA) {
 					el.innerHTML = '<form onsubmit="return false"><label>Trim: <span class="value">1</span>s</label><input id="effect-duration" type="range" value="1" min="0" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.previousSibling.querySelector(\'span\').innerHTML = this.value;"></form>';
 					stage.dropped(el, 'Trim');
 					HA.gaEvent({
+						origin: HAP.options.ga_origin,
 						type: 'HAP',
 						action: 'trimeffectdrop: Drop Trim effect on to stage'
 					});
@@ -244,6 +248,7 @@ HAP = (function (window, document, HA) {
 				onDragStart: function (e) {
 					HA.addClass(stage.target, 'dragdrop');
 					HA.gaEvent({
+						origin: HAP.options.ga_origin,
 						type: 'HAP',
 						action: 'titleeffectstartdrag: Start drag of Title effect'
 					});
@@ -266,6 +271,7 @@ HAP = (function (window, document, HA) {
 					el.innerHTML = html;
 					stage.dropped(el, 'Title');
 					HA.gaEvent({
+						origin: HAP.options.ga_origin,
 						type: 'HAP',
 						action: 'titleeffectdrop: Drop Title effect on to stage'
 					});
@@ -274,12 +280,14 @@ HAP = (function (window, document, HA) {
 
 			if(transcriptId) {
 				HA.gaEvent({
+					origin: HAP.options.ga_origin,
 					type: 'HAP',
 					action: 'loadtranscript: Load Transcript given in URL param'
 				});
 				transcript.load(transcriptId);
 			} else {
 				HA.gaEvent({
+					origin: HAP.options.ga_origin,
 					type: 'HAP',
 					action: 'loaddefaulttranscript: Load default Transcript'
 				});
@@ -289,12 +297,14 @@ HAP = (function (window, document, HA) {
 
 		if(mixId) {
 			HA.gaEvent({
+				origin: HAP.options.ga_origin,
 				type: 'HAP',
 				action: 'loadmix: Load Mix given in URL param'
 			});
 			stage.load(mixId);
 		} else {
 			HA.gaEvent({
+				origin: HAP.options.ga_origin,
 				type: 'HAP',
 				action: 'nomix: New pad opened'
 			});
