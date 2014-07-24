@@ -1,4 +1,4 @@
-/*! hyperaudio-pad v0.5.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 24th July 2014 15:56:42 */
+/*! hyperaudio-pad v0.5.2 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 24th July 2014 18:10:19 */
 /*! hyperaudio-lib v0.5.0 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 20th July 2014 18:36:29 */
 (function(global, document) {
 
@@ -11310,7 +11310,9 @@ HAP = (function (window, document, HA) {
 	var HAP = {
 		options: {
 			viewer: false, // True for read only viewer
-			defaultTranscriptId: 'XMVjtXOUSC-V0sSZBOKrBw'
+			targetViewer: '#viewer-wrapper',
+			defaultTranscriptId: 'XMVjtXOUSC-V0sSZBOKrBw',
+			ga_origin: 'Pad'
 		}
 	};
 
@@ -11334,8 +11336,6 @@ HAP = (function (window, document, HA) {
 
 	var transcriptId = HA.getURLParameter('t');
 	var mixId = HA.getURLParameter('m');
-
-	// var ga_origin = 'Hyperaudio Pad'; // Will use the default HA Lib origin
 
 	function loaded () {
 		
@@ -11364,44 +11364,58 @@ HAP = (function (window, document, HA) {
 			target: "#music-player"
 		});
 
-		projector = HA.Projector({
-			target: "#stage-videos",
-			music: music
-		});
+		if(!HAP.options.viewer || transcriptId || mixId) {
 
-		stage = HA.Stage({
-			target: "#stage",
-			projector: projector,
-			editable: !HAP.options.viewer
-		});
+			if(!HAP.options.viewer || mixId) {
+				projector = HA.Projector({
+					target: "#stage-videos",
+					music: music
+				});
 
-		stage.target.addEventListener(HA.event.load, function(e) {
-			if(!HAP.options.viewer) {
-				mixTitle.value = HA.api.mix.label;
-				notify('load'); // Tell top frame the mix was loaded
-			} else {
-				mixTitle.innerHTML = HA.api.mix.label;
+				stage = HA.Stage({
+					target: "#stage",
+					projector: projector,
+					editable: !HAP.options.viewer
+				});
+
+				stage.target.addEventListener(HA.event.load, function(e) {
+					if(!HAP.options.viewer) {
+						mixTitle.value = HA.api.mix.label;
+						notify('load'); // Tell top frame the mix was loaded
+					} else {
+						mixTitle.innerHTML = HA.api.mix.label;
+					}
+				}, false);
+
+				if(!HAP.options.viewer) {
+					stage.target.addEventListener(HA.event.save, function(e) {
+						savingAnim.style.display = 'none';
+						notify('save'); // Tell top frame the mix was saved
+					}, false);
+				}
 			}
-		}, false);
 
-		if(!HAP.options.viewer) {
-			stage.target.addEventListener(HA.event.save, function(e) {
-				savingAnim.style.display = 'none';
-				notify('save'); // Tell top frame the mix was saved
-			}, false);
+			if(!HAP.options.viewer || (transcriptId && !mixId)) {
+				player = HA.Player({
+					target: "#video-source",
+					gui: true
+				});
+
+				transcript = HA.Transcript({
+					target: "#transcript",
+					stage: stage,
+					player: player
+				});
+
+				if(HAP.options.viewer) {
+					transcript.target.addEventListener(HA.event.load, function(e) {
+						mixTitle.innerHTML = HA.api.transcript.label;
+					}, false);
+				}
+			}
 		}
 
 		if(!HAP.options.viewer) {
-			player = HA.Player({
-				target: "#video-source",
-				gui: true
-			});
-
-			transcript = HA.Transcript({
-				target: "#transcript",
-				stage: stage,
-				player: player
-			});
 
 			function mediaSelect (el) {
 				var id = el.getAttribute('data-id');
@@ -11426,6 +11440,7 @@ HAP = (function (window, document, HA) {
 					mixTitle.blur();
 				}
 				HA.gaEvent({
+					origin: HAP.options.ga_origin,
 					type: 'HAP',
 					action: 'titlechange: Mix title changed'
 				});
@@ -11495,6 +11510,7 @@ HAP = (function (window, document, HA) {
 				onDragStart: function (e) {
 					HA.addClass(stage.target, 'dragdrop');
 					HA.gaEvent({
+						origin: HAP.options.ga_origin,
 						type: 'HAP',
 						action: 'fadeeffectstartdrag: Start drag of Fade effect'
 					});
@@ -11509,6 +11525,7 @@ HAP = (function (window, document, HA) {
 					el.innerHTML = '<form onsubmit="return false"><label>Fade Effect: <span class="value">1</span>s</label><input id="effect-duration" type="range" value="1" min="0.5" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.previousSibling.querySelector(\'span\').innerHTML = this.value;"></form>';
 					stage.dropped(el, 'Fade');
 					HA.gaEvent({
+						origin: HAP.options.ga_origin,
 						type: 'HAP',
 						action: 'fadeeffectdrop: Drop Fade effect on to stage'
 					});
@@ -11522,6 +11539,7 @@ HAP = (function (window, document, HA) {
 				onDragStart: function (e) {
 					HA.addClass(stage.target, 'dragdrop');
 					HA.gaEvent({
+						origin: HAP.options.ga_origin,
 						type: 'HAP',
 						action: 'trimeffectstartdrag: Start drag of Trim effect'
 					});
@@ -11536,6 +11554,7 @@ HAP = (function (window, document, HA) {
 					el.innerHTML = '<form onsubmit="return false"><label>Trim: <span class="value">1</span>s</label><input id="effect-duration" type="range" value="1" min="0" max="5" step="0.1" onchange="this.setAttribute(\'value\', this.value); this.previousSibling.querySelector(\'span\').innerHTML = this.value;"></form>';
 					stage.dropped(el, 'Trim');
 					HA.gaEvent({
+						origin: HAP.options.ga_origin,
 						type: 'HAP',
 						action: 'trimeffectdrop: Drop Trim effect on to stage'
 					});
@@ -11549,6 +11568,7 @@ HAP = (function (window, document, HA) {
 				onDragStart: function (e) {
 					HA.addClass(stage.target, 'dragdrop');
 					HA.gaEvent({
+						origin: HAP.options.ga_origin,
 						type: 'HAP',
 						action: 'titleeffectstartdrag: Start drag of Title effect'
 					});
@@ -11571,38 +11591,53 @@ HAP = (function (window, document, HA) {
 					el.innerHTML = html;
 					stage.dropped(el, 'Title');
 					HA.gaEvent({
+						origin: HAP.options.ga_origin,
 						type: 'HAP',
 						action: 'titleeffectdrop: Drop Title effect on to stage'
 					});
 				}
 			});
-
-			if(transcriptId) {
-				HA.gaEvent({
-					type: 'HAP',
-					action: 'loadtranscript: Load Transcript given in URL param'
-				});
-				transcript.load(transcriptId);
-			} else {
-				HA.gaEvent({
-					type: 'HAP',
-					action: 'loaddefaulttranscript: Load default Transcript'
-				});
-				transcript.load(HAP.options.defaultTranscriptId);
-			}
 		}
 
-		if(mixId) {
-			HA.gaEvent({
-				type: 'HAP',
-				action: 'loadmix: Load Mix given in URL param'
-			});
-			stage.load(mixId);
-		} else {
-			HA.gaEvent({
-				type: 'HAP',
-				action: 'nomix: New pad opened'
-			});
+
+
+
+		if(!HAP.options.viewer || transcriptId || mixId) {
+
+			if(!HAP.options.viewer || mixId) {
+				if(mixId) {
+					HA.gaEvent({
+						origin: HAP.options.ga_origin,
+						type: 'HAP',
+						action: 'loadmix: Load Mix given in URL param'
+					});
+					stage.load(mixId);
+				} else {
+					HA.gaEvent({
+						origin: HAP.options.ga_origin,
+						type: 'HAP',
+						action: 'nomix: New pad opened'
+					});
+				}
+			}
+
+			if(!HAP.options.viewer || (transcriptId && !mixId)) {
+				if(transcriptId) {
+					HA.gaEvent({
+						origin: HAP.options.ga_origin,
+						type: 'HAP',
+						action: 'loadtranscript: Load Transcript given in URL param'
+					});
+					transcript.load(transcriptId);
+				} else {
+					HA.gaEvent({
+						origin: HAP.options.ga_origin,
+						type: 'HAP',
+						action: 'loaddefaulttranscript: Load default Transcript'
+					});
+					transcript.load(HAP.options.defaultTranscriptId);
+				}
+			}
 		}
 	}
 
@@ -11632,6 +11667,24 @@ HAP = (function (window, document, HA) {
 	HAP.init = function(options) {
 
 		this.options = HA.extend({}, this.options, options);
+
+		if(this.options.viewer) {
+			var viewer = document.querySelector(this.options.targetViewer);
+			var video = document.createElement('div');
+			var text = document.createElement('div');
+			if(mixId) {
+				video.setAttribute('id', 'stage-videos');
+				HA.addClass(video, 'video');
+				text.setAttribute('id', 'stage');
+			} else {
+				video.setAttribute('id', 'video-source');
+				HA.addClass(video, 'video');
+				text.setAttribute('id', 'transcript');
+				text.appendChild(document.createElement('p')); // Otherwise iScroll complains.
+			}
+			viewer.appendChild(video);
+			viewer.appendChild(text);
+		}
 
 		if(pageReady) {
 			loaded();
