@@ -55,8 +55,8 @@ HAP = (function (window, document, HA) {
 		// Init the Address utility
 		HA.Address.init();
 
-		editBtn = document.querySelector(this.options.editBtn);
-		shareBtn = document.querySelector(this.options.shareBtn);
+		editBtn = document.querySelector(HAP.options.editBtn);
+		shareBtn = document.querySelector(HAP.options.shareBtn);
 
 		mixTitleForm = document.getElementById('mix-title-form');
 		mixTitle = document.getElementById('mix-title');
@@ -303,7 +303,7 @@ HAP = (function (window, document, HA) {
 		}
 
 		if(HAP.options.viewer) {
-			var editUrl = 'http://' + namespace + '.hyperaud.io/pad/';
+			var editUrl = 'http://' + (namespace ? namespace + '.' : '') + 'hyperaud.io/pad/';
 			if(mixId && transcriptId) {
 				editUrl += '?t=' + transcriptId + '&m=' + mixId;
 			} else if(mixId) {
