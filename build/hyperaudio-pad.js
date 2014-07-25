@@ -1,5 +1,5 @@
-/*! hyperaudio-pad v0.5.2 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 24th July 2014 18:10:19 */
-/*! hyperaudio-lib v0.5.0 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 20th July 2014 18:36:29 */
+/*! hyperaudio-pad v0.5.3 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 25th July 2014 14:27:44 */
+/*! hyperaudio-lib v0.5.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 25th July 2014 14:26:43 */
 (function(global, document) {
 
   // Popcorn.js does not support archaic browsers
@@ -4923,8 +4923,22 @@ IScroll.prototype = {
 		}, 400);
 
 		if ( 'deltaX' in e ) {
-			wheelDeltaX = -e.deltaX;
-			wheelDeltaY = -e.deltaY;
+
+			// Manual fix of Firefox mouse wheel bug.
+			// https://github.com/cubiq/iscroll/issues/577
+			// https://github.com/BryanTheCrow/iscroll/commit/3480247348392ea44ff6a0b9aec5c6a9043593df
+
+			// wheelDeltaX = -e.deltaX;
+			// wheelDeltaY = -e.deltaY;
+
+			if (e.deltaMode === 1) {
+				wheelDeltaX = -e.deltaX * this.options.mouseWheelSpeed;
+				wheelDeltaY = -e.deltaY * this.options.mouseWheelSpeed;
+			} else {
+				wheelDeltaX = -e.deltaX;
+				wheelDeltaY = -e.deltaY;
+			}
+
 		} else if ( 'wheelDeltaX' in e ) {
 			wheelDeltaX = e.wheelDeltaX / 120 * this.options.mouseWheelSpeed;
 			wheelDeltaY = e.wheelDeltaY / 120 * this.options.mouseWheelSpeed;
