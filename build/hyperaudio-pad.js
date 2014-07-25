@@ -1,4 +1,4 @@
-/*! hyperaudio-pad v0.5.3 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 25th July 2014 14:27:44 */
+/*! hyperaudio-pad v0.5.4 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 25th July 2014 17:41:59 */
 /*! hyperaudio-lib v0.5.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 25th July 2014 14:26:43 */
 (function(global, document) {
 
@@ -11325,6 +11325,8 @@ HAP = (function (window, document, HA) {
 		options: {
 			viewer: false, // True for read only viewer
 			targetViewer: '#viewer-wrapper',
+			editBtn: '#edit',
+			shareBtn: '#share',
 			defaultTranscriptId: 'XMVjtXOUSC-V0sSZBOKrBw',
 			ga_origin: 'Pad'
 		}
@@ -11337,6 +11339,9 @@ HAP = (function (window, document, HA) {
 	var transcript;
 
 	var sidemenu;
+
+	var editBtn;
+	var shareBtn;
 
 	var mixTitleForm;
 	var mixTitle;
@@ -11368,6 +11373,9 @@ HAP = (function (window, document, HA) {
 
 		// Init the Address utility
 		HA.Address.init();
+
+		editBtn = document.querySelector(HAP.options.editBtn);
+		shareBtn = document.querySelector(HAP.options.shareBtn);
 
 		mixTitleForm = document.getElementById('mix-title-form');
 		mixTitle = document.getElementById('mix-title');
@@ -11613,8 +11621,17 @@ HAP = (function (window, document, HA) {
 			});
 		}
 
-
-
+		if(HAP.options.viewer) {
+			var editUrl = 'http://' + (namespace ? namespace + '.' : '') + 'hyperaud.io/pad/';
+			if(mixId && transcriptId) {
+				editUrl += '?t=' + transcriptId + '&m=' + mixId;
+			} else if(mixId) {
+				editUrl += '?m=' + mixId;
+			} else if(transcriptId) {
+				editUrl += '?t=' + transcriptId;
+			}
+			editBtn.setAttribute('href', editUrl);
+		}
 
 		if(!HAP.options.viewer || transcriptId || mixId) {
 
