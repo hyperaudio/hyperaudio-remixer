@@ -6,6 +6,8 @@ HAP = (function (window, document, HA) {
 		options: {
 			viewer: false, // True for read only viewer
 			targetViewer: '#viewer-wrapper',
+			editBtn: '#edit',
+			shareBtn: '#share',
 			defaultTranscriptId: 'XMVjtXOUSC-V0sSZBOKrBw',
 			ga_origin: 'Pad'
 		}
@@ -18,6 +20,9 @@ HAP = (function (window, document, HA) {
 	var transcript;
 
 	var sidemenu;
+
+	var editBtn;
+	var shareBtn;
 
 	var mixTitleForm;
 	var mixTitle;
@@ -49,6 +54,9 @@ HAP = (function (window, document, HA) {
 
 		// Init the Address utility
 		HA.Address.init();
+
+		editBtn = document.querySelector(this.options.editBtn);
+		shareBtn = document.querySelector(this.options.shareBtn);
 
 		mixTitleForm = document.getElementById('mix-title-form');
 		mixTitle = document.getElementById('mix-title');
@@ -294,8 +302,17 @@ HAP = (function (window, document, HA) {
 			});
 		}
 
-
-
+		if(HAP.options.viewer) {
+			var editUrl = 'http://' + namespace + '.hyperaud.io/pad/';
+			if(mixId && transcriptId) {
+				editUrl += '?t=' + transcriptId + '&m=' + mixId;
+			} else if(mixId) {
+				editUrl += '?m=' + mixId;
+			} else if(transcriptId) {
+				editUrl += '?t=' + transcriptId;
+			}
+			editBtn.setAttribute('href', editUrl);
+		}
 
 		if(!HAP.options.viewer || transcriptId || mixId) {
 
