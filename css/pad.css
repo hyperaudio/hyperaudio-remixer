@@ -754,7 +754,7 @@ h1 input:focus {
 	left:0;
 	width: 100%;
 	height: 100%;
-	z-index: 200;
+	z-index: 10000; /* Because iScroll uses 9999 */
 	display:none;
 }
 .modal .modal-mask {
@@ -814,6 +814,7 @@ h1 input:focus {
 	border: 1px solid #666;
 	border-radius: 4px;
 }
+.modal .modal-input input[type="textarea"],
 .modal .modal-input input[type="text"],
 .modal .modal-input input[type="password"] {
 	display:block;
@@ -822,6 +823,9 @@ h1 input:focus {
 	margin:0 auto;
 	padding:5px;
 	font-size:1.5em;
+}
+.modal .modal-input input[type="textarea"] {
+	font-size:0.8em;
 }
 .modal .modal-input input[type="submit"] {
 	display:block;
