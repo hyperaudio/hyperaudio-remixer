@@ -314,25 +314,27 @@ HAP = (function (window, document, HA) {
 			editBtn.setAttribute('href', editUrl);
 
 			// Prompt login if attempting to save
-			var share = document.querySelector('#signin-modal');
+			var share = document.querySelector('#share-modal');
 
-			share.querySelector('.modal-close').addEventListener('click', function(e) {
-				e.preventDefault();
-				share.style.display = 'none';
-				HA.Clipboard.enable(); // Enable the Clipboard utility
-			});
+			if(share && shareBtn) {
+				share.querySelector('.modal-close').addEventListener('click', function(e) {
+					e.preventDefault();
+					share.style.display = 'none';
+					HA.Clipboard.enable(); // Enable the Clipboard utility
+				});
 
-			share.querySelector('form').addEventListener('submit', function(e) {
-				e.preventDefault();
-				share.style.display = 'none';
-				HA.Clipboard.enable(); // Enable the Clipboard utility
-			});
+				share.querySelector('form').addEventListener('submit', function(e) {
+					e.preventDefault();
+					share.style.display = 'none';
+					HA.Clipboard.enable(); // Enable the Clipboard utility
+				});
 
-			shareBtn.addEventListener('click', function(e) {
-				e.preventDefault();
-				share.style.display = 'block';
-				HA.Clipboard.disable(); // Disable the Clipboard utility
-			});
+				shareBtn.addEventListener('click', function(e) {
+					e.preventDefault();
+					share.style.display = 'block';
+					HA.Clipboard.disable(); // Disable the Clipboard utility
+				});
+			}
 		}
 
 		if(!HAP.options.viewer || transcriptId || mixId) {
