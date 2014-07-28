@@ -304,17 +304,24 @@ HAP = (function (window, document, HA) {
 
 		if(HAP.options.viewer) {
 			var editUrl = 'http://' + (namespace ? namespace + '.' : '') + 'hyperaud.io/pad/';
+			var shareUrl = editUrl + 'viewer/';
+			var urlParams = '';
 			if(mixId && transcriptId) {
-				editUrl += '?t=' + transcriptId + '&m=' + mixId;
+				urlParams = '?t=' + transcriptId + '&m=' + mixId;
 			} else if(mixId) {
-				editUrl += '?m=' + mixId;
+				urlParams = '?m=' + mixId;
 			} else if(transcriptId) {
-				editUrl += '?t=' + transcriptId;
+				urlParams = '?t=' + transcriptId;
 			}
+			editUrl += urlParams;
+			shareUrl += urlParams;
 			editBtn.setAttribute('href', editUrl);
 
 			// Prompt login if attempting to save
 			var share = document.querySelector('#share-modal');
+			var shareTextElem = document.querySelector('#share-embed-code');
+
+			var shareText = '<iframe src="' + shareUrl + '" height="294" width="480" frameborder="0" scrolling="no" allowfullscreen seamless></iframe>';
 
 			if(share && shareBtn) {
 				share.querySelector('.modal-close').addEventListener('click', function(e) {
@@ -334,6 +341,16 @@ HAP = (function (window, document, HA) {
 					share.style.display = 'block';
 					HA.Clipboard.disable(); // Disable the Clipboard utility
 				});
+			}
+			if(shareTextElem) {
+				//
+				shareTextElem.value = shareText;
+
+				shareTextElem.addEventListener('click', function(e) {
+					e.preventDefault();
+					shareTextElem.focus();
+					shareTextElem.select();
+				}, false);
 			}
 		}
 

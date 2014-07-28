@@ -804,17 +804,22 @@ h1 input:focus {
 .modal .modal-input {
 	margin-top:20px;
 }
+.modal .modal-input p {
+	color:#666;
+	margin:5px 0;
+}
 .modal .modal-input label {
 	display:block;
 	font-weight:bold;
 	color:#666;
 	margin-bottom:5px;
 }
+.modal .modal-input textarea,
 .modal .modal-input input {
 	border: 1px solid #666;
 	border-radius: 4px;
 }
-.modal .modal-input input[type="textarea"],
+.modal .modal-input textarea,
 .modal .modal-input input[type="text"],
 .modal .modal-input input[type="password"] {
 	display:block;
@@ -824,8 +829,11 @@ h1 input:focus {
 	padding:5px;
 	font-size:1.5em;
 }
-.modal .modal-input input[type="textarea"] {
-	font-size:0.8em;
+.modal .modal-input textarea {
+	font-size: 0.8em;
+	text-align: left;
+	resize: none;
+	overflow: hidden;
 }
 .modal .modal-input input[type="submit"] {
 	display:block;
