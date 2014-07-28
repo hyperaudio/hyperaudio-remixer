@@ -312,6 +312,27 @@ HAP = (function (window, document, HA) {
 				editUrl += '?t=' + transcriptId;
 			}
 			editBtn.setAttribute('href', editUrl);
+
+			// Prompt login if attempting to save
+			var share = document.querySelector('#signin-modal');
+
+			share.querySelector('.modal-close').addEventListener('click', function(e) {
+				e.preventDefault();
+				share.style.display = 'none';
+				HA.Clipboard.enable(); // Enable the Clipboard utility
+			});
+
+			share.querySelector('form').addEventListener('submit', function(e) {
+				e.preventDefault();
+				share.style.display = 'none';
+				HA.Clipboard.enable(); // Enable the Clipboard utility
+			});
+
+			shareBtn.addEventListener('click', function(e) {
+				e.preventDefault();
+				share.style.display = 'block';
+				HA.Clipboard.disable(); // Disable the Clipboard utility
+			});
 		}
 
 		if(!HAP.options.viewer || transcriptId || mixId) {
