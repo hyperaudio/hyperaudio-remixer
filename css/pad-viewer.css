@@ -117,3 +117,11 @@ h1 {
 .btn-edit {
 	right: 24px;
 }
+
+.modal .modal-window {
+	top:10px;
+	width:460px;
+	margin-left:-230px;
+	height:274px;
+	min-height:274px;
+}

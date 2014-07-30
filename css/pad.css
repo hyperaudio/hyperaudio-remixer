@@ -778,6 +778,7 @@ h1 input:focus {
 	position: absolute;
 	width:480px;
 	height:50%;
+	min-height:294px;
 	top:25%;
 	left:50%;
 	margin-left:-240px;
