@@ -1,4 +1,4 @@
-/*! hyperaudio-pad v0.5.8 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 30th July 2014 20:26:36 */
+/*! hyperaudio-pad v0.5.9 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 30th July 2014 20:49:32 */
 /*! hyperaudio-lib v0.5.5 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 28th July 2014 20:25:35 */
 (function(global, document) {
 
@@ -11487,7 +11487,9 @@ HAP = (function (window, document, HA) {
 			if(!HAP.options.viewer || (transcriptId && !mixId)) {
 				player = HA.Player({
 					target: "#video-source",
-					gui: true
+					gui: {
+						fullscreen: HAP.options.viewer
+					}
 				});
 
 				transcript = HA.Transcript({
