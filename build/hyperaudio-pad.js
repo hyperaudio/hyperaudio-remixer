@@ -1,4 +1,4 @@
-/*! hyperaudio-pad v0.5.7 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 30th July 2014 20:05:50 */
+/*! hyperaudio-pad v0.5.8 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 30th July 2014 20:26:36 */
 /*! hyperaudio-lib v0.5.5 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 28th July 2014 20:25:35 */
 (function(global, document) {
 
@@ -11387,7 +11387,7 @@ HAP = (function (window, document, HA) {
 		}
 
 		if(share && shareBtn) {
-			if(mixId) {
+			if(mixId || HAP.options.viewer) {
 				shareBtn.style.display = 'block';
 			} else {
 				shareBtn.style.display = 'none';
