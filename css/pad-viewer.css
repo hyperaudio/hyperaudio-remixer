@@ -81,7 +81,6 @@ h1 {
 	font-size: 16px;
 	text-align: center;
 	overflow:hidden;
-	cursor: pointer;
 
 	font-family: "fontello";
 	font-style: normal;
@@ -97,6 +96,7 @@ h1 {
 	overflow: hidden;
 	color: #eee;
  	text-decoration: none;
+	cursor: pointer;
 }
 .button a:hover {
 	color: #fff;

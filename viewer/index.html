@@ -24,10 +24,10 @@
 			</a>
 		</div>
 		<div class="button btn-share">
-			<a id="share-button" title="Share">f</a>
+			<a id="share" title="Share">f</a>
 		</div>
 		<div class="button btn-edit">
-			<a id="edit-button" href="http://hyperaud.io/pad/" target="_top" title="Edit">d</a>
+			<a id="edit" href="http://hyperaud.io/pad/" target="_top" title="Edit">d</a>
 		</div>
 	</header>
 
@@ -63,7 +63,9 @@
 
 HAP.init({
 	viewer: true,
-	origin: 'Viewer'
+	origin: 'Viewer',
+	editBtn: '#edit',
+	shareBtn: '#share' // Important the id is different from PAD, due to ghetto ID based CSS rules.
 });
 
 </script>
