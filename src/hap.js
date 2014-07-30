@@ -159,7 +159,9 @@ HAP = (function (window, document, HA) {
 			if(!HAP.options.viewer || (transcriptId && !mixId)) {
 				player = HA.Player({
 					target: "#video-source",
-					gui: true
+					gui: {
+						fullscreen: HAP.options.viewer
+					}
 				});
 
 				transcript = HA.Transcript({
