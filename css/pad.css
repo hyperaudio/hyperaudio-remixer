@@ -163,6 +163,7 @@ h1 input:focus {
 	outline: none;
 }
 
+#share-button,
 #save-button {
 	font-family: 'fontello';
 	width: 48px;
@@ -178,9 +179,16 @@ h1 input:focus {
 	cursor: pointer;
 }
 
+#share-button:hover,
 #save-button:hover {
 	background: #ccc;
 	color: #2c3e50;
+}
+
+#share-button {
+	right: 49px; /* 48 + 1 */
+	/* border-right: 1px #2c3e50 solid; */
+	display: none;
 }
 
 #save-button-saving {

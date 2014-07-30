@@ -6,8 +6,8 @@ HAP = (function (window, document, HA) {
 		options: {
 			viewer: false, // True for read only viewer
 			targetViewer: '#viewer-wrapper',
-			editBtn: '#edit',
-			shareBtn: '#share',
+			editBtn: '#edit-button',
+			shareBtn: '#share-button',
 			defaultTranscriptId: 'XMVjtXOUSC-V0sSZBOKrBw',
 			ga_origin: 'Pad'
 		}
@@ -24,26 +24,67 @@ HAP = (function (window, document, HA) {
 	var editBtn;
 	var shareBtn;
 
+	var share;
+	var shareTextElem;
+
 	var mixTitleForm;
 	var mixTitle;
 	var mixTitleHandler;
 	var saveButton;
 	var savingAnim;
 
+	var signin;
+
 	var fade;
 	var trim;
 	var title;
 
+	var namespace = null;
+	var myUrls = {};
+
 	var transcriptId = HA.getURLParameter('t');
 	var mixId = HA.getURLParameter('m');
 
+	function updateGUI() {
+
+		myUrls = getUrls();
+
+		if(editBtn) {
+			editBtn.setAttribute('href', myUrls.edit);
+		}
+
+		if(shareTextElem) {
+			var shareText = '<iframe src="' + myUrls.share + '" height="294" width="480" frameborder="0" scrolling="no" allowfullscreen seamless></iframe>';
+			shareTextElem.value = shareText;
+		}
+	}
+
+	function getUrls() {
+		var edit = 'http://' + (namespace ? namespace + '.' : '') + 'hyperaud.io/pad/';
+		var share = edit + 'viewer/';
+		var params = '';
+		if(mixId && transcriptId) {
+			params = '?t=' + transcriptId + '&m=' + mixId;
+		} else if(mixId) {
+			params = '?m=' + mixId;
+		} else if(transcriptId) {
+			params = '?t=' + transcriptId;
+		}
+		edit += params;
+		share += params;
+
+		return {
+			edit: edit,
+			share: share
+		};
+	}
+
 	function loaded () {
 		
-		var namespace = null;
 		if (document.location.hostname.indexOf('hyperaud') > 0) {
 		  namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
 		}
-		
+
 		// Init the API utility
 		HA.api.init({
 			org: namespace // The organisations namespace / sub-domain. EG. 'chattanooga'
@@ -58,10 +99,15 @@ HAP = (function (window, document, HA) {
 		editBtn = document.querySelector(HAP.options.editBtn);
 		shareBtn = document.querySelector(HAP.options.shareBtn);
 
+		share = document.querySelector('#share-modal');
+		shareTextElem = document.querySelector('#share-embed-code');
+
 		mixTitleForm = document.getElementById('mix-title-form');
 		mixTitle = document.getElementById('mix-title');
 		saveButton = document.getElementById('save-button');
 		savingAnim = document.querySelector('#save-button-saving');
+
+		signin = document.querySelector('#signin-modal');
 
 		music = HA.Music({
 			target: "#music-player"
@@ -165,9 +211,6 @@ HAP = (function (window, document, HA) {
 				stage.save();
 			}, false);
 
-			// Prompt login if attempting to save
-			var signin = document.querySelector('#signin-modal');
-
 			signin.querySelector('.modal-close').addEventListener('click', function(e) {
 				e.preventDefault();
 				signin.style.display = 'none';
@@ -193,6 +236,7 @@ HAP = (function (window, document, HA) {
 				});
 			});
 
+			// Prompt login if attempting to save
 			stage.target.addEventListener(HA.event.unauthenticated, function(e) {
 				// Prompt login
 				signin.style.display = 'block';
@@ -302,57 +346,35 @@ HAP = (function (window, document, HA) {
 			});
 		}
 
-		if(HAP.options.viewer) {
-			var editUrl = 'http://' + (namespace ? namespace + '.' : '') + 'hyperaud.io/pad/';
-			var shareUrl = editUrl + 'viewer/';
-			var urlParams = '';
-			if(mixId && transcriptId) {
-				urlParams = '?t=' + transcriptId + '&m=' + mixId;
-			} else if(mixId) {
-				urlParams = '?m=' + mixId;
-			} else if(transcriptId) {
-				urlParams = '?t=' + transcriptId;
-			}
-			editUrl += urlParams;
-			shareUrl += urlParams;
-			editBtn.setAttribute('href', editUrl);
+		if(share && shareBtn) {
+			share.querySelector('.modal-close').addEventListener('click', function(e) {
+				e.preventDefault();
+				share.style.display = 'none';
+				HA.Clipboard.enable(); // Enable the Clipboard utility
+			});
 
-			// Prompt login if attempting to save
-			var share = document.querySelector('#share-modal');
-			var shareTextElem = document.querySelector('#share-embed-code');
+			share.querySelector('form').addEventListener('submit', function(e) {
+				e.preventDefault();
+				share.style.display = 'none';
+				HA.Clipboard.enable(); // Enable the Clipboard utility
+			});
 
-			var shareText = '<iframe src="' + shareUrl + '" height="294" width="480" frameborder="0" scrolling="no" allowfullscreen seamless></iframe>';
-
-			if(share && shareBtn) {
-				share.querySelector('.modal-close').addEventListener('click', function(e) {
-					e.preventDefault();
-					share.style.display = 'none';
-					HA.Clipboard.enable(); // Enable the Clipboard utility
-				});
-
-				share.querySelector('form').addEventListener('submit', function(e) {
-					e.preventDefault();
-					share.style.display = 'none';
-					HA.Clipboard.enable(); // Enable the Clipboard utility
-				});
-
-				shareBtn.addEventListener('click', function(e) {
-					e.preventDefault();
-					share.style.display = 'block';
-					HA.Clipboard.disable(); // Disable the Clipboard utility
-				});
-			}
-			if(shareTextElem) {
-				//
-				shareTextElem.value = shareText;
-
-				shareTextElem.addEventListener('click', function(e) {
-					e.preventDefault();
-					shareTextElem.focus();
-					shareTextElem.select();
-				}, false);
-			}
+			shareBtn.addEventListener('click', function(e) {
+				e.preventDefault();
+				share.style.display = 'block';
+				HA.Clipboard.disable(); // Disable the Clipboard utility
+			});
 		}
+
+		if(shareTextElem) {
+			shareTextElem.addEventListener('click', function(e) {
+				e.preventDefault();
+				shareTextElem.focus();
+				shareTextElem.select();
+			}, false);
+		}
+
+		updateGUI();
 
 		if(!HAP.options.viewer || transcriptId || mixId) {
 
