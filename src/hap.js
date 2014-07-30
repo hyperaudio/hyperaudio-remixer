@@ -57,6 +57,14 @@ HAP = (function (window, document, HA) {
 			var shareText = '<iframe src="' + myUrls.share + '" height="294" width="480" frameborder="0" scrolling="no" allowfullscreen seamless></iframe>';
 			shareTextElem.value = shareText;
 		}
+
+		if(share && shareBtn) {
+			if(mixId) {
+				shareBtn.style.display = 'block';
+			} else {
+				shareBtn.style.display = 'none';
+			}
+		}
 	}
 
 	function getUrls() {
@@ -134,12 +142,16 @@ HAP = (function (window, document, HA) {
 					} else {
 						mixTitle.innerHTML = HA.api.mix.label;
 					}
+					mixId = HA.api.mix._id;
+					updateGUI();
 				}, false);
 
 				if(!HAP.options.viewer) {
 					stage.target.addEventListener(HA.event.save, function(e) {
 						savingAnim.style.display = 'none';
 						notify('save'); // Tell top frame the mix was saved
+						mixId = HA.api.mix._id;
+						updateGUI();
 					}, false);
 				}
 			}
@@ -161,6 +173,10 @@ HAP = (function (window, document, HA) {
 						mixTitle.innerHTML = HA.api.transcript.label;
 					}, false);
 				}
+				transcript.target.addEventListener(HA.event.load, function(e) {
+					transcriptId = HA.api.transcript._id;
+					updateGUI();
+				}, false);
 			}
 		}
 
