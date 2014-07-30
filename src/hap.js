@@ -59,7 +59,7 @@ HAP = (function (window, document, HA) {
 		}
 
 		if(share && shareBtn) {
-			if(mixId) {
+			if(mixId || HAP.options.viewer) {
 				shareBtn.style.display = 'block';
 			} else {
 				shareBtn.style.display = 'none';
