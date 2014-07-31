@@ -94,8 +94,8 @@ HAP = (function (window, document, HA) {
 			namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
 		}
 
-		if (document.location.hostname.indexOf('hyperaud.net') > -1) {
-			domain = 'hyperaud.net';
+		if (document.location.hostname.indexOf('hyperaudio.net') > -1) {
+			domain = 'hyperaudio.net';
 		}
 
 		// Init the API utility
