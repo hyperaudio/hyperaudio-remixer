@@ -1,4 +1,4 @@
-/*! hyperaudio-pad v0.6.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 31st July 2014 16:54:49 */
+/*! hyperaudio-pad v0.6.2 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 31st July 2014 17:08:04 */
 /*! hyperaudio-lib v0.6.1 ~ (c) 2012-2014 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 31st July 2014 16:43:10 */
 (function(global, document) {
 
@@ -11427,8 +11427,8 @@ HAP = (function (window, document, HA) {
 			namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
 		}
 
-		if (document.location.hostname.indexOf('hyperaud.net') > -1) {
-			domain = 'hyperaud.net';
+		if (document.location.hostname.indexOf('hyperaudio.net') > -1) {
+			domain = 'hyperaudio.net';
 		}
 
 		// Init the API utility
