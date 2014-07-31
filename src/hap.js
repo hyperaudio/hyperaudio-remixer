@@ -40,6 +40,7 @@ HAP = (function (window, document, HA) {
 	var title;
 
 	var namespace = null;
+	var domain = 'hyperaud.io';
 	var myUrls = {};
 
 	var transcriptId = HA.getURLParameter('t');
@@ -68,7 +69,7 @@ HAP = (function (window, document, HA) {
 	}
 
 	function getUrls() {
-		var edit = 'http://' + (namespace ? namespace + '.' : '') + 'hyperaud.io/pad/';
+		var edit = 'http://' + (namespace ? namespace + '.' : '') + domain + '/pad/';
 		var share = edit + 'viewer/';
 		var params = '';
 		if(mixId && transcriptId) {
@@ -89,13 +90,18 @@ HAP = (function (window, document, HA) {
 
 	function loaded () {
 		
-		if (document.location.hostname.indexOf('hyperaud') > 0) {
-		  namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
+		if (document.location.hostname.indexOf('hyperaud') > -1) {
+			namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
+		}
+
+		if (document.location.hostname.indexOf('hyperaud.net') > -1) {
+			domain = 'hyperaud.net';
 		}
 
 		// Init the API utility
 		HA.api.init({
-			org: namespace // The organisations namespace / sub-domain. EG. 'chattanooga'
+			org: namespace, // The organisations namespace / sub-domain. EG. 'chattanooga'
+			domain: domain
 		});
 
 		// Init the Clipboard utility
