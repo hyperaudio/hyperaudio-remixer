@@ -124,11 +124,12 @@ var Source = function (_Player) {
         for (var _iterator3 = selected[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
           var node = _step3.value;
 
-          if (selection.containsNode(node, true)) {
+          if (selection.containsNode(node, true) || selection.containsNode(node.parentNode, true)) {
             node.setAttribute('draggable', true);
             node.addEventListener('dragstart', this.onDragStart.bind(this));
-            node.addEventListener('dragend', this.onDragEnd.bind(this));
+            // node.addEventListener('dragend', this.onDragEnd.bind(this));
           } else {
+            console.log('kill', node);
             node.classList.remove('selected');
             node.removeAttribute('draggable');
           }
@@ -152,7 +153,9 @@ var Source = function (_Player) {
         var range = selection.getRangeAt(0);
         range.setStartBefore(selected.item(0));
         range.setEndAfter(selected.item(selected.length - 1));
-      } else selection.removeAllRanges();
+      } else {
+        selection.removeAllRanges();
+      }
     }
   }, {
     key: 'onDragStart',
@@ -190,35 +193,14 @@ var Source = function (_Player) {
       event.dataTransfer.effectAllowed = 'copy';
       event.dataTransfer.dropEffect = 'copy';
     }
-  }, {
-    key: 'onDragEnd',
-    value: function onDragEnd() {
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
 
-      try {
-        for (var _iterator5 = this.node.querySelectorAll('.selected')[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var node = _step5.value;
+    // onDragEnd() {
+    //   for (const node of this.node.querySelectorAll('.selected')) {
+    //     node.classList.remove('selected');
+    //     node.removeAttribute('draggable');
+    //   }
+    // }
 
-          node.classList.remove('selected');
-          node.removeAttribute('draggable');
-        }
-      } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
-          }
-        } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
-          }
-        }
-      }
-    }
   }]);
 
   return Source;
@@ -239,27 +221,27 @@ var Sink = function (_Player2) {
     article.addEventListener('dragend', _this2.onDragEnd.bind(_this2));
     article.addEventListener('drop', _this2.onDrop.bind(_this2));
 
-    var _iteratorNormalCompletion6 = true;
-    var _didIteratorError6 = false;
-    var _iteratorError6 = undefined;
+    var _iteratorNormalCompletion5 = true;
+    var _didIteratorError5 = false;
+    var _iteratorError5 = undefined;
 
     try {
-      for (var _iterator6 = article.querySelectorAll('section')[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-        var node = _step6.value;
+      for (var _iterator5 = article.querySelectorAll('section')[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+        var node = _step5.value;
 
         _this2.setup(node);
       }
     } catch (err) {
-      _didIteratorError6 = true;
-      _iteratorError6 = err;
+      _didIteratorError5 = true;
+      _iteratorError5 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion6 && _iterator6.return) {
-          _iterator6.return();
+        if (!_iteratorNormalCompletion5 && _iterator5.return) {
+          _iterator5.return();
         }
       } finally {
-        if (_didIteratorError6) {
-          throw _iteratorError6;
+        if (_didIteratorError5) {
+          throw _iteratorError5;
         }
       }
     }
@@ -302,6 +284,47 @@ var Sink = function (_Player2) {
       event.preventDefault();
       event.stopPropagation();
 
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = this.node.querySelectorAll('.over')[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var node = _step6.value;
+
+          node.classList.remove('over');
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
+        }
+      }
+
+      var target = event.target;
+      if (typeof target.matches !== 'function') return;
+      while (!target.matches('section[draggable]')) {
+        target = target.parentNode;
+        if (!target) return;
+        if (typeof target.matches !== 'function') return;
+      }
+
+      target.classList.add('over');
+    }
+
+    // onDragLeave(event) {}
+
+  }, {
+    key: 'onDragEnd',
+    value: function onDragEnd(event) {
       var _iteratorNormalCompletion7 = true;
       var _didIteratorError7 = false;
       var _iteratorError7 = undefined;
@@ -323,47 +346,6 @@ var Sink = function (_Player2) {
         } finally {
           if (_didIteratorError7) {
             throw _iteratorError7;
-          }
-        }
-      }
-
-      var target = event.target;
-      if (typeof target.matches !== 'function') return;
-      while (!target.matches('section[draggable]')) {
-        target = target.parentNode;
-        if (!target) return;
-        if (typeof target.matches !== 'function') return;
-      }
-
-      target.classList.add('over');
-    }
-
-    // onDragLeave(event) {}
-
-  }, {
-    key: 'onDragEnd',
-    value: function onDragEnd(event) {
-      var _iteratorNormalCompletion8 = true;
-      var _didIteratorError8 = false;
-      var _iteratorError8 = undefined;
-
-      try {
-        for (var _iterator8 = this.node.querySelectorAll('.over')[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-          var node = _step8.value;
-
-          node.classList.remove('over');
-        }
-      } catch (err) {
-        _didIteratorError8 = true;
-        _iteratorError8 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion8 && _iterator8.return) {
-            _iterator8.return();
-          }
-        } finally {
-          if (_didIteratorError8) {
-            throw _iteratorError8;
           }
         }
       }

@@ -49,11 +49,12 @@ class Source extends Player {
     const selected = this.node.querySelectorAll('.selected');
 
     for (const node of selected) {
-      if (selection.containsNode(node, true)) {
+      if (selection.containsNode(node, true) || selection.containsNode(node.parentNode, true)) {
         node.setAttribute('draggable', true);
         node.addEventListener('dragstart', this.onDragStart.bind(this));
-        node.addEventListener('dragend', this.onDragEnd.bind(this));
+        // node.addEventListener('dragend', this.onDragEnd.bind(this));
       } else {
+        console.log('kill', node);
         node.classList.remove('selected');
         node.removeAttribute('draggable');
       }
@@ -63,7 +64,9 @@ class Source extends Player {
       const range = selection.getRangeAt(0);
       range.setStartBefore(selected.item(0));
       range.setEndAfter(selected.item(selected.length - 1));
-    } else selection.removeAllRanges();
+    } else {
+      selection.removeAllRanges();
+    }
   }
 
   onDragStart(event) {
@@ -80,12 +83,12 @@ class Source extends Player {
     event.dataTransfer.dropEffect = 'copy';
   }
 
-  onDragEnd() {
-    for (const node of this.node.querySelectorAll('.selected')) {
-      node.classList.remove('selected');
-      node.removeAttribute('draggable');
-    }
-  }
+  // onDragEnd() {
+  //   for (const node of this.node.querySelectorAll('.selected')) {
+  //     node.classList.remove('selected');
+  //     node.removeAttribute('draggable');
+  //   }
+  // }
 }
 
 
