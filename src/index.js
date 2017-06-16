@@ -67,7 +67,12 @@ class Source extends Player {
   }
 
   onDragStart(event) {
-    event.dataTransfer.setData('nodes', this.node.querySelectorAll('.selected'));
+    const node = document.createElement('section');
+    for (const selected of this.node.querySelectorAll('.selected')) {
+      node.appendChild(selected.cloneNode(true));
+    }
+
+    event.dataTransfer.setData('html', node.outerHTML);
     event.dataTransfer.effectAllowed = 'copy';
     event.dataTransfer.dropEffect = 'copy';
   }
@@ -102,12 +107,26 @@ class Sink extends Player {
     node.setAttribute('draggable', true);
     node.setAttribute('tabindex', 0);
     node.addEventListener('dragstart', this.onDragStart.bind(this));
+    node.addEventListener('dragend', this.onDragEnd2.bind(this));
   }
 
   onDragStart(event) {
-    event.dataTransfer.setData('nodes', 'THIS');
+    // let position = 0;
+    // let node = event.target;
+    //
+    // while (node.previousSibling) {
+    //     position++;
+    //     node = node.previousSibling;
+    // }
+
+    event.dataTransfer.setData('html', event.target.outerHTML);
+    // event.dataTransfer.setData('position', position);
     event.dataTransfer.effectAllowed = 'copy';
     event.dataTransfer.dropEffect = 'copy';
+  }
+
+  onDragEnd2(event) {
+    event.target.remove();
   }
 
   onDragOver(event) {
@@ -145,7 +164,42 @@ class Sink extends Player {
 
   onDrop(event) {
     event.preventDefault();
-    console.log(event.dataTransfer.getData('nodes'));
+    const html = event.dataTransfer.getData('html');
+    // const position = parseInt(event.dataTransfer.getData('position'));
+
+    let target = event.target;
+
+    // if (position) {
+    //   if (target.nodeName === 'ARTICLE') {
+    //     target.appendChild(target.children[position - 1]);
+    //   } else {
+    //     while (!target.matches('section[draggable]')) {
+    //       target = target.parentNode;
+    //       if (!target) break;
+    //       if (typeof target.matches !== 'function') break;
+    //     }
+    //     console.log(target, position, this.node.querySelector('article').children[position - 1]);
+    //   }
+    // }
+
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = html;
+    const node = wrapper.children[0];
+
+    if (target.nodeName === 'ARTICLE') {
+      target.appendChild(node);
+      this.setup(node);
+    } else {
+      while (!target.matches('section[draggable]')) {
+        target = target.parentNode;
+      }
+
+      target.parentNode.insertBefore(node, target);
+      this.setup(node);
+    }
+
+    // this.setup(node);
+    this.onDragEnd();
   }
 }
 

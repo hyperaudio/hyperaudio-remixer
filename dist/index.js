@@ -157,23 +157,16 @@ var Source = function (_Player) {
   }, {
     key: 'onDragStart',
     value: function onDragStart(event) {
-      event.dataTransfer.setData('nodes', this.node.querySelectorAll('.selected'));
-      event.dataTransfer.effectAllowed = 'copy';
-      event.dataTransfer.dropEffect = 'copy';
-    }
-  }, {
-    key: 'onDragEnd',
-    value: function onDragEnd() {
+      var node = document.createElement('section');
       var _iteratorNormalCompletion4 = true;
       var _didIteratorError4 = false;
       var _iteratorError4 = undefined;
 
       try {
         for (var _iterator4 = this.node.querySelectorAll('.selected')[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-          var node = _step4.value;
+          var selected = _step4.value;
 
-          node.classList.remove('selected');
-          node.removeAttribute('draggable');
+          node.appendChild(selected.cloneNode(true));
         }
       } catch (err) {
         _didIteratorError4 = true;
@@ -186,6 +179,39 @@ var Source = function (_Player) {
         } finally {
           if (_didIteratorError4) {
             throw _iteratorError4;
+          }
+        }
+      }
+
+      event.dataTransfer.setData('html', node.outerHTML);
+      event.dataTransfer.effectAllowed = 'copy';
+      event.dataTransfer.dropEffect = 'copy';
+    }
+  }, {
+    key: 'onDragEnd',
+    value: function onDragEnd() {
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = this.node.querySelectorAll('.selected')[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var node = _step5.value;
+
+          node.classList.remove('selected');
+          node.removeAttribute('draggable');
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
@@ -209,27 +235,27 @@ var Sink = function (_Player2) {
     _this2.node.querySelector('article').addEventListener('dragend', _this2.onDragEnd.bind(_this2));
     _this2.node.querySelector('article').addEventListener('drop', _this2.onDrop.bind(_this2));
 
-    var _iteratorNormalCompletion5 = true;
-    var _didIteratorError5 = false;
-    var _iteratorError5 = undefined;
+    var _iteratorNormalCompletion6 = true;
+    var _didIteratorError6 = false;
+    var _iteratorError6 = undefined;
 
     try {
-      for (var _iterator5 = _this2.node.querySelectorAll('section')[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-        var node = _step5.value;
+      for (var _iterator6 = _this2.node.querySelectorAll('section')[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+        var node = _step6.value;
 
         _this2.setup(node);
       }
     } catch (err) {
-      _didIteratorError5 = true;
-      _iteratorError5 = err;
+      _didIteratorError6 = true;
+      _iteratorError6 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion5 && _iterator5.return) {
-          _iterator5.return();
+        if (!_iteratorNormalCompletion6 && _iterator6.return) {
+          _iterator6.return();
         }
       } finally {
-        if (_didIteratorError5) {
-          throw _iteratorError5;
+        if (_didIteratorError6) {
+          throw _iteratorError6;
         }
       }
     }
@@ -245,13 +271,28 @@ var Sink = function (_Player2) {
       node.setAttribute('draggable', true);
       node.setAttribute('tabindex', 0);
       node.addEventListener('dragstart', this.onDragStart.bind(this));
+      node.addEventListener('dragend', this.onDragEnd2.bind(this));
     }
   }, {
     key: 'onDragStart',
     value: function onDragStart(event) {
-      event.dataTransfer.setData('nodes', 'THIS');
+      // let position = 0;
+      // let node = event.target;
+      //
+      // while (node.previousSibling) {
+      //     position++;
+      //     node = node.previousSibling;
+      // }
+
+      event.dataTransfer.setData('html', event.target.outerHTML);
+      // event.dataTransfer.setData('position', position);
       event.dataTransfer.effectAllowed = 'copy';
       event.dataTransfer.dropEffect = 'copy';
+    }
+  }, {
+    key: 'onDragEnd2',
+    value: function onDragEnd2(event) {
+      event.target.remove();
     }
   }, {
     key: 'onDragOver',
@@ -266,47 +307,6 @@ var Sink = function (_Player2) {
       event.preventDefault();
       event.stopPropagation();
 
-      var _iteratorNormalCompletion6 = true;
-      var _didIteratorError6 = false;
-      var _iteratorError6 = undefined;
-
-      try {
-        for (var _iterator6 = this.node.querySelectorAll('.over')[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-          var node = _step6.value;
-
-          node.classList.remove('over');
-        }
-      } catch (err) {
-        _didIteratorError6 = true;
-        _iteratorError6 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return) {
-            _iterator6.return();
-          }
-        } finally {
-          if (_didIteratorError6) {
-            throw _iteratorError6;
-          }
-        }
-      }
-
-      var target = event.target;
-      if (typeof target.matches !== 'function') return;
-      while (!target.matches('section[draggable]')) {
-        target = target.parentNode;
-        if (!target) return;
-        if (typeof target.matches !== 'function') return;
-      }
-
-      target.classList.add('over');
-    }
-
-    // onDragLeave(event) {}
-
-  }, {
-    key: 'onDragEnd',
-    value: function onDragEnd(event) {
       var _iteratorNormalCompletion7 = true;
       var _didIteratorError7 = false;
       var _iteratorError7 = undefined;
@@ -331,12 +331,88 @@ var Sink = function (_Player2) {
           }
         }
       }
+
+      var target = event.target;
+      if (typeof target.matches !== 'function') return;
+      while (!target.matches('section[draggable]')) {
+        target = target.parentNode;
+        if (!target) return;
+        if (typeof target.matches !== 'function') return;
+      }
+
+      target.classList.add('over');
+    }
+
+    // onDragLeave(event) {}
+
+  }, {
+    key: 'onDragEnd',
+    value: function onDragEnd(event) {
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
+
+      try {
+        for (var _iterator8 = this.node.querySelectorAll('.over')[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var node = _step8.value;
+
+          node.classList.remove('over');
+        }
+      } catch (err) {
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
+          }
+        } finally {
+          if (_didIteratorError8) {
+            throw _iteratorError8;
+          }
+        }
+      }
     }
   }, {
     key: 'onDrop',
     value: function onDrop(event) {
       event.preventDefault();
-      console.log(event.dataTransfer.getData('nodes'));
+      var html = event.dataTransfer.getData('html');
+      // const position = parseInt(event.dataTransfer.getData('position'));
+
+      var target = event.target;
+
+      // if (position) {
+      //   if (target.nodeName === 'ARTICLE') {
+      //     target.appendChild(target.children[position - 1]);
+      //   } else {
+      //     while (!target.matches('section[draggable]')) {
+      //       target = target.parentNode;
+      //       if (!target) break;
+      //       if (typeof target.matches !== 'function') break;
+      //     }
+      //     console.log(target, position, this.node.querySelector('article').children[position - 1]);
+      //   }
+      // }
+
+      var wrapper = document.createElement('div');
+      wrapper.innerHTML = html;
+      var node = wrapper.children[0];
+
+      if (target.nodeName === 'ARTICLE') {
+        target.appendChild(node);
+        this.setup(node);
+      } else {
+        while (!target.matches('section[draggable]')) {
+          target = target.parentNode;
+        }
+
+        target.parentNode.insertBefore(node, target);
+        this.setup(node);
+      }
+
+      // this.setup(node);
+      this.onDragEnd();
     }
   }]);
 
