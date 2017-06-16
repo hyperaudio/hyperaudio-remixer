@@ -2,7 +2,12 @@ class Player {
   constructor(nodeOrSelector) {
     this.node = typeof nodeOrSelector === 'string' ? document.querySelector(nodeOrSelector) : nodeOrSelector;
   }
+
+  setup(node) {
+    console.log('TODO setup player for', node.getAttribute('data-src'));
+  }
 }
+
 
 class Source extends Player {
   constructor(nodeOrSelector) {
@@ -54,8 +59,8 @@ class Source extends Player {
       }
     }
 
-    const range = selection.getRangeAt(0);
-    if (selected.length > 0) {
+    if (selected.length > 0 && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
       range.setStartBefore(selected.item(0));
       range.setEndAfter(selected.item(selected.length - 1));
     } else selection.removeAllRanges();
@@ -85,6 +90,24 @@ class Sink extends Player {
     // this.node.querySelector('article').addEventListener('dragleave', this.onDragLeave.bind(this));
     this.node.querySelector('article').addEventListener('dragend', this.onDragEnd.bind(this));
     this.node.querySelector('article').addEventListener('drop', this.onDrop.bind(this));
+
+    for (const node of this.node.querySelectorAll('section')) {
+      this.setup(node);
+    }
+  }
+
+  setup(node) {
+    super.setup(node);
+
+    node.setAttribute('draggable', true);
+    node.setAttribute('tabindex', 0);
+    node.addEventListener('dragstart', this.onDragStart.bind(this));
+  }
+
+  onDragStart(event) {
+    event.dataTransfer.setData('nodes', 'THIS');
+    event.dataTransfer.effectAllowed = 'copy';
+    event.dataTransfer.dropEffect = 'copy';
   }
 
   onDragOver(event) {
@@ -103,8 +126,7 @@ class Sink extends Player {
 
     let target = event.target;
     if (typeof target.matches !== 'function') return;
-    while (!target.matches('section[data-src]')) {
-      console.log(target);
+    while (!target.matches('section[draggable]')) {
       target = target.parentNode;
       if (!target) return;
       if (typeof target.matches !== 'function') return;

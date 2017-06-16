@@ -1,5 +1,7 @@
 'use strict';
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -8,11 +10,22 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Player = function Player(nodeOrSelector) {
-  _classCallCheck(this, Player);
+var Player = function () {
+  function Player(nodeOrSelector) {
+    _classCallCheck(this, Player);
 
-  this.node = typeof nodeOrSelector === 'string' ? document.querySelector(nodeOrSelector) : nodeOrSelector;
-};
+    this.node = typeof nodeOrSelector === 'string' ? document.querySelector(nodeOrSelector) : nodeOrSelector;
+  }
+
+  _createClass(Player, [{
+    key: 'setup',
+    value: function setup(node) {
+      console.log('TODO setup player for', node.getAttribute('data-src'));
+    }
+  }]);
+
+  return Player;
+}();
 
 var Source = function (_Player) {
   _inherits(Source, _Player);
@@ -135,8 +148,8 @@ var Source = function (_Player) {
         }
       }
 
-      var range = selection.getRangeAt(0);
-      if (selected.length > 0) {
+      if (selected.length > 0 && selection.rangeCount > 0) {
+        var range = selection.getRangeAt(0);
         range.setStartBefore(selected.item(0));
         range.setEndAfter(selected.item(selected.length - 1));
       } else selection.removeAllRanges();
@@ -195,10 +208,52 @@ var Sink = function (_Player2) {
     // this.node.querySelector('article').addEventListener('dragleave', this.onDragLeave.bind(this));
     _this2.node.querySelector('article').addEventListener('dragend', _this2.onDragEnd.bind(_this2));
     _this2.node.querySelector('article').addEventListener('drop', _this2.onDrop.bind(_this2));
+
+    var _iteratorNormalCompletion5 = true;
+    var _didIteratorError5 = false;
+    var _iteratorError5 = undefined;
+
+    try {
+      for (var _iterator5 = _this2.node.querySelectorAll('section')[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+        var node = _step5.value;
+
+        _this2.setup(node);
+      }
+    } catch (err) {
+      _didIteratorError5 = true;
+      _iteratorError5 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion5 && _iterator5.return) {
+          _iterator5.return();
+        }
+      } finally {
+        if (_didIteratorError5) {
+          throw _iteratorError5;
+        }
+      }
+    }
+
     return _this2;
   }
 
   _createClass(Sink, [{
+    key: 'setup',
+    value: function setup(node) {
+      _get(Sink.prototype.__proto__ || Object.getPrototypeOf(Sink.prototype), 'setup', this).call(this, node);
+
+      node.setAttribute('draggable', true);
+      node.setAttribute('tabindex', 0);
+      node.addEventListener('dragstart', this.onDragStart.bind(this));
+    }
+  }, {
+    key: 'onDragStart',
+    value: function onDragStart(event) {
+      event.dataTransfer.setData('nodes', 'THIS');
+      event.dataTransfer.effectAllowed = 'copy';
+      event.dataTransfer.dropEffect = 'copy';
+    }
+  }, {
     key: 'onDragOver',
     value: function onDragOver(event) {
       event.preventDefault();
@@ -211,48 +266,6 @@ var Sink = function (_Player2) {
       event.preventDefault();
       event.stopPropagation();
 
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
-
-      try {
-        for (var _iterator5 = this.node.querySelectorAll('.over')[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var node = _step5.value;
-
-          node.classList.remove('over');
-        }
-      } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
-          }
-        } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
-          }
-        }
-      }
-
-      var target = event.target;
-      if (typeof target.matches !== 'function') return;
-      while (!target.matches('section[data-src]')) {
-        console.log(target);
-        target = target.parentNode;
-        if (!target) return;
-        if (typeof target.matches !== 'function') return;
-      }
-
-      target.classList.add('over');
-    }
-
-    // onDragLeave(event) {}
-
-  }, {
-    key: 'onDragEnd',
-    value: function onDragEnd(event) {
       var _iteratorNormalCompletion6 = true;
       var _didIteratorError6 = false;
       var _iteratorError6 = undefined;
@@ -277,6 +290,47 @@ var Sink = function (_Player2) {
           }
         }
       }
+
+      var target = event.target;
+      if (typeof target.matches !== 'function') return;
+      while (!target.matches('section[draggable]')) {
+        target = target.parentNode;
+        if (!target) return;
+        if (typeof target.matches !== 'function') return;
+      }
+
+      target.classList.add('over');
+    }
+
+    // onDragLeave(event) {}
+
+  }, {
+    key: 'onDragEnd',
+    value: function onDragEnd(event) {
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
+
+      try {
+        for (var _iterator7 = this.node.querySelectorAll('.over')[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var node = _step7.value;
+
+          node.classList.remove('over');
+        }
+      } catch (err) {
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
+          }
+        } finally {
+          if (_didIteratorError7) {
+            throw _iteratorError7;
+          }
+        }
+      }
     }
   }, {
     key: 'onDrop',
@@ -288,5 +342,3 @@ var Sink = function (_Player2) {
 
   return Sink;
 }(Player);
-
-//# sourceMappingURL=index.js.map
