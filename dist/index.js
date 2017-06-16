@@ -64,7 +64,7 @@ var Source = function (_Player) {
         for (var _iterator = this.node.querySelectorAll('.selected')[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var selected = _step.value;
 
-          if (selection.containsNode(selected, true)) continue;
+          if (selection.containsNode(selected, true) || selection.containsNode(selected.parentNode, true)) continue;
           selected.classList.remove('selected');
           selected.removeAttribute('draggable');
         }
@@ -160,6 +160,9 @@ var Source = function (_Player) {
   }, {
     key: 'onDragStart',
     value: function onDragStart(event) {
+      // event.preventDefault();
+      // event.stopPropagation();
+
       var node = document.createElement('section');
       var _iteratorNormalCompletion4 = true;
       var _didIteratorError4 = false;
@@ -192,6 +195,8 @@ var Source = function (_Player) {
       event.dataTransfer.setData('html', node.outerHTML);
       event.dataTransfer.effectAllowed = 'copy';
       event.dataTransfer.dropEffect = 'copy';
+
+      // return false;
     }
 
     // onDragEnd() {

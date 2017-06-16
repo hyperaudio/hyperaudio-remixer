@@ -32,7 +32,7 @@ class Source extends Player {
     if (!(commonAncestor.matches('section[data-src]') || commonAncestor.parentNode.matches('section[data-src]'))) return;
 
     for (const selected of this.node.querySelectorAll('.selected')) {
-      if (selection.containsNode(selected, true)) continue;
+      if (selection.containsNode(selected, true) || selection.containsNode(selected.parentNode, true)) continue;
       selected.classList.remove('selected');
       selected.removeAttribute('draggable');
     }
@@ -70,6 +70,9 @@ class Source extends Player {
   }
 
   onDragStart(event) {
+    // event.preventDefault();
+    // event.stopPropagation();
+
     const node = document.createElement('section');
     for (const selected of this.node.querySelectorAll('.selected')) {
       const clone = selected.cloneNode(true);
@@ -81,6 +84,8 @@ class Source extends Player {
     event.dataTransfer.setData('html', node.outerHTML);
     event.dataTransfer.effectAllowed = 'copy';
     event.dataTransfer.dropEffect = 'copy';
+
+    // return false;
   }
 
   // onDragEnd() {
