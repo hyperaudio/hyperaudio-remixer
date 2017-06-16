@@ -166,7 +166,10 @@ var Source = function (_Player) {
         for (var _iterator4 = this.node.querySelectorAll('.selected')[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
           var selected = _step4.value;
 
-          node.appendChild(selected.cloneNode(true));
+          var clone = selected.cloneNode(true);
+          clone.classList.remove('selected');
+          clone.removeAttribute('draggable');
+          node.appendChild(clone);
         }
       } catch (err) {
         _didIteratorError4 = true;
@@ -229,18 +232,19 @@ var Sink = function (_Player2) {
 
     var _this2 = _possibleConstructorReturn(this, (Sink.__proto__ || Object.getPrototypeOf(Sink)).call(this, nodeOrSelector));
 
-    _this2.node.querySelector('article').addEventListener('dragover', _this2.onDragOver.bind(_this2));
-    _this2.node.querySelector('article').addEventListener('dragenter', _this2.onDragEnter.bind(_this2));
-    // this.node.querySelector('article').addEventListener('dragleave', this.onDragLeave.bind(this));
-    _this2.node.querySelector('article').addEventListener('dragend', _this2.onDragEnd.bind(_this2));
-    _this2.node.querySelector('article').addEventListener('drop', _this2.onDrop.bind(_this2));
+    var article = _this2.node.querySelector('article');
+    article.addEventListener('dragover', _this2.onDragOver.bind(_this2));
+    article.addEventListener('dragenter', _this2.onDragEnter.bind(_this2));
+    // article.addEventListener('dragleave', this.onDragLeave.bind(this));
+    article.addEventListener('dragend', _this2.onDragEnd.bind(_this2));
+    article.addEventListener('drop', _this2.onDrop.bind(_this2));
 
     var _iteratorNormalCompletion6 = true;
     var _didIteratorError6 = false;
     var _iteratorError6 = undefined;
 
     try {
-      for (var _iterator6 = _this2.node.querySelectorAll('section')[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+      for (var _iterator6 = article.querySelectorAll('section')[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
         var node = _step6.value;
 
         _this2.setup(node);
@@ -276,16 +280,7 @@ var Sink = function (_Player2) {
   }, {
     key: 'onDragStart',
     value: function onDragStart(event) {
-      // let position = 0;
-      // let node = event.target;
-      //
-      // while (node.previousSibling) {
-      //     position++;
-      //     node = node.previousSibling;
-      // }
-
       event.dataTransfer.setData('html', event.target.outerHTML);
-      // event.dataTransfer.setData('position', position);
       event.dataTransfer.effectAllowed = 'copy';
       event.dataTransfer.dropEffect = 'copy';
     }
@@ -378,22 +373,8 @@ var Sink = function (_Player2) {
     value: function onDrop(event) {
       event.preventDefault();
       var html = event.dataTransfer.getData('html');
-      // const position = parseInt(event.dataTransfer.getData('position'));
 
       var target = event.target;
-
-      // if (position) {
-      //   if (target.nodeName === 'ARTICLE') {
-      //     target.appendChild(target.children[position - 1]);
-      //   } else {
-      //     while (!target.matches('section[draggable]')) {
-      //       target = target.parentNode;
-      //       if (!target) break;
-      //       if (typeof target.matches !== 'function') break;
-      //     }
-      //     console.log(target, position, this.node.querySelector('article').children[position - 1]);
-      //   }
-      // }
 
       var wrapper = document.createElement('div');
       wrapper.innerHTML = html;
@@ -411,7 +392,6 @@ var Sink = function (_Player2) {
         this.setup(node);
       }
 
-      // this.setup(node);
       this.onDragEnd();
     }
   }]);

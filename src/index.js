@@ -69,7 +69,10 @@ class Source extends Player {
   onDragStart(event) {
     const node = document.createElement('section');
     for (const selected of this.node.querySelectorAll('.selected')) {
-      node.appendChild(selected.cloneNode(true));
+      const clone = selected.cloneNode(true);
+      clone.classList.remove('selected');
+      clone.removeAttribute('draggable');
+      node.appendChild(clone);
     }
 
     event.dataTransfer.setData('html', node.outerHTML);
@@ -90,13 +93,14 @@ class Sink extends Player {
   constructor(nodeOrSelector) {
     super(nodeOrSelector);
 
-    this.node.querySelector('article').addEventListener('dragover', this.onDragOver.bind(this));
-    this.node.querySelector('article').addEventListener('dragenter', this.onDragEnter.bind(this));
-    // this.node.querySelector('article').addEventListener('dragleave', this.onDragLeave.bind(this));
-    this.node.querySelector('article').addEventListener('dragend', this.onDragEnd.bind(this));
-    this.node.querySelector('article').addEventListener('drop', this.onDrop.bind(this));
+    const article = this.node.querySelector('article');
+    article.addEventListener('dragover', this.onDragOver.bind(this));
+    article.addEventListener('dragenter', this.onDragEnter.bind(this));
+    // article.addEventListener('dragleave', this.onDragLeave.bind(this));
+    article.addEventListener('dragend', this.onDragEnd.bind(this));
+    article.addEventListener('drop', this.onDrop.bind(this));
 
-    for (const node of this.node.querySelectorAll('section')) {
+    for (const node of article.querySelectorAll('section')) {
       this.setup(node);
     }
   }
@@ -111,16 +115,7 @@ class Sink extends Player {
   }
 
   onDragStart(event) {
-    // let position = 0;
-    // let node = event.target;
-    //
-    // while (node.previousSibling) {
-    //     position++;
-    //     node = node.previousSibling;
-    // }
-
     event.dataTransfer.setData('html', event.target.outerHTML);
-    // event.dataTransfer.setData('position', position);
     event.dataTransfer.effectAllowed = 'copy';
     event.dataTransfer.dropEffect = 'copy';
   }
@@ -165,22 +160,8 @@ class Sink extends Player {
   onDrop(event) {
     event.preventDefault();
     const html = event.dataTransfer.getData('html');
-    // const position = parseInt(event.dataTransfer.getData('position'));
 
     let target = event.target;
-
-    // if (position) {
-    //   if (target.nodeName === 'ARTICLE') {
-    //     target.appendChild(target.children[position - 1]);
-    //   } else {
-    //     while (!target.matches('section[draggable]')) {
-    //       target = target.parentNode;
-    //       if (!target) break;
-    //       if (typeof target.matches !== 'function') break;
-    //     }
-    //     console.log(target, position, this.node.querySelector('article').children[position - 1]);
-    //   }
-    // }
 
     const wrapper = document.createElement('div');
     wrapper.innerHTML = html;
@@ -198,7 +179,6 @@ class Sink extends Player {
       this.setup(node);
     }
 
-    // this.setup(node);
     this.onDragEnd();
   }
 }
