@@ -1,0 +1,22 @@
+{
+  "name": "hyperaudio-pad",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyperaudio/hyperaudio-pad.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hyperaudio/hyperaudio-pad/issues"
+  },
+  "homepage": "https://github.com/hyperaudio/hyperaudio-pad#readme",
+  "dependencies": {
+    "debug": "^2.6.8"
+  }
+}
