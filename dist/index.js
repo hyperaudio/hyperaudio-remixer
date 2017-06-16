@@ -342,3 +342,23 @@ var Sink = function (_Player2) {
 
   return Sink;
 }(Player);
+
+var Hyperaudio = function Hyperaudio() {
+  var nodeOrSelector = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document;
+
+  _classCallCheck(this, Hyperaudio);
+
+  this.node = typeof nodeOrSelector === 'string' ? document.querySelector(nodeOrSelector) : nodeOrSelector;
+
+  // for (const source of this.node.querySelectorAll('.hyperaudio-source')) {
+  //   new Source(source);
+  // }
+  //
+  // for (const sink of this.node.querySelectorAll('.hyperaudio-sink')) {
+  //   new Sink(sink);
+  // }
+  //
+  // for (const player of this.node.querySelectorAll('.hyperaudio-player')) {
+  //   new Player(player);
+  // }
+};
