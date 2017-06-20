@@ -1,17 +1,19 @@
 class Player {
-  constructor(nodeOrSelector) {
-    this.node = typeof nodeOrSelector === 'string' ? document.querySelector(nodeOrSelector) : nodeOrSelector;
+  constructor(rootNodeOrSelector, collectionSelector = 'article', itemSelector = 'section') {
+    this.collectionSelector = collectionSelector;
+    this.itemSelector = itemSelector;
+    this.root = typeof rootNodeOrSelector === 'string' ? document.querySelector(rootNodeOrSelector) : rootNodeOrSelector;
   }
 
-  setup(node) {
-    console.log('TODO setup player for', node.getAttribute('data-src'));
+  setup(item) {
+    console.log('TODO setup player for', item.getAttribute('data-src'));
   }
 }
 
 
 class Source extends Player {
-  constructor(nodeOrSelector) {
-    super(nodeOrSelector);
+  constructor(rootNodeOrSelector, collectionSelector = 'article', itemSelector = 'section') {
+    super(rootNodeOrSelector);
 
     document.addEventListener('selectionchange', this.onSelectionChange.bind(this));
     document.addEventListener('mouseup', this.onMouseUp.bind(this));
@@ -31,7 +33,7 @@ class Source extends Player {
 
     if (!(commonAncestor.matches('section[data-src]') || commonAncestor.parentNode.matches('section[data-src]'))) return;
 
-    for (const selected of this.node.querySelectorAll('.selected')) {
+    for (const selected of this.root.querySelectorAll('.selected')) {
       if (selection.containsNode(selected, true) || selection.containsNode(selected.parentNode, true)) continue;
       selected.classList.remove('selected');
       selected.removeAttribute('draggable');
@@ -46,7 +48,7 @@ class Source extends Player {
 
   onMouseUp() {
     const selection = window.getSelection();
-    const selected = this.node.querySelectorAll('.selected');
+    const selected = this.root.querySelectorAll('.selected');
 
     for (const node of selected) {
       if (selection.containsNode(node, true) || selection.containsNode(node.parentNode, true)) {
@@ -54,7 +56,7 @@ class Source extends Player {
         node.addEventListener('dragstart', this.onDragStart.bind(this));
         // node.addEventListener('dragend', this.onDragEnd.bind(this));
       } else {
-        console.log('kill', node);
+        // console.log('kill', node);
         node.classList.remove('selected');
         node.removeAttribute('draggable');
       }
@@ -73,15 +75,15 @@ class Source extends Player {
     // event.preventDefault();
     // event.stopPropagation();
 
-    const node = document.createElement('section');
-    for (const selected of this.node.querySelectorAll('.selected')) {
+    const item = document.createElement('section');
+    for (const selected of this.root.querySelectorAll('.selected')) {
       const clone = selected.cloneNode(true);
       clone.classList.remove('selected');
       clone.removeAttribute('draggable');
-      node.appendChild(clone);
+      item.appendChild(clone);
     }
 
-    event.dataTransfer.setData('html', node.outerHTML);
+    event.dataTransfer.setData('html', item.outerHTML);
     event.dataTransfer.effectAllowed = 'copy';
     event.dataTransfer.dropEffect = 'copy';
 
@@ -98,28 +100,28 @@ class Source extends Player {
 
 
 class Sink extends Player {
-  constructor(nodeOrSelector) {
-    super(nodeOrSelector);
+  constructor(rootNodeOrSelector, collectionSelector = 'article', itemSelector = 'section') {
+    super(rootNodeOrSelector, collectionSelector, itemSelector);
 
-    const article = this.node.querySelector('article');
-    article.addEventListener('dragover', this.onDragOver.bind(this));
-    article.addEventListener('dragenter', this.onDragEnter.bind(this));
-    // article.addEventListener('dragleave', this.onDragLeave.bind(this));
-    article.addEventListener('dragend', this.onDragEnd.bind(this));
-    article.addEventListener('drop', this.onDrop.bind(this));
+    const collection = this.root.querySelector(this.collectionSelector);
+    collection.addEventListener('dragover', this.onDragOver.bind(this));
+    collection.addEventListener('dragenter', this.onDragEnter.bind(this));
+    // collection.addEventListener('dragleave', this.onDragLeave.bind(this));
+    collection.addEventListener('dragend', this.onDragEnd.bind(this));
+    collection.addEventListener('drop', this.onDrop.bind(this));
 
-    for (const node of article.querySelectorAll('section')) {
-      this.setup(node);
+    for (const item of collection.querySelectorAll(this.itemSelector)) {
+      this.setup(item);
     }
   }
 
-  setup(node) {
-    super.setup(node);
+  setup(item) {
+    super.setup(item);
 
-    node.setAttribute('draggable', true);
-    node.setAttribute('tabindex', 0);
-    node.addEventListener('dragstart', this.onDragStart.bind(this));
-    node.addEventListener('dragend', this.onDragEnd2.bind(this));
+    item.setAttribute('draggable', true);
+    item.setAttribute('tabindex', 0);
+    item.addEventListener('dragstart', this.onDragStart.bind(this));
+    item.addEventListener('dragend', this.onDragEnd2.bind(this));
   }
 
   onDragStart(event) {
@@ -142,13 +144,13 @@ class Sink extends Player {
     event.preventDefault();
     event.stopPropagation();
 
-    for (const node of this.node.querySelectorAll('.over')) {
-      node.classList.remove('over');
+    for (const item of this.root.querySelectorAll('.over')) {
+      item.classList.remove('over');
     }
 
     let target = event.target;
     if (typeof target.matches !== 'function') return;
-    while (!target.matches('section[draggable]')) {
+    while (!target.matches(this.itemSelector + '[draggable]')) { // FIXME
       target = target.parentNode;
       if (!target) return;
       if (typeof target.matches !== 'function') return;
@@ -160,8 +162,8 @@ class Sink extends Player {
   // onDragLeave(event) {}
 
   onDragEnd(event) {
-    for (const node of this.node.querySelectorAll('.over')) {
-      node.classList.remove('over');
+    for (const item of this.root.querySelectorAll('.over')) {
+      item.classList.remove('over');
     }
   }
 
@@ -173,18 +175,18 @@ class Sink extends Player {
 
     const wrapper = document.createElement('div');
     wrapper.innerHTML = html;
-    const node = wrapper.children[0];
+    const item = wrapper.children[0];
 
-    if (target.nodeName === 'ARTICLE') {
-      target.appendChild(node);
-      this.setup(node);
+    if (target.nodeName === 'ARTICLE') { // FIXME
+      target.appendChild(item);
+      this.setup(item);
     } else {
-      while (!target.matches('section[draggable]')) {
+      while (!target.matches(this.itemSelector + '[draggable]')) { // FIXME
         target = target.parentNode;
       }
 
-      target.parentNode.insertBefore(node, target);
-      this.setup(node);
+      target.parentNode.insertBefore(item, target);
+      this.setup(item);
     }
 
     this.onDragEnd();
@@ -196,16 +198,16 @@ class Hyperaudio {
   constructor(nodeOrSelector = document) {
     this.node = typeof nodeOrSelector === 'string' ? document.querySelector(nodeOrSelector) : nodeOrSelector;
 
-    // for (const source of this.node.querySelectorAll('.hyperaudio-source')) {
-    //   new Source(source);
-    // }
-    //
-    // for (const sink of this.node.querySelectorAll('.hyperaudio-sink')) {
-    //   new Sink(sink);
-    // }
-    //
-    // for (const player of this.node.querySelectorAll('.hyperaudio-player')) {
-    //   new Player(player);
-    // }
+    for (const player of this.node.querySelectorAll('.hyperaudio-player')) {
+      new Player(player);
+    }
   }
 }
+
+// for (const source of this.node.querySelectorAll('.hyperaudio-source')) {
+//   new Source(source);
+// }
+//
+// for (const sink of this.node.querySelectorAll('.hyperaudio-sink')) {
+//   new Sink(sink);
+// }

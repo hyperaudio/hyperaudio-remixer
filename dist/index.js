@@ -11,16 +11,21 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Player = function () {
-  function Player(nodeOrSelector) {
+  function Player(rootNodeOrSelector) {
+    var collectionSelector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'article';
+    var itemSelector = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'section';
+
     _classCallCheck(this, Player);
 
-    this.node = typeof nodeOrSelector === 'string' ? document.querySelector(nodeOrSelector) : nodeOrSelector;
+    this.collectionSelector = collectionSelector;
+    this.itemSelector = itemSelector;
+    this.root = typeof rootNodeOrSelector === 'string' ? document.querySelector(rootNodeOrSelector) : rootNodeOrSelector;
   }
 
   _createClass(Player, [{
     key: 'setup',
-    value: function setup(node) {
-      console.log('TODO setup player for', node.getAttribute('data-src'));
+    value: function setup(item) {
+      console.log('TODO setup player for', item.getAttribute('data-src'));
     }
   }]);
 
@@ -30,10 +35,13 @@ var Player = function () {
 var Source = function (_Player) {
   _inherits(Source, _Player);
 
-  function Source(nodeOrSelector) {
+  function Source(rootNodeOrSelector) {
+    var collectionSelector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'article';
+    var itemSelector = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'section';
+
     _classCallCheck(this, Source);
 
-    var _this = _possibleConstructorReturn(this, (Source.__proto__ || Object.getPrototypeOf(Source)).call(this, nodeOrSelector));
+    var _this = _possibleConstructorReturn(this, (Source.__proto__ || Object.getPrototypeOf(Source)).call(this, rootNodeOrSelector));
 
     document.addEventListener('selectionchange', _this.onSelectionChange.bind(_this));
     document.addEventListener('mouseup', _this.onMouseUp.bind(_this));
@@ -61,7 +69,7 @@ var Source = function (_Player) {
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = this.node.querySelectorAll('.selected')[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = this.root.querySelectorAll('.selected')[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var selected = _step.value;
 
           if (selection.containsNode(selected, true) || selection.containsNode(selected.parentNode, true)) continue;
@@ -114,7 +122,7 @@ var Source = function (_Player) {
     key: 'onMouseUp',
     value: function onMouseUp() {
       var selection = window.getSelection();
-      var selected = this.node.querySelectorAll('.selected');
+      var selected = this.root.querySelectorAll('.selected');
 
       var _iteratorNormalCompletion3 = true;
       var _didIteratorError3 = false;
@@ -129,7 +137,7 @@ var Source = function (_Player) {
             node.addEventListener('dragstart', this.onDragStart.bind(this));
             // node.addEventListener('dragend', this.onDragEnd.bind(this));
           } else {
-            console.log('kill', node);
+            // console.log('kill', node);
             node.classList.remove('selected');
             node.removeAttribute('draggable');
           }
@@ -163,19 +171,19 @@ var Source = function (_Player) {
       // event.preventDefault();
       // event.stopPropagation();
 
-      var node = document.createElement('section');
+      var item = document.createElement('section');
       var _iteratorNormalCompletion4 = true;
       var _didIteratorError4 = false;
       var _iteratorError4 = undefined;
 
       try {
-        for (var _iterator4 = this.node.querySelectorAll('.selected')[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+        for (var _iterator4 = this.root.querySelectorAll('.selected')[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
           var selected = _step4.value;
 
           var clone = selected.cloneNode(true);
           clone.classList.remove('selected');
           clone.removeAttribute('draggable');
-          node.appendChild(clone);
+          item.appendChild(clone);
         }
       } catch (err) {
         _didIteratorError4 = true;
@@ -192,7 +200,7 @@ var Source = function (_Player) {
         }
       }
 
-      event.dataTransfer.setData('html', node.outerHTML);
+      event.dataTransfer.setData('html', item.outerHTML);
       event.dataTransfer.effectAllowed = 'copy';
       event.dataTransfer.dropEffect = 'copy';
 
@@ -214,27 +222,30 @@ var Source = function (_Player) {
 var Sink = function (_Player2) {
   _inherits(Sink, _Player2);
 
-  function Sink(nodeOrSelector) {
+  function Sink(rootNodeOrSelector) {
+    var collectionSelector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'article';
+    var itemSelector = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'section';
+
     _classCallCheck(this, Sink);
 
-    var _this2 = _possibleConstructorReturn(this, (Sink.__proto__ || Object.getPrototypeOf(Sink)).call(this, nodeOrSelector));
+    var _this2 = _possibleConstructorReturn(this, (Sink.__proto__ || Object.getPrototypeOf(Sink)).call(this, rootNodeOrSelector, collectionSelector, itemSelector));
 
-    var article = _this2.node.querySelector('article');
-    article.addEventListener('dragover', _this2.onDragOver.bind(_this2));
-    article.addEventListener('dragenter', _this2.onDragEnter.bind(_this2));
-    // article.addEventListener('dragleave', this.onDragLeave.bind(this));
-    article.addEventListener('dragend', _this2.onDragEnd.bind(_this2));
-    article.addEventListener('drop', _this2.onDrop.bind(_this2));
+    var collection = _this2.root.querySelector(_this2.collectionSelector);
+    collection.addEventListener('dragover', _this2.onDragOver.bind(_this2));
+    collection.addEventListener('dragenter', _this2.onDragEnter.bind(_this2));
+    // collection.addEventListener('dragleave', this.onDragLeave.bind(this));
+    collection.addEventListener('dragend', _this2.onDragEnd.bind(_this2));
+    collection.addEventListener('drop', _this2.onDrop.bind(_this2));
 
     var _iteratorNormalCompletion5 = true;
     var _didIteratorError5 = false;
     var _iteratorError5 = undefined;
 
     try {
-      for (var _iterator5 = article.querySelectorAll('section')[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-        var node = _step5.value;
+      for (var _iterator5 = collection.querySelectorAll(_this2.itemSelector)[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+        var item = _step5.value;
 
-        _this2.setup(node);
+        _this2.setup(item);
       }
     } catch (err) {
       _didIteratorError5 = true;
@@ -256,13 +267,13 @@ var Sink = function (_Player2) {
 
   _createClass(Sink, [{
     key: 'setup',
-    value: function setup(node) {
-      _get(Sink.prototype.__proto__ || Object.getPrototypeOf(Sink.prototype), 'setup', this).call(this, node);
+    value: function setup(item) {
+      _get(Sink.prototype.__proto__ || Object.getPrototypeOf(Sink.prototype), 'setup', this).call(this, item);
 
-      node.setAttribute('draggable', true);
-      node.setAttribute('tabindex', 0);
-      node.addEventListener('dragstart', this.onDragStart.bind(this));
-      node.addEventListener('dragend', this.onDragEnd2.bind(this));
+      item.setAttribute('draggable', true);
+      item.setAttribute('tabindex', 0);
+      item.addEventListener('dragstart', this.onDragStart.bind(this));
+      item.addEventListener('dragend', this.onDragEnd2.bind(this));
     }
   }, {
     key: 'onDragStart',
@@ -294,10 +305,10 @@ var Sink = function (_Player2) {
       var _iteratorError6 = undefined;
 
       try {
-        for (var _iterator6 = this.node.querySelectorAll('.over')[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-          var node = _step6.value;
+        for (var _iterator6 = this.root.querySelectorAll('.over')[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var item = _step6.value;
 
-          node.classList.remove('over');
+          item.classList.remove('over');
         }
       } catch (err) {
         _didIteratorError6 = true;
@@ -316,7 +327,8 @@ var Sink = function (_Player2) {
 
       var target = event.target;
       if (typeof target.matches !== 'function') return;
-      while (!target.matches('section[draggable]')) {
+      while (!target.matches(this.itemSelector + '[draggable]')) {
+        // FIXME
         target = target.parentNode;
         if (!target) return;
         if (typeof target.matches !== 'function') return;
@@ -335,10 +347,10 @@ var Sink = function (_Player2) {
       var _iteratorError7 = undefined;
 
       try {
-        for (var _iterator7 = this.node.querySelectorAll('.over')[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-          var node = _step7.value;
+        for (var _iterator7 = this.root.querySelectorAll('.over')[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var item = _step7.value;
 
-          node.classList.remove('over');
+          item.classList.remove('over');
         }
       } catch (err) {
         _didIteratorError7 = true;
@@ -365,18 +377,20 @@ var Sink = function (_Player2) {
 
       var wrapper = document.createElement('div');
       wrapper.innerHTML = html;
-      var node = wrapper.children[0];
+      var item = wrapper.children[0];
 
       if (target.nodeName === 'ARTICLE') {
-        target.appendChild(node);
-        this.setup(node);
+        // FIXME
+        target.appendChild(item);
+        this.setup(item);
       } else {
-        while (!target.matches('section[draggable]')) {
+        while (!target.matches(this.itemSelector + '[draggable]')) {
+          // FIXME
           target = target.parentNode;
         }
 
-        target.parentNode.insertBefore(node, target);
-        this.setup(node);
+        target.parentNode.insertBefore(item, target);
+        this.setup(item);
       }
 
       this.onDragEnd();
@@ -393,15 +407,36 @@ var Hyperaudio = function Hyperaudio() {
 
   this.node = typeof nodeOrSelector === 'string' ? document.querySelector(nodeOrSelector) : nodeOrSelector;
 
-  // for (const source of this.node.querySelectorAll('.hyperaudio-source')) {
-  //   new Source(source);
-  // }
-  //
-  // for (const sink of this.node.querySelectorAll('.hyperaudio-sink')) {
-  //   new Sink(sink);
-  // }
-  //
-  // for (const player of this.node.querySelectorAll('.hyperaudio-player')) {
-  //   new Player(player);
-  // }
+  var _iteratorNormalCompletion8 = true;
+  var _didIteratorError8 = false;
+  var _iteratorError8 = undefined;
+
+  try {
+    for (var _iterator8 = this.node.querySelectorAll('.hyperaudio-player')[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+      var player = _step8.value;
+
+      new Player(player);
+    }
+  } catch (err) {
+    _didIteratorError8 = true;
+    _iteratorError8 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion8 && _iterator8.return) {
+        _iterator8.return();
+      }
+    } finally {
+      if (_didIteratorError8) {
+        throw _iteratorError8;
+      }
+    }
+  }
 };
+
+// for (const source of this.node.querySelectorAll('.hyperaudio-source')) {
+//   new Source(source);
+// }
+//
+// for (const sink of this.node.querySelectorAll('.hyperaudio-sink')) {
+//   new Sink(sink);
+// }
