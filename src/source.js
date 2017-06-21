@@ -24,25 +24,25 @@ export default class Source extends Player {
 
     if (!(commonAncestor.matches('section[data-src]') || commonAncestor.parentNode.matches('section[data-src]'))) return;
 
-    for (const selected of this.root.querySelectorAll('.selected')) {
+    this.root.querySelectorAll('.selected').forEach((selected) => {
       if (selection.containsNode(selected, true)
-      || selection.containsNode(selected.parentNode, true)) continue;
+      || selection.containsNode(selected.parentNode, true)) return;
       selected.classList.remove('selected');
       selected.removeAttribute('draggable');
-    }
+    });
 
-    for (const candidate of commonAncestor.getElementsByTagName('*')) {
-      if (selection.containsNode(candidate, true) && candidate.nodeName !== 'P') {
+    commonAncestor.querySelectorAll('*').forEach((candidate) => {
+      if (selection.containsNode(candidate, true) && candidate.nodeName !== 'P') { // FIXME
         candidate.classList.add('selected');
       }
-    }
+    });
   }
 
   onMouseUp() {
     const selection = window.getSelection();
     const selected = this.root.querySelectorAll('.selected');
 
-    for (const node of selected) {
+    selected.forEach((node) => {
       if (selection.containsNode(node, true) || selection.containsNode(node.parentNode, true)) {
         node.setAttribute('draggable', true);
         node.addEventListener('dragstart', this.onDragStart.bind(this));
@@ -52,7 +52,7 @@ export default class Source extends Player {
         node.classList.remove('selected');
         node.removeAttribute('draggable');
       }
-    }
+    });
 
     if (selected.length > 0 && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
@@ -68,12 +68,12 @@ export default class Source extends Player {
     // event.stopPropagation();
 
     const item = document.createElement('section');
-    for (const selected of this.root.querySelectorAll('.selected')) {
+    this.root.querySelectorAll('.selected').forEach((selected) => {
       const clone = selected.cloneNode(true);
       clone.classList.remove('selected');
       clone.removeAttribute('draggable');
       item.appendChild(clone);
-    }
+    });
 
     event.dataTransfer.setData('html', item.outerHTML);
     // eslint-disable-next-line no-param-reassign

@@ -1,23 +1,15 @@
 /* eslint-disable no-new */
 
-// import Player from './player';
+import Player from './player';
 import Source from './source';
 import Sink from './sink';
 
 export default class Hyperaudio {
-  constructor(nodeOrSelector = document) {
-    this.node = typeof nodeOrSelector === 'string' ? document.querySelector(nodeOrSelector) : nodeOrSelector;
+  constructor(rootNodeOrSelector = document) {
+    this.root = typeof rootNodeOrSelector === 'string' ? document.querySelector(rootNodeOrSelector) : rootNodeOrSelector;
 
-    for (const source of this.node.querySelectorAll('.hyperaudio-source')) {
-      new Source(source);
-    }
-
-    for (const sink of this.node.querySelectorAll('.hyperaudio-sink')) {
-      new Sink(sink);
-    }
-
-    // for (const player of this.node.querySelectorAll('.hyperaudio-player')) {
-    //   new Player(player);
-    // }
+    this.root.querySelectorAll('.hyperaudio-source').forEach(sourceNode => new Source(sourceNode));
+    this.root.querySelectorAll('.hyperaudio-sink').forEach(sinkNode => new Sink(sinkNode));
+    this.root.querySelectorAll('.hyperaudio-player:not(.hyperaudio-sink):not(.hyperaudio-source)').forEach(playerNode => new Player(playerNode));
   }
 }

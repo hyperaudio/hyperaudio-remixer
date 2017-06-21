@@ -13,9 +13,7 @@ export default class Sink extends Player {
     collection.addEventListener('dragend', this.onDragEnd.bind(this));
     collection.addEventListener('drop', this.onDrop.bind(this));
 
-    for (const item of collection.querySelectorAll(this.itemSelector)) {
-      this.setup(item);
-    }
+    collection.querySelectorAll(this.itemSelector).forEach(item => this.setup(item));
   }
 
   setup(item) {
@@ -49,9 +47,7 @@ export default class Sink extends Player {
     event.preventDefault();
     event.stopPropagation();
 
-    for (const item of this.root.querySelectorAll('.over')) {
-      item.classList.remove('over');
-    }
+    this.root.querySelectorAll('.over').forEach(item => item.classList.remove('over'));
 
     let target = event.target;
     if (typeof target.matches !== 'function') return;
@@ -67,9 +63,7 @@ export default class Sink extends Player {
   // onDragLeave(event) {}
 
   onDragEnd() {
-    for (const item of this.root.querySelectorAll('.over')) {
-      item.classList.remove('over');
-    }
+    this.root.querySelectorAll('.over').forEach(item => item.classList.remove('over'));
   }
 
   onDrop(event) {
