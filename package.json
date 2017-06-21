@@ -8,7 +8,7 @@
     "dev": "webpack-dev-server --progress",
     "build": "rimraf lib dist && babel src -d lib --ignore .test.js && cross-env NODE_ENV=production webpack -p --progress && cp src/index.html dist/",
     "lint": "eslint src webpack.config.babel.js --ext .js,.jsx",
-    "test": "yarn lint && echo flow && echo jest --coverage",
+    "test": "yarn lint && flow && echo jest --coverage",
     "precommit": "yarn test",
     "prepush": "yarn test && yarn build"
   },

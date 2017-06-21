@@ -1,9 +1,10 @@
+// @flow
 /* eslint-disable class-methods-use-this */
 
 import Player from './player';
 
 export default class Source extends Player {
-  constructor(rootNodeOrSelector, collectionSelector = 'article', itemSelector = 'section') {
+  constructor(rootNodeOrSelector: Object | string, collectionSelector: string = 'article', itemSelector: string = 'section') {
     super(rootNodeOrSelector, collectionSelector, itemSelector);
 
     document.addEventListener('selectionchange', this.onSelectionChange.bind(this));
@@ -17,13 +18,14 @@ export default class Source extends Player {
     const range = selection.getRangeAt(0);
     const commonAncestor = range.commonAncestorContainer;
 
-    if (commonAncestor.nodeType === document.TEXT_NODE) {
+    if (commonAncestor.nodeType === 3) { // document.TEXT_NODE
       range.setStartBefore(commonAncestor.parentNode);
       return;
     }
 
     if (!(commonAncestor.matches('section[data-src]') || commonAncestor.parentNode.matches('section[data-src]'))) return;
 
+    // flow-disable-next-line
     this.root.querySelectorAll('.selected').forEach((selected) => {
       if (selection.containsNode(selected, true)
       || selection.containsNode(selected.parentNode, true)) return;
@@ -40,6 +42,7 @@ export default class Source extends Player {
 
   onMouseUp() {
     const selection = window.getSelection();
+    // flow-disable-next-line
     const selected = this.root.querySelectorAll('.selected');
 
     selected.forEach((node) => {
@@ -63,11 +66,12 @@ export default class Source extends Player {
     }
   }
 
-  onDragStart(event) {
+  onDragStart(/* event) */) {
     // event.preventDefault();
     // event.stopPropagation();
 
     const item = document.createElement('section');
+    // flow-disable-next-line
     this.root.querySelectorAll('.selected').forEach((selected) => {
       const clone = selected.cloneNode(true);
       clone.classList.remove('selected');
@@ -75,10 +79,11 @@ export default class Source extends Player {
       item.appendChild(clone);
     });
 
+    // flow-disable-next-line
     event.dataTransfer.setData('html', item.outerHTML);
-    // eslint-disable-next-line no-param-reassign
+    // eslint-disable-next-line no-param-reassign flow-disable-next-line
     event.dataTransfer.effectAllowed = 'copy';
-    // eslint-disable-next-line no-param-reassign
+    // eslint-disable-next-line no-param-reassign flow-disable-next-line
     event.dataTransfer.dropEffect = 'copy';
 
     // return false;

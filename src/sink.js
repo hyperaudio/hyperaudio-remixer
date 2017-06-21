@@ -1,11 +1,13 @@
+// @flow
 /* eslint-disable class-methods-use-this */
 
 import Player from './player';
 
 export default class Sink extends Player {
-  constructor(rootNodeOrSelector, collectionSelector = 'article', itemSelector = 'section') {
+  constructor(rootNodeOrSelector: Object | string, collectionSelector: string = 'article', itemSelector: string = 'section') {
     super(rootNodeOrSelector, collectionSelector, itemSelector);
 
+    // flow-disable-next-line
     const collection = this.root.querySelector(this.collectionSelector);
     collection.addEventListener('dragover', this.onDragOver.bind(this));
     collection.addEventListener('dragenter', this.onDragEnter.bind(this));
@@ -16,7 +18,7 @@ export default class Sink extends Player {
     collection.querySelectorAll(this.itemSelector).forEach(item => this.setup(item));
   }
 
-  setup(item) {
+  setup(item: Object) {
     super.setup(item);
 
     item.setAttribute('draggable', true);
@@ -25,7 +27,7 @@ export default class Sink extends Player {
     item.addEventListener('dragend', this.onDragEnd2.bind(this));
   }
 
-  onDragStart(event) {
+  onDragStart(event: Object) {
     event.dataTransfer.setData('html', event.target.outerHTML);
     // eslint-disable-next-line no-param-reassign
     event.dataTransfer.effectAllowed = 'copy';
@@ -33,20 +35,21 @@ export default class Sink extends Player {
     event.dataTransfer.dropEffect = 'copy';
   }
 
-  onDragEnd2(event) {
+  onDragEnd2(event: Object) {
     event.target.remove();
   }
 
-  onDragOver(event) {
+  onDragOver(event: Object) {
     event.preventDefault();
     event.stopPropagation();
     return false;
   }
 
-  onDragEnter(event) {
+  onDragEnter(event: Object) {
     event.preventDefault();
     event.stopPropagation();
 
+    // flow-disable-next-line
     this.root.querySelectorAll('.over').forEach(item => item.classList.remove('over'));
 
     let target = event.target;
@@ -63,10 +66,11 @@ export default class Sink extends Player {
   // onDragLeave(event) {}
 
   onDragEnd() {
+    // flow-disable-next-line
     this.root.querySelectorAll('.over').forEach(item => item.classList.remove('over'));
   }
 
-  onDrop(event) {
+  onDrop(event: Object) {
     event.preventDefault();
     const html = event.dataTransfer.getData('html');
 
