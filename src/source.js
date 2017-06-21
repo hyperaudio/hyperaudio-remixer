@@ -93,17 +93,20 @@ export default class Source extends Player {
     // event.preventDefault();
     // event.stopPropagation();
 
-    const item = document.createElement('section');
-    let parent = document.createElement('p');
-    item.appendChild(parent);
-    let prevSelected = null;
+    let item;
+    let parent;
+    let prevSelected;
     // flow-disable-next-line
     this.root.querySelectorAll('.selected').forEach(selected => {
       const clone = selected.cloneNode(true);
       clone.classList.remove('selected');
       clone.removeAttribute('draggable');
+
+      if (!item) item = selected.parentNode.parentNode.cloneNode(false);
+      if (!parent) parent = selected.parentNode.cloneNode(false);
+
       if (prevSelected && prevSelected.parentNode !== selected.parentNode) {
-        parent = document.createElement('p');
+        parent = selected.parentNode.cloneNode(false);
         item.appendChild(parent);
       }
       parent.appendChild(clone);
