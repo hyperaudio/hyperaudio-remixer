@@ -6,13 +6,12 @@ import Player from './player';
 export default class Sink extends Player {
   constructor(
     rootNodeOrSelector: Object | string,
-    collectionSelector: string = 'article',
-    itemSelector: string = 'section',
+    itemSelector: string = '.hyperaudio-transcript, .hyperaudio-effect',
   ) {
-    super(rootNodeOrSelector, collectionSelector, itemSelector);
+    super(rootNodeOrSelector, itemSelector);
 
     // flow-disable-next-line
-    const collection = this.root.querySelector(this.collectionSelector);
+    const collection = this.root.querySelector(this.itemSelector).parentNode;
     collection.addEventListener('dragover', this.onDragOver.bind(this));
     collection.addEventListener('dragenter', this.onDragEnter.bind(this));
     // collection.addEventListener('dragleave', this.onDragLeave.bind(this));

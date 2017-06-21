@@ -6,10 +6,9 @@ import Player from './player';
 export default class Source extends Player {
   constructor(
     rootNodeOrSelector: Object | string,
-    collectionSelector: string = 'article',
-    itemSelector: string = 'section',
+    itemSelector: string = '.hyperaudio-transcript, .hyperaudio-effect',
   ) {
-    super(rootNodeOrSelector, collectionSelector, itemSelector);
+    super(rootNodeOrSelector, itemSelector);
 
     document.addEventListener(
       'selectionchange',

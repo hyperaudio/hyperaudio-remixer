@@ -38,6 +38,14 @@
       /*color: red;*/
       background-color: lightpink;
     }
+
+    .hyperaudio-effect {
+      background-color: #fafaff;
+    }
+
+    .hyperaudio-effect input {
+      width: 100%;
+    }
   </style>
 
 </head>
@@ -47,11 +55,11 @@
     <!-- Player -->
     <section id="player" class="hyperaudio-player hyperaudio-source">
       <header class="hyperaudio-media">
-        <video width="640" height="360" src="https://s3.amazonaws.com/xn--cckb1i8d.trint.com/55932ab68822d3e66ea4f269/3648514544741/8d2f8d41-6a02-46dd-bef4-e73c12d51b1b/Arrt2L12ROqdB4mo56222g.mp4" type="audio/mp4" data-current-time="0" controls preload></video>
+        <video width="640" height="360" src="https://s3.amazonaws.com/xn--cckb1i8d.trint.com/55932ab68822d3e66ea4f269/3648514544741/8d2f8d41-6a02-46dd-bef4-e73c12d51b1b/Arrt2L12ROqdB4mo56222g.mp4" type="video/mp4" controls preload></video>
       </header>
 
       <article>
-        <section data-src="https://s3.amazonaws.com/xn--cckb1i8d.trint.com/55932ab68822d3e66ea4f269/3648514544741/8d2f8d41-6a02-46dd-bef4-e73c12d51b1b/Arrt2L12ROqdB4mo56222g.mp4">
+        <section class="hyperaudio-transcript" data-src="https://s3.amazonaws.com/xn--cckb1i8d.trint.com/55932ab68822d3e66ea4f269/3648514544741/8d2f8d41-6a02-46dd-bef4-e73c12d51b1b/Arrt2L12ROqdB4mo56222g.mp4" data-type="video/mp4">
           <p>
             <span data-t=".54,.81">Friends</span>
             <span data-t="1.71,.69">Romans.</span>
@@ -366,22 +374,16 @@
     <!-- Remixer -->
     <section id="remixer" class="hyperaudio-player hyperaudio-sink">
       <header class="hyperaudio-media">
-        <video width="640" height="360" src="https://s3.amazonaws.com/xn--cckb1i8d.trint.com/55932ab68822d3e66ea4f269/3648514544741/8d2f8d41-6a02-46dd-bef4-e73c12d51b1b/Arrt2L12ROqdB4mo56222g.mp4" type="audio/mp4" data-current-time="0" controls preload></video>
+        <video width="640" height="360" src="https://s3.amazonaws.com/xn--cckb1i8d.trint.com/55932ab68822d3e66ea4f269/3648514544741/8d2f8d41-6a02-46dd-bef4-e73c12d51b1b/Arrt2L12ROqdB4mo56222g.mp4" type="video/mp4" controls preload></video>
       </header>
 
       <article>
-        <section data-type="title" data-value="???">
-          <fieldset>
-            <legend>Title: <span>1s</span></legend>
-            <input type="text">
-            <select>
-              <option>Lower 3rds</option>
-              <option>Full Screen</option>
-            </select>
-            <input type="number" value="1">
-          </fieldset>
-        </section>
-        <section data-src="https://s3.amazonaws.com/xn--cckb1i8d.trint.com/55932ab68822d3e66ea4f269/3648514544741/8d2f8d41-6a02-46dd-bef4-e73c12d51b1b/Arrt2L12ROqdB4mo56222g.mp4">
+        <fieldset class="hyperaudio-effect" data-type="title">
+          <legend>Title: <span>1</span>s</legend>
+          <input type="text" placeholder="title">
+          <input type="range" value="1" min="0.5" max="7" step="0.1">
+        </fieldset>
+        <section class="hyperaudio-transcript" data-src="https://s3.amazonaws.com/xn--cckb1i8d.trint.com/55932ab68822d3e66ea4f269/3648514544741/8d2f8d41-6a02-46dd-bef4-e73c12d51b1b/Arrt2L12ROqdB4mo56222g.mp4" data-type="video/mp4">
           <p>
             <span data-t=".54,.81">Friends </span>
             <span data-t="1.71,.69">Romans. </span>
@@ -400,13 +402,11 @@
             <span data-t="8.91,.17">him. </span>
           </p>
         </section>
-        <section data-type="trim" data-value="1">
-          <fieldset>
-            <legend>Trim: <span>1s</span></legend>
-            <input type="number" value="1">
-          </fieldset>
-        </section>
-        <section data-src="https://s3.amazonaws.com/xn--cckb1i8d.trint.com/55932ab68822d3e66ea4f269/3648514544741/8d2f8d41-6a02-46dd-bef4-e73c12d51b1b/Arrt2L12ROqdB4mo56222g.mp4">
+        <fieldset class="hyperaudio-effect" data-type="fade">
+          <legend>Fade: <span>1</span>s</legend>
+          <input type="range" value="1" min="0.5" max="7" step="0.1">
+        </fieldset>
+        <section class="hyperaudio-transcript" data-src="https://s3.amazonaws.com/xn--cckb1i8d.trint.com/55932ab68822d3e66ea4f269/3648514544741/8d2f8d41-6a02-46dd-bef4-e73c12d51b1b/Arrt2L12ROqdB4mo56222g.mp4" data-type="video/mp4">
           <p>
             <span data-t="40.65,.15">He </span>
             <span data-t="40.8,.27">was </span>
@@ -414,12 +414,10 @@
             <span data-t="41.28,.36">friend. </span>
           </p>
         </section>
-        <section data-type="fade" data-value="1">
-          <fieldset>
-            <legend>Fade: <span>1s</span></legend>
-            <input type="number" value="1">
-          </fieldset>
-        </section>
+        <fieldset class="hyperaudio-effect" data-type="trim">
+          <legend>Trim: <span>1</span>s</legend>
+          <input type="range" value="1" min="0.5" max="7" step="0.1">
+        </fieldset>
       </article>
       <aside>
         <button>+ Title</button>

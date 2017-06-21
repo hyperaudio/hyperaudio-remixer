@@ -4,14 +4,11 @@
 export default class Player {
   root: Object | string; // FIXME
   itemSelector: string;
-  collectionSelector: string;
 
   constructor(
     rootNodeOrSelector: Object | string,
-    collectionSelector: string = 'article',
-    itemSelector: string = 'section',
+    itemSelector: string = '.hyperaudio-transcript, .hyperaudio-effect',
   ) {
-    this.collectionSelector = collectionSelector;
     this.itemSelector = itemSelector;
     this.root = typeof rootNodeOrSelector === 'string'
       ? document.querySelector(rootNodeOrSelector) || rootNodeOrSelector
