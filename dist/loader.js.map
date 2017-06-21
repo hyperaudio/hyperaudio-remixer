@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/loader.js"],"names":[],"mappings":";;AAAA;;;;;;AAEA","file":"loader.js","sourcesContent":["import Hyperaudio from './hyperaudio';\n\nnew Hyperaudio();\n"]}
