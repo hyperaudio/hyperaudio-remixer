@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+
 import Player from './player';
 
 export default class Sink extends Player {
@@ -27,7 +29,9 @@ export default class Sink extends Player {
 
   onDragStart(event) {
     event.dataTransfer.setData('html', event.target.outerHTML);
+    // eslint-disable-next-line no-param-reassign
     event.dataTransfer.effectAllowed = 'copy';
+    // eslint-disable-next-line no-param-reassign
     event.dataTransfer.dropEffect = 'copy';
   }
 
@@ -51,7 +55,7 @@ export default class Sink extends Player {
 
     let target = event.target;
     if (typeof target.matches !== 'function') return;
-    while (!target.matches(this.itemSelector + '[draggable]')) { // FIXME
+    while (!target.matches(`${this.itemSelector}[draggable]`)) { // FIXME
       target = target.parentNode;
       if (!target) return;
       if (typeof target.matches !== 'function') return;
@@ -62,7 +66,7 @@ export default class Sink extends Player {
 
   // onDragLeave(event) {}
 
-  onDragEnd(event) {
+  onDragEnd() {
     for (const item of this.root.querySelectorAll('.over')) {
       item.classList.remove('over');
     }
@@ -82,7 +86,7 @@ export default class Sink extends Player {
       target.appendChild(item);
       this.setup(item);
     } else {
-      while (!target.matches(this.itemSelector + '[draggable]')) { // FIXME
+      while (!target.matches(`${this.itemSelector}[draggable]`)) { // FIXME
         target = target.parentNode;
       }
 

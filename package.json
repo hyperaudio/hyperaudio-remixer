@@ -4,7 +4,13 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "yarn dev",
+    "dev": "webpack-dev-server --progress",
+    "build": "rimraf lib dist && babel src -d lib --ignore .test.js && cross-env NODE_ENV=production webpack -p --progress",
+    "lint": "eslint src webpack.config.babel.js --ext .js,.jsx",
+    "test": "yarn lint && flow && echo jest --coverage",
+    "_precommit": "yarn test",
+    "_prepush": "yarn test && yarn prod:build"
   },
   "repository": {
     "type": "git",
@@ -15,8 +21,35 @@
   "bugs": {
     "url": "https://github.com/hyperaudio/hyperaudio-pad/issues"
   },
+  "browserslist": [
+    "> 1%"
+  ],
   "homepage": "https://github.com/hyperaudio/hyperaudio-pad#readme",
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
     "debug": "^2.6.8"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-jest": "^20.0.3",
+    "babel-loader": "^7.1.0",
+    "babel-preset-env": "^1.5.2",
+    "babel-preset-flow": "^6.23.0",
+    "cross-env": "^5.0.1",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-plugin-compat": "^1.0.4",
+    "eslint-plugin-flowtype": "^2.34.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^5.0.1",
+    "eslint-plugin-react": "^7.0.1",
+    "flow-bin": "^0.48.0",
+    "husky": "^0.13.4",
+    "jest": "^20.0.4",
+    "rimraf": "^2.6.1",
+    "webpack": "^3.0.0",
+    "webpack-dev-server": "^2.5.0"
   }
 }

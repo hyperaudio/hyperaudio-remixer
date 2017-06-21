@@ -1,8 +1,10 @@
+/* eslint-disable class-methods-use-this */
+
 import Player from './player';
 
 export default class Source extends Player {
   constructor(rootNodeOrSelector, collectionSelector = 'article', itemSelector = 'section') {
-    super(rootNodeOrSelector);
+    super(rootNodeOrSelector, collectionSelector, itemSelector);
 
     document.addEventListener('selectionchange', this.onSelectionChange.bind(this));
     document.addEventListener('mouseup', this.onMouseUp.bind(this));
@@ -23,7 +25,8 @@ export default class Source extends Player {
     if (!(commonAncestor.matches('section[data-src]') || commonAncestor.parentNode.matches('section[data-src]'))) return;
 
     for (const selected of this.root.querySelectorAll('.selected')) {
-      if (selection.containsNode(selected, true) || selection.containsNode(selected.parentNode, true)) continue;
+      if (selection.containsNode(selected, true)
+      || selection.containsNode(selected.parentNode, true)) continue;
       selected.classList.remove('selected');
       selected.removeAttribute('draggable');
     }
@@ -73,7 +76,9 @@ export default class Source extends Player {
     }
 
     event.dataTransfer.setData('html', item.outerHTML);
+    // eslint-disable-next-line no-param-reassign
     event.dataTransfer.effectAllowed = 'copy';
+    // eslint-disable-next-line no-param-reassign
     event.dataTransfer.dropEffect = 'copy';
 
     // return false;

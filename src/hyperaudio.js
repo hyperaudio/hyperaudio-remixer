@@ -1,8 +1,10 @@
-import Player from './player';
+/* eslint-disable no-new */
+
+// import Player from './player';
 import Source from './source';
 import Sink from './sink';
 
-class Hyperaudio {
+export default class Hyperaudio {
   constructor(nodeOrSelector = document) {
     this.node = typeof nodeOrSelector === 'string' ? document.querySelector(nodeOrSelector) : nodeOrSelector;
 
