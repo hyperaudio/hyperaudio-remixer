@@ -4,10 +4,17 @@
 import Player from './player';
 
 export default class Source extends Player {
-  constructor(rootNodeOrSelector: Object | string, collectionSelector: string = 'article', itemSelector: string = 'section') {
+  constructor(
+    rootNodeOrSelector: Object | string,
+    collectionSelector: string = 'article',
+    itemSelector: string = 'section',
+  ) {
     super(rootNodeOrSelector, collectionSelector, itemSelector);
 
-    document.addEventListener('selectionchange', this.onSelectionChange.bind(this));
+    document.addEventListener(
+      'selectionchange',
+      this.onSelectionChange.bind(this),
+    );
     document.addEventListener('mouseup', this.onMouseUp.bind(this));
   }
 
@@ -18,23 +25,37 @@ export default class Source extends Player {
     const range = selection.getRangeAt(0);
     const commonAncestor = range.commonAncestorContainer;
 
-    if (commonAncestor.nodeType === 3) { // document.TEXT_NODE
+    // document.TEXT_NODE
+    if (commonAncestor.nodeType === 3) {
       range.setStartBefore(commonAncestor.parentNode);
       return;
     }
 
-    if (!(commonAncestor.matches('section[data-src]') || commonAncestor.parentNode.matches('section[data-src]'))) return;
+    if (
+      !(
+        commonAncestor.matches('section[data-src]') ||
+        commonAncestor.parentNode.matches('section[data-src]')
+      )
+    )
+      return;
 
     // flow-disable-next-line
-    this.root.querySelectorAll('.selected').forEach((selected) => {
-      if (selection.containsNode(selected, true)
-      || selection.containsNode(selected.parentNode, true)) return;
+    this.root.querySelectorAll('.selected').forEach(selected => {
+      if (
+        selection.containsNode(selected, true) ||
+        selection.containsNode(selected.parentNode, true)
+      )
+        return;
       selected.classList.remove('selected');
       selected.removeAttribute('draggable');
     });
 
-    commonAncestor.querySelectorAll('*').forEach((candidate) => {
-      if (selection.containsNode(candidate, true) && candidate.nodeName !== 'P') { // FIXME
+    commonAncestor.querySelectorAll('*').forEach(candidate => {
+      // FIXME
+      if (
+        selection.containsNode(candidate, true) &&
+        candidate.nodeName !== 'P'
+      ) {
         candidate.classList.add('selected');
       }
     });
@@ -45,8 +66,11 @@ export default class Source extends Player {
     // flow-disable-next-line
     const selected = this.root.querySelectorAll('.selected');
 
-    selected.forEach((node) => {
-      if (selection.containsNode(node, true) || selection.containsNode(node.parentNode, true)) {
+    selected.forEach(node => {
+      if (
+        selection.containsNode(node, true) ||
+        selection.containsNode(node.parentNode, true)
+      ) {
         node.setAttribute('draggable', true);
         node.addEventListener('dragstart', this.onDragStart.bind(this));
         // node.addEventListener('dragend', this.onDragEnd.bind(this));
@@ -72,7 +96,7 @@ export default class Source extends Player {
 
     const item = document.createElement('section');
     // flow-disable-next-line
-    this.root.querySelectorAll('.selected').forEach((selected) => {
+    this.root.querySelectorAll('.selected').forEach(selected => {
       const clone = selected.cloneNode(true);
       clone.classList.remove('selected');
       clone.removeAttribute('draggable');

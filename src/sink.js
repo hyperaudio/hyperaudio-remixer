@@ -4,7 +4,11 @@
 import Player from './player';
 
 export default class Sink extends Player {
-  constructor(rootNodeOrSelector: Object | string, collectionSelector: string = 'article', itemSelector: string = 'section') {
+  constructor(
+    rootNodeOrSelector: Object | string,
+    collectionSelector: string = 'article',
+    itemSelector: string = 'section',
+  ) {
     super(rootNodeOrSelector, collectionSelector, itemSelector);
 
     // flow-disable-next-line
@@ -15,7 +19,9 @@ export default class Sink extends Player {
     collection.addEventListener('dragend', this.onDragEnd.bind(this));
     collection.addEventListener('drop', this.onDrop.bind(this));
 
-    collection.querySelectorAll(this.itemSelector).forEach(item => this.setup(item));
+    collection
+      .querySelectorAll(this.itemSelector)
+      .forEach(item => this.setup(item));
   }
 
   setup(item: Object) {
@@ -50,11 +56,14 @@ export default class Sink extends Player {
     event.stopPropagation();
 
     // flow-disable-next-line
-    this.root.querySelectorAll('.over').forEach(item => item.classList.remove('over'));
+    this.root
+      .querySelectorAll('.over')
+      .forEach(item => item.classList.remove('over'));
 
     let target = event.target;
     if (typeof target.matches !== 'function') return;
-    while (!target.matches(`${this.itemSelector}[draggable]`)) { // FIXME
+    while (!target.matches(`${this.itemSelector}[draggable]`)) {
+      // FIXME
       target = target.parentNode;
       if (!target) return;
       if (typeof target.matches !== 'function') return;
@@ -67,7 +76,9 @@ export default class Sink extends Player {
 
   onDragEnd() {
     // flow-disable-next-line
-    this.root.querySelectorAll('.over').forEach(item => item.classList.remove('over'));
+    this.root
+      .querySelectorAll('.over')
+      .forEach(item => item.classList.remove('over'));
   }
 
   onDrop(event: Object) {
@@ -80,11 +91,13 @@ export default class Sink extends Player {
     wrapper.innerHTML = html;
     const item = wrapper.children[0];
 
-    if (target.nodeName === 'ARTICLE') { // FIXME
+    // FIXME
+    if (target.nodeName === 'ARTICLE') {
       target.appendChild(item);
       this.setup(item);
     } else {
-      while (!target.matches(`${this.itemSelector}[draggable]`)) { // FIXME
+      // FIXME
+      while (!target.matches(`${this.itemSelector}[draggable]`)) {
         target = target.parentNode;
       }
 

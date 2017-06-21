@@ -11,13 +11,23 @@ export default class Hyperaudio {
   collectionSelector: string;
 
   constructor(rootNodeOrSelector: Object | string = document) {
-    this.root = typeof rootNodeOrSelector === 'string' ? document.querySelector(rootNodeOrSelector) || rootNodeOrSelector : rootNodeOrSelector;
+    this.root = typeof rootNodeOrSelector === 'string'
+      ? document.querySelector(rootNodeOrSelector) || rootNodeOrSelector
+      : rootNodeOrSelector;
 
     // flow-disable-next-line
-    this.root.querySelectorAll('.hyperaudio-source').forEach(sourceNode => new Source(sourceNode));
+    this.root
+      .querySelectorAll('.hyperaudio-source')
+      .forEach(sourceNode => new Source(sourceNode));
     // flow-disable-next-line
-    this.root.querySelectorAll('.hyperaudio-sink').forEach(sinkNode => new Sink(sinkNode));
+    this.root
+      .querySelectorAll('.hyperaudio-sink')
+      .forEach(sinkNode => new Sink(sinkNode));
     // flow-disable-next-line
-    this.root.querySelectorAll('.hyperaudio-player:not(.hyperaudio-sink):not(.hyperaudio-source)').forEach(playerNode => new Player(playerNode));
+    this.root
+      .querySelectorAll(
+        '.hyperaudio-player:not(.hyperaudio-sink):not(.hyperaudio-source)',
+      )
+      .forEach(playerNode => new Player(playerNode));
   }
 }

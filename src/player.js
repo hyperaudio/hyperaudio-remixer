@@ -6,10 +6,16 @@ export default class Player {
   itemSelector: string;
   collectionSelector: string;
 
-  constructor(rootNodeOrSelector: Object | string, collectionSelector: string = 'article', itemSelector: string = 'section') {
+  constructor(
+    rootNodeOrSelector: Object | string,
+    collectionSelector: string = 'article',
+    itemSelector: string = 'section',
+  ) {
     this.collectionSelector = collectionSelector;
     this.itemSelector = itemSelector;
-    this.root = typeof rootNodeOrSelector === 'string' ? document.querySelector(rootNodeOrSelector) || rootNodeOrSelector : rootNodeOrSelector;
+    this.root = typeof rootNodeOrSelector === 'string'
+      ? document.querySelector(rootNodeOrSelector) || rootNodeOrSelector
+      : rootNodeOrSelector;
   }
 
   setup(item: Object) {
