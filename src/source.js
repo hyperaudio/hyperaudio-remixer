@@ -94,12 +94,20 @@ export default class Source extends Player {
     // event.stopPropagation();
 
     const item = document.createElement('section');
+    let parent = document.createElement('p');
+    item.appendChild(parent);
+    let prevSelected = null;
     // flow-disable-next-line
     this.root.querySelectorAll('.selected').forEach(selected => {
       const clone = selected.cloneNode(true);
       clone.classList.remove('selected');
       clone.removeAttribute('draggable');
-      item.appendChild(clone);
+      if (prevSelected && prevSelected.parentNode !== selected.parentNode) {
+        parent = document.createElement('p');
+        item.appendChild(parent);
+      }
+      parent.appendChild(clone);
+      prevSelected = selected;
     });
 
     // flow-disable-next-line

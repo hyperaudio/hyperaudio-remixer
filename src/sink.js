@@ -61,7 +61,11 @@ export default class Sink extends Player {
 
     let target = event.target;
     if (typeof target.matches !== 'function') return;
-    while (!target.matches(`${this.itemSelector}[draggable]`)) {
+    while (
+      target &&
+      typeof target.matches === 'function' &&
+      !target.matches(`${this.itemSelector}[draggable]`)
+    ) {
       // FIXME
       target = target.parentNode;
       if (!target) return;
@@ -96,7 +100,11 @@ export default class Sink extends Player {
       this.setup(item);
     } else {
       // FIXME
-      while (!target.matches(`${this.itemSelector}[draggable]`)) {
+      while (
+        target &&
+        typeof target.matches === 'function' &&
+        !target.matches(`${this.itemSelector}[draggable]`)
+      ) {
         target = target.parentNode;
       }
 
