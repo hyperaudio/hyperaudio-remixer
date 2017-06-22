@@ -101,8 +101,11 @@ export default class Source extends Player {
 
       // flow-disable-next-line
       if (!item) item = selected.parentNode.parentNode.cloneNode(false);
-      // flow-disable-next-line
-      if (!parent) parent = selected.parentNode.cloneNode(false);
+      if (!parent) {
+        // flow-disable-next-line
+        parent = selected.parentNode.cloneNode(false);
+        item.appendChild(parent);
+      }
 
       if (prevSelected && prevSelected.parentNode !== selected.parentNode) {
         // flow-disable-next-line

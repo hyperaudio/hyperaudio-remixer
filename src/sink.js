@@ -24,7 +24,7 @@ export default class Sink extends Player {
   setup(item: Object) {
     super.setup(item);
 
-    item.setAttribute('draggable', true);
+    item.setAttribute('draggable', 'true');
     item.setAttribute('tabindex', 0);
     item.addEventListener('dragstart', this.onDragStart.bind(this));
     item.addEventListener('dragend', this.onDragEnd2.bind(this));
