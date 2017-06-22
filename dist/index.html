@@ -17,12 +17,12 @@
   <style>
     /* hyperaudio styles */
     .hyperaudio-sink .hyperaudio-effect:focus {
-      color: red;
+      border-left: 2px solid red;
       outline: none;
     }
 
     .hyperaudio-sink .hyperaudio-transcript:focus {
-      color: red;
+      border-left: 2px solid red;
       outline: none;
     }
 
@@ -36,8 +36,17 @@
     }
 
     .hyperaudio-player p {
+      color: gray;
       margin: 0;
       padding: .5em 0;
+    }
+
+    .hyperaudio-player .past {
+      color: black;
+    }
+
+    .hyperaudio-player .active {
+      color: red;
     }
 
     .hyperaudio-source .selected {
