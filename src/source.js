@@ -5,7 +5,7 @@ import Player from './player';
 
 export default class Source extends Player {
   constructor(
-    rootNodeOrSelector: Object | string,
+    rootNodeOrSelector: Element | string,
     itemSelector: string = '.hyperaudio-transcript, .hyperaudio-effect',
   ) {
     super(rootNodeOrSelector, itemSelector);
@@ -38,7 +38,6 @@ export default class Source extends Player {
     )
       return;
 
-    // flow-disable-next-line
     this.root.querySelectorAll('.selected').forEach(selected => {
       if (
         selection.containsNode(selected, true) ||
@@ -62,7 +61,6 @@ export default class Source extends Player {
 
   onMouseUp() {
     const selection = window.getSelection();
-    // flow-disable-next-line
     const selected = this.root.querySelectorAll('.selected');
 
     selected.forEach(node => {
@@ -70,7 +68,7 @@ export default class Source extends Player {
         selection.containsNode(node, true) ||
         selection.containsNode(node.parentNode, true)
       ) {
-        node.setAttribute('draggable', true);
+        node.setAttribute('draggable', 'true');
         node.addEventListener('dragstart', this.onDragStart.bind(this));
         // node.addEventListener('dragend', this.onDragEnd.bind(this));
       } else {
@@ -96,16 +94,18 @@ export default class Source extends Player {
     let item;
     let parent;
     let prevSelected;
-    // flow-disable-next-line
     this.root.querySelectorAll('.selected').forEach(selected => {
       const clone = selected.cloneNode(true);
       clone.classList.remove('selected');
       clone.removeAttribute('draggable');
 
+      // flow-disable-next-line
       if (!item) item = selected.parentNode.parentNode.cloneNode(false);
+      // flow-disable-next-line
       if (!parent) parent = selected.parentNode.cloneNode(false);
 
       if (prevSelected && prevSelected.parentNode !== selected.parentNode) {
+        // flow-disable-next-line
         parent = selected.parentNode.cloneNode(false);
         item.appendChild(parent);
       }

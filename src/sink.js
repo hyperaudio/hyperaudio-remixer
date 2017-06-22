@@ -5,22 +5,20 @@ import Player from './player';
 
 export default class Sink extends Player {
   constructor(
-    rootNodeOrSelector: Object | string,
+    rootNodeOrSelector: Element | string,
     itemSelector: string = '.hyperaudio-transcript, .hyperaudio-effect',
   ) {
     super(rootNodeOrSelector, itemSelector);
 
     // flow-disable-next-line
     const collection = this.root.querySelector(this.itemSelector).parentNode;
-    collection.addEventListener('dragover', this.onDragOver.bind(this));
-    collection.addEventListener('dragenter', this.onDragEnter.bind(this));
-    // collection.addEventListener('dragleave', this.onDragLeave.bind(this));
-    collection.addEventListener('dragend', this.onDragEnd.bind(this));
-    collection.addEventListener('drop', this.onDrop.bind(this));
-
-    collection
-      .querySelectorAll(this.itemSelector)
-      .forEach(item => this.setup(item));
+    if (collection) {
+      collection.addEventListener('dragover', this.onDragOver.bind(this));
+      collection.addEventListener('dragenter', this.onDragEnter.bind(this));
+      collection.addEventListener('dragend', this.onDragEnd.bind(this));
+      collection.addEventListener('drop', this.onDrop.bind(this));
+      // collection.addEventListener('dragleave', this.onDragLeave.bind(this));
+    }
   }
 
   setup(item: Object) {
@@ -54,7 +52,6 @@ export default class Sink extends Player {
     event.preventDefault();
     event.stopPropagation();
 
-    // flow-disable-next-line
     this.root
       .querySelectorAll('.over')
       .forEach(item => item.classList.remove('over'));
@@ -78,7 +75,6 @@ export default class Sink extends Player {
   // onDragLeave(event) {}
 
   onDragEnd() {
-    // flow-disable-next-line
     this.root
       .querySelectorAll('.over')
       .forEach(item => item.classList.remove('over'));
