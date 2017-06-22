@@ -32,6 +32,20 @@ export default class Player {
     const type = item.getAttribute('data-type');
 
     if (src) this.getMedia(src, type);
+
+    // data-m?
+    item.querySelectorAll('*[data-m]').forEach(element => {
+      const m = element.getAttribute('data-m');
+      const d = element.getAttribute('data-d');
+      const t = [];
+
+      if (m) t.push(parseInt(m, 10) / 1000);
+      if (d) t.push(parseInt(d, 10) / 1000);
+
+      element.setAttribute('data-t', t.join(','));
+      element.removeAttribute('data-m');
+      element.removeAttribute('data-d');
+    });
   }
 
   onClick(event: Object) {
