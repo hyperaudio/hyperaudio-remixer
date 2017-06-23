@@ -53,7 +53,7 @@ export default class Sink extends Player {
     event.stopPropagation();
 
     this.root
-      .querySelectorAll('.over')
+      .querySelectorAll('.over:not(article)')
       .forEach(item => item.classList.remove('over'));
 
     let target = event.target;
@@ -70,6 +70,8 @@ export default class Sink extends Player {
     }
 
     target.classList.add('over');
+    // flow-disable-next-line
+    this.root.querySelector('article').classList.add('over');
   }
 
   // onDragLeave(event) {}
@@ -91,8 +93,10 @@ export default class Sink extends Player {
     const item = wrapper.children[0];
 
     // FIXME
+    if (target.nodeName === 'DIV') target = target.parentNode;
     if (target.nodeName === 'ARTICLE') {
-      target.appendChild(item);
+      // target.appendChild(item);
+      target.insertBefore(item, target.querySelector('div'));
       this.setup(item);
     } else {
       // FIXME

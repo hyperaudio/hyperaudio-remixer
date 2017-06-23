@@ -3,4 +3,5 @@
 
 import Hyperaudio from './hyperaudio';
 
-new Hyperaudio();
+window.Hyperaudio = Hyperaudio;
+if (!window.hyperaudio) window.hyperaudio = new Hyperaudio();

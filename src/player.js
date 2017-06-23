@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable class-methods-use-this, no-unused-vars, no-plusplus, no-continue */
+/* eslint-disable class-methods-use-this, no-unused-vars, no-plusplus, no-continue, no-param-reassign */
 
 export default class Player {
   root: Element;
@@ -59,12 +59,16 @@ export default class Player {
     const src = item.getAttribute('data-src');
     if (!src) return;
 
-    const media = this.findMedia(src);
+    // FIXME
+    // flow-disable-next-line
+    const media = this.getMedia(src);
     if (!media) return;
 
     const [start] = t.split(',');
     // flow-disable-next-line
     media.currentTime = start;
+    // flow-disable-next-line
+    if (media.paused) media.play();
   }
 
   setHead(time: number, src: string) {
@@ -115,7 +119,18 @@ export default class Player {
       );
       if (source) media = source.parentNode;
     }
+
     return media;
+  }
+
+  hideOtherMediaThan(src: string) {
+    this.root
+      .querySelectorAll(`video:not([src="${src}"]), audio:not([src="${src}"])`)
+      .forEach(media => {
+        // flow-disable-next-line
+        media.pause();
+        media.style.display = 'none';
+      });
   }
 
   createMedia(src: string, type: string) {
@@ -139,6 +154,12 @@ export default class Player {
 
   getMedia(src: string, type: string) {
     const media = this.findMedia(src) || this.createMedia(src, type);
+
+    if (media) {
+      this.hideOtherMediaThan(src);
+      // flow-disable-next-line
+      media.style.display = '';
+    }
 
     // flow-disable-next-line
     if (media && !media.classList.contains('hyperaudio-enabled')) {
