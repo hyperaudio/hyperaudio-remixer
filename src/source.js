@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable class-methods-use-this */
+/* eslint-disable class-methods-use-this, no-param-reassign */
 
 import Player from './player';
 
@@ -14,7 +14,11 @@ export default class Source extends Player {
       'selectionchange',
       this.onSelectionChange.bind(this),
     );
-    document.addEventListener('mouseup', this.onMouseUp.bind(this));
+
+    // flow-disable-next-line
+    const collection = this.root.querySelector(this.itemSelector).parentNode;
+    if (collection)
+      collection.addEventListener('mouseup', this.onMouseUp.bind(this));
   }
 
   onSelectionChange() {
@@ -22,6 +26,8 @@ export default class Source extends Player {
     if (selection.rangeCount === 0) return;
 
     const range = selection.getRangeAt(0);
+    if (range.startOffset === range.endOffset) return;
+
     const commonAncestor = range.commonAncestorContainer;
 
     // document.TEXT_NODE
@@ -65,12 +71,12 @@ export default class Source extends Player {
 
     selected.forEach(node => {
       if (
-        selection.containsNode(node, true) ||
-        selection.containsNode(node.parentNode, true)
+        selection.containsNode(node, true) // ||
+        // selection.containsNode(node.parentNode, true)
       ) {
         node.setAttribute('draggable', 'true');
         node.addEventListener('dragstart', this.onDragStart.bind(this));
-        // node.addEventListener('dragend', this.onDragEnd.bind(this));
+        node.addEventListener('dragend', this.onDragEnd.bind(this));
       } else {
         // console.log('kill', node);
         node.classList.remove('selected');
@@ -78,16 +84,18 @@ export default class Source extends Player {
       }
     });
 
-    if (selected.length > 0 && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      range.setStartBefore(selected.item(0));
-      range.setEndAfter(selected.item(selected.length - 1));
-    } else {
-      selection.removeAllRanges();
-    }
+    selection.removeAllRanges();
+
+    // if (selected.length > 0 && selection.rangeCount > 0) {
+    //   const range = selection.getRangeAt(0);
+    //   range.setStartBefore(selected.item(0));
+    //   range.setEndAfter(selected.item(selected.length - 1));
+    // } else {
+    //   selection.removeAllRanges();
+    // }
   }
 
-  onDragStart(/* event) */) {
+  onDragStart(event: Object) {
     // event.preventDefault();
     // event.stopPropagation();
 
@@ -97,6 +105,8 @@ export default class Source extends Player {
     this.root.querySelectorAll('.selected').forEach(selected => {
       const clone = selected.cloneNode(true);
       clone.classList.remove('selected');
+      clone.classList.remove('active');
+      clone.classList.remove('past');
       clone.removeAttribute('draggable');
 
       // flow-disable-next-line
@@ -117,19 +127,29 @@ export default class Source extends Player {
     });
 
     // flow-disable-next-line
-    event.dataTransfer.setData('html', item.outerHTML);
-    // eslint-disable-next-line no-param-reassign flow-disable-next-line
+    event.dataTransfer.setData('text/html', item.outerHTML);
+    // flow-disable-next-line
+    event.dataTransfer.setData('text/plain', item.innerText);
     event.dataTransfer.effectAllowed = 'copy';
-    // eslint-disable-next-line no-param-reassign flow-disable-next-line
     event.dataTransfer.dropEffect = 'copy';
 
-    // return false;
+    // flow-disable-next-line
+    const itemClone = item.cloneNode(true);
+
+    // itemClone.style.position = 'absolute';
+    // itemClone.style.top = '0px';
+    // itemClone.style.left = '-100px';
+    // document.body.appendChild(itemClone);
+
+    // FIXME
+    this.root.appendChild(itemClone);
+    event.dataTransfer.setDragImage(itemClone, 0, 0);
   }
 
-  // onDragEnd() {
-  //   for (const node of this.node.querySelectorAll('.selected')) {
-  //     node.classList.remove('selected');
-  //     node.removeAttribute('draggable');
-  //   }
-  // }
+  onDragEnd() {
+    this.root.querySelectorAll('.selected').forEach(node => {
+      node.classList.remove('selected');
+      node.removeAttribute('draggable');
+    });
+  }
 }

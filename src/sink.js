@@ -31,7 +31,8 @@ export default class Sink extends Player {
   }
 
   onDragStart(event: Object) {
-    event.dataTransfer.setData('html', event.target.outerHTML);
+    event.dataTransfer.setData('text/html', event.target.outerHTML);
+    event.dataTransfer.setData('text/plain', event.target.innerText);
     // eslint-disable-next-line no-param-reassign
     event.dataTransfer.effectAllowed = 'copy';
     // eslint-disable-next-line no-param-reassign
@@ -84,12 +85,16 @@ export default class Sink extends Player {
 
   onDrop(event: Object) {
     event.preventDefault();
-    const html = event.dataTransfer.getData('html');
+    const html = event.dataTransfer.getData('text/html');
 
     let target = event.target;
 
     const wrapper = document.createElement('div');
     wrapper.innerHTML = html;
+
+    // flow-disable-next-line
+    if (wrapper.querySelector('meta')) wrapper.querySelector('meta').remove();
+
     const item = wrapper.children[0];
 
     // FIXME
