@@ -45,6 +45,8 @@ export default class Player {
       element.setAttribute('data-t', t.join(','));
       element.removeAttribute('data-m');
       element.removeAttribute('data-d');
+      element.removeAttribute('class');
+      element.parentNode.removeAttribute('class');
     });
   }
 

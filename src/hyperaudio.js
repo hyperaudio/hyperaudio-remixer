@@ -5,6 +5,8 @@ import Player from './player';
 import Source from './source';
 import Sink from './sink';
 
+export {Player, Source, Sink};
+
 export default class Hyperaudio {
   root: Object | string; // FIXME
   itemSelector: string;

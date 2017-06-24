@@ -36,6 +36,7 @@
       background-color: #d74b36;
       height: 60px;
       margin-bottom: 1em;
+      text-align: left;
     }
 
     /*#d74b36*/
@@ -150,7 +151,7 @@
 <body>
   <main>
     <header>
-
+      <!-- <select></select> -->
     </header>
     <!-- Player -->
     <section id="player" class="hyperaudio-player hyperaudio-source">
@@ -200,25 +201,74 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="bundle.js"></script>
   <script>
-    axios.get('http://studsterkel.api.hyperaud.io/v1/transcripts/UO5wDCaqSRawl22uTb6ciw')
-      .then(function(response) {
-        console.log(response.data);
+    document
+      .querySelectorAll('.hyperaudio-sink')
+      .forEach(sinkNode => new window.Sink(sinkNode));
 
-        document.querySelector('.hyperaudio-player')
-          .querySelector('article').outerHTML = response.data.content;
+    function load(data) {
+      console.log(data);
 
-        var section = document.querySelector('.hyperaudio-player')
+      document.querySelector('.hyperaudio-player')
+        .querySelector('article').innerHTML = data.content;
+
+      var section = document.querySelector('.hyperaudio-player')
           .querySelector('article section');
 
-        section.setAttribute('data-src', response.data.media.source.mp4.url);
-        section.setAttribute('data-type', response.data.media.source.mp4.type);
-        section.classList.add('hyperaudio-transcript');
+      section.setAttribute('data-src', data.media.source.mp4.url);
+      section.setAttribute('data-type', data.media.source.mp4.type);
+      section.classList.add('hyperaudio-transcript');
 
-        window.hyperaudio = new window.Hyperaudio();
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+      // window.hyperaudio = new window.Hyperaudio();
+
+      document
+        .querySelectorAll('.hyperaudio-source')
+        .forEach(sourceNode => new window.Source(sourceNode));
+    }
+
+    function loadURL(url, callback) {
+      console.log(url);
+      axios.get(url)
+        .then(function(response) {
+          callback(response.data);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }
+
+    function loadID(id, callback) {
+      console.log(id);
+      loadURL('http://studsterkel.api.hyperaud.io/v1/transcripts/' + id, callback);
+    }
+
+    // function loadMediaID(id, callback) {
+    //   console.log(id);
+    //   loadURL('http://studsterkel.api.hyperaud.io/v1/media/' + id + '/transcripts', function(data){
+    //     callback(data[0]);
+    //   });
+    // }
+
+    // default
+    // loadURL('http://studsterkel.api.hyperaud.io/v1/transcripts/UO5wDCaqSRawl22uTb6ciw', load);
+    loadID('UO5wDCaqSRawl22uTb6ciw', load);
+
+    // LIST
+    // loadURL('http://studsterkel.api.hyperaud.io/v1/media', function(data) {
+    //   console.log(data);
+    //   var select = document.querySelector('select');
+    //   data.forEach(function(media) {
+    //     if (media.channel !== 'Interviews') return;
+    //     var option = document.createElement('option');
+    //     option.innerText = media.label;
+    //     option.setAttribute('value', media._id);
+    //     select.appendChild(option);
+    //   });
+    //
+    //   select.addEventListener('change', function(event) {
+    //     loadMediaID(this.value, load);
+    //   });
+    // });
+
   </script>
 
 </body>

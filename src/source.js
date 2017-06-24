@@ -104,9 +104,10 @@ export default class Source extends Player {
     let prevSelected;
     this.root.querySelectorAll('.selected').forEach(selected => {
       const clone = selected.cloneNode(true);
-      clone.classList.remove('selected');
-      clone.classList.remove('active');
-      clone.classList.remove('past');
+      // clone.classList.remove('selected');
+      // clone.classList.remove('active');
+      // clone.classList.remove('past');
+      clone.removeAttribute('class');
       clone.removeAttribute('draggable');
 
       // flow-disable-next-line
@@ -114,6 +115,8 @@ export default class Source extends Player {
       if (!parent) {
         // flow-disable-next-line
         parent = selected.parentNode.cloneNode(false);
+        // flow-disable-next-line
+        parent.removeAttribute('class');
         item.appendChild(parent);
       }
 
