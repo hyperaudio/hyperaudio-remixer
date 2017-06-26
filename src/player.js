@@ -83,11 +83,11 @@ export default class Player {
       .querySelectorAll(`.hyperaudio-transcript[data-src="${src}"]`)
       .forEach(item => {
         item
-          .querySelectorAll('.past')
-          .forEach(active => active.classList.remove('past'));
+          .querySelectorAll('.hyperaudio-past')
+          .forEach(active => active.classList.remove('hyperaudio-past'));
         item
-          .querySelectorAll('.active')
-          .forEach(active => active.classList.remove('active'));
+          .querySelectorAll('.hyperaudio-active')
+          .forEach(active => active.classList.remove('hyperaudio-active'));
 
         const candidates = item.querySelectorAll('*[data-t]');
         for (let i = 0; i < candidates.length; i++) {
@@ -98,11 +98,11 @@ export default class Player {
           d = parseFloat(d);
 
           if (t < time) {
-            candidates[i].classList.add('past');
+            candidates[i].classList.add('hyperaudio-past');
           }
 
           if (t <= time && time < t + d) {
-            candidates[i].classList.add('active');
+            candidates[i].classList.add('hyperaudio-active');
           }
 
           if (t > time) break;

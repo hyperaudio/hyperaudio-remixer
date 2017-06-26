@@ -44,13 +44,13 @@ export default class Source extends Player {
     )
       return;
 
-    this.root.querySelectorAll('.selected').forEach(selected => {
+    this.root.querySelectorAll('.hyperaudio-selected').forEach(selected => {
       if (
         selection.containsNode(selected, true) ||
         selection.containsNode(selected.parentNode, true)
       )
         return;
-      selected.classList.remove('selected');
+      selected.classList.remove('hyperaudio-selected');
       selected.removeAttribute('draggable');
     });
 
@@ -60,14 +60,14 @@ export default class Source extends Player {
         selection.containsNode(candidate, true) &&
         candidate.nodeName !== 'P'
       ) {
-        candidate.classList.add('selected');
+        candidate.classList.add('hyperaudio-selected');
       }
     });
   }
 
   onMouseUp() {
     const selection = window.getSelection();
-    const selected = this.root.querySelectorAll('.selected');
+    const selected = this.root.querySelectorAll('.hyperaudio-selected');
 
     selected.forEach(node => {
       if (
@@ -79,7 +79,7 @@ export default class Source extends Player {
         node.addEventListener('dragend', this.onDragEnd.bind(this));
       } else {
         // console.log('kill', node);
-        node.classList.remove('selected');
+        node.classList.remove('hyperaudio-selected');
         node.removeAttribute('draggable');
       }
     });
@@ -102,12 +102,12 @@ export default class Source extends Player {
     let item;
     let parent;
     let prevSelected;
-    this.root.querySelectorAll('.selected').forEach(selected => {
+    this.root.querySelectorAll('.hyperaudio-selected').forEach(selected => {
       const clone = selected.cloneNode(true);
-      // clone.classList.remove('selected');
-      // clone.classList.remove('active');
-      // clone.classList.remove('past');
-      clone.removeAttribute('class');
+      clone.classList.remove('hyperaudio-selected');
+      clone.classList.remove('hyperaudio-active');
+      clone.classList.remove('hyperaudio-past');
+      // clone.removeAttribute('class');
       clone.removeAttribute('draggable');
 
       // flow-disable-next-line
@@ -115,8 +115,7 @@ export default class Source extends Player {
       if (!parent) {
         // flow-disable-next-line
         parent = selected.parentNode.cloneNode(false);
-        // flow-disable-next-line
-        parent.removeAttribute('class');
+        // parent.removeAttribute('class');
         item.appendChild(parent);
       }
 
@@ -150,8 +149,8 @@ export default class Source extends Player {
   }
 
   onDragEnd() {
-    this.root.querySelectorAll('.selected').forEach(node => {
-      node.classList.remove('selected');
+    this.root.querySelectorAll('.hyperaudio-selected').forEach(node => {
+      node.classList.remove('hyperaudio-selected');
       node.removeAttribute('draggable');
     });
   }

@@ -83,7 +83,7 @@
       transition: border-top 0.15s;
     }
 
-    .hyperaudio-sink .hyperaudio-transcript.over {
+    .hyperaudio-sink .hyperaudio-transcript.hyperaudio-over {
       border-top: 2em solid #e9f8fb;
       transition: border-top 0.15s;
     }
@@ -122,36 +122,36 @@
       padding: .5em 0;
     }
 
-    .hyperaudio-player .past {
+    .hyperaudio-player .hyperaudio-past {
       color: black;
     }
 
-    .hyperaudio-player .active {
+    .hyperaudio-player .hyperaudio-active {
       color: #d74b36;
     }
 
-    .hyperaudio-source .selected, hyperaudio-player .active.selected {
+    .hyperaudio-source .hyperaudio-selected, hyperaudio-player .hyperaudio-active.hyperaudio-selected {
       /*background-color: lightpink;*/
       background: #87d8e7;
       text-shadow: none;
       /*color: white;*/
     }
 
-    .hyperaudio-effect {
+    /*.hyperaudio-effect {
       background-color: #fafaff;
       padding: .5em;
     }
 
     .hyperaudio-effect input {
       width: 33%;
-    }
+    }*/
   </style>
 
 </head>
 <body>
   <main>
     <header>
-      <!-- <select></select> -->
+      <select></select>
     </header>
     <!-- Player -->
     <section id="player" class="hyperaudio-player hyperaudio-source">
@@ -241,33 +241,34 @@
       loadURL('http://studsterkel.api.hyperaud.io/v1/transcripts/' + id, callback);
     }
 
-    // function loadMediaID(id, callback) {
-    //   console.log(id);
-    //   loadURL('http://studsterkel.api.hyperaud.io/v1/media/' + id + '/transcripts', function(data){
-    //     callback(data[0]);
-    //   });
-    // }
+    function loadMediaID(id, callback) {
+      console.log(id);
+      loadURL('http://studsterkel.api.hyperaud.io/v1/media/' + id + '/transcripts', function(data){
+        // callback(data[0]);
+        loadID(data[0]._id, load);
+      });
+    }
 
     // default
     // loadURL('http://studsterkel.api.hyperaud.io/v1/transcripts/UO5wDCaqSRawl22uTb6ciw', load);
-    loadID('UO5wDCaqSRawl22uTb6ciw', load);
+    // loadID('UO5wDCaqSRawl22uTb6ciw', load);
+    loadID("ORdQOjpETuKGv9OwiWnEMQ", load);
 
-    // LIST
-    // loadURL('http://studsterkel.api.hyperaud.io/v1/media', function(data) {
-    //   console.log(data);
-    //   var select = document.querySelector('select');
-    //   data.forEach(function(media) {
-    //     if (media.channel !== 'Interviews') return;
-    //     var option = document.createElement('option');
-    //     option.innerText = media.label;
-    //     option.setAttribute('value', media._id);
-    //     select.appendChild(option);
-    //   });
-    //
-    //   select.addEventListener('change', function(event) {
-    //     loadMediaID(this.value, load);
-    //   });
-    // });
+    loadURL('http://studsterkel.api.hyperaud.io/v1/media', function(data) {
+      console.log(data);
+      var select = document.querySelector('select');
+      data.forEach(function(media) {
+        if (media.channel !== 'Interviews') return;
+        var option = document.createElement('option');
+        option.innerText = media.label;
+        option.setAttribute('value', media._id);
+        select.appendChild(option);
+      });
+
+      select.addEventListener('change', function(event) {
+        loadMediaID(this.value, load);
+      });
+    });
 
   </script>
 

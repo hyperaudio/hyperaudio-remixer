@@ -54,8 +54,8 @@ export default class Sink extends Player {
     event.stopPropagation();
 
     this.root
-      .querySelectorAll('.over:not(article)')
-      .forEach(item => item.classList.remove('over'));
+      .querySelectorAll('.hyperaudio-over:not(article)')
+      .forEach(item => item.classList.remove('hyperaudio-over'));
 
     let target = event.target;
     if (typeof target.matches !== 'function') return;
@@ -70,17 +70,17 @@ export default class Sink extends Player {
       if (typeof target.matches !== 'function') return;
     }
 
-    target.classList.add('over');
+    target.classList.add('hyperaudio-over');
     // flow-disable-next-line
-    this.root.querySelector('article').classList.add('over');
+    this.root.querySelector('article').classList.add('hyperaudio-over');
   }
 
   // onDragLeave(event) {}
 
   onDragEnd() {
     this.root
-      .querySelectorAll('.over')
-      .forEach(item => item.classList.remove('over'));
+      .querySelectorAll('.hyperaudio-over')
+      .forEach(item => item.classList.remove('hyperaudio-over'));
   }
 
   onDrop(event: Object) {
