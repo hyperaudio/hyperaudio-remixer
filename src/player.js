@@ -50,6 +50,11 @@ export default class Player {
     });
   }
 
+  // empty() {
+  //   this.root.querySelector(this.itemSelector).parentNode.innerHTML = '';
+  //   this.root.querySelector('header').parentNode.innerHTML = '';
+  // }
+
   onClick(event: Object) {
     const t = event.target.getAttribute('data-t');
     if (!t) return;
@@ -144,7 +149,7 @@ export default class Player {
         break;
 
       default:
-        wrapper.innerHTML = `<video src="${src}" type="${type}" controls preload></video>`;
+        wrapper.innerHTML = `<video src="${src}" type="${type}" controls preload playsinline></video>`;
     }
 
     const media = wrapper.querySelector('audio, video');
