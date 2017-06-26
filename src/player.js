@@ -4,6 +4,8 @@
 export default class Player {
   root: Element;
   itemSelector: string;
+  currentSrc: string;
+  lastSegment: Element;
 
   constructor(
     rootNodeOrSelector: Element | string,
@@ -71,43 +73,92 @@ export default class Player {
     const media = this.getMedia(src);
     if (!media) return;
 
-    const [start] = t.split(',');
+    const [start, duration] = t.split(',');
+    // event.target.classList.add('hyperaudio-duration');
+
     // flow-disable-next-line
     media.currentTime = start;
+
     // flow-disable-next-line
     if (media.paused) media.play();
   }
 
   setHead(time: number, src: string) {
-    this.root
-      .querySelectorAll(`.hyperaudio-transcript[data-src="${src}"]`)
-      .forEach(item => {
-        item
-          .querySelectorAll('.hyperaudio-past')
-          .forEach(active => active.classList.remove('hyperaudio-past'));
-        item
-          .querySelectorAll('.hyperaudio-active')
-          .forEach(active => active.classList.remove('hyperaudio-active'));
+    this.currentSrc = src;
+    let found = false;
 
-        const candidates = item.querySelectorAll('*[data-t]');
-        for (let i = 0; i < candidates.length; i++) {
-          const tc = candidates[i].getAttribute('data-t');
-          if (!tc) continue;
-          let [t, d] = tc.split(',');
-          t = parseFloat(t);
-          d = parseFloat(d);
+    const items = this.root.querySelectorAll(
+      `.hyperaudio-transcript[data-src="${src}"]`,
+    );
 
-          if (t < time) {
-            candidates[i].classList.add('hyperaudio-past');
-          }
+    for (let j = 0; j < items.length; j++) {
+      const item = items[j];
 
-          if (t <= time && time < t + d) {
-            candidates[i].classList.add('hyperaudio-active');
-          }
+      item
+        .querySelectorAll('.hyperaudio-past')
+        .forEach(active => active.classList.remove('hyperaudio-past'));
+      item
+        .querySelectorAll('.hyperaudio-active')
+        .forEach(active => active.classList.remove('hyperaudio-active'));
 
-          if (t > time) break;
+      const candidates = item.querySelectorAll('*[data-t]');
+
+      const first = candidates[0];
+      const last = candidates[candidates.length - 1];
+
+      // flow-disable-next-line
+      const [t0] = first.getAttribute('data-t').split(',');
+      if (time < parseFloat(t0)) continue;
+
+      // flow-disable-next-line
+      const [ti, di] = last.getAttribute('data-t').split(',');
+      if (time > parseFloat(ti) + parseFloat(di)) continue;
+
+      found = true;
+      this.lastSegment = item;
+
+      for (let i = 0; i < candidates.length; i++) {
+        const tc = candidates[i].getAttribute('data-t');
+        // flow-disable-next-line
+        let [t, d] = tc.split(',');
+        t = parseFloat(t);
+        d = parseFloat(d);
+
+        if (t < time) {
+          candidates[i].classList.add('hyperaudio-past');
         }
-      });
+
+        if (t <= time && time < t + d) {
+          // console.log(time - (t + d) * 1e3);
+          candidates[i].classList.add('hyperaudio-active');
+          if (!candidates[i].classList.contains('hyperaudio-duration'))
+            setInterval(() => {
+              candidates[i].classList.remove('hyperaudio-duration');
+            }, (d - (time - t)) * 1e3);
+          candidates[i].classList.add('hyperaudio-duration');
+        }
+
+        if (t > time) break;
+      }
+    }
+
+    if (!found) {
+      // flow-disable-next-line
+      const media = this.getMedia(src);
+      // flow-disable-next-line
+      media.pause();
+
+      const allItems = this.root.querySelectorAll('.hyperaudio-transcript');
+      for (let k = 0; k < allItems.length - 1; k++) {
+        if (allItems[k] === this.lastSegment) {
+          const event = document.createEvent('HTMLEvents');
+          event.initEvent('click', true, false);
+          // flow-disable-next-line
+          allItems[k + 1].querySelector('*[data-t]').dispatchEvent(event);
+          break;
+        }
+      }
+    }
   }
 
   onTimeUpdate(event: Object) {
