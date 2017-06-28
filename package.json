@@ -1,7 +1,29 @@
 {
   "name": "hyperaudio-pad",
-  "version": "0.0.0",
-  "description": "",
+  "version": "1.0.0",
+  "description": "Hyperaudio Player and Remix Pad",
+  "author": "Laurian Gridinoc <laurian@gridinoc.name> (http://gridinoc.com)",
+  "contributors": [
+    "Mark Boas <markb@happyworm.com> (http://happyworm.com)",
+    "Mark Panaghiston <markp@happyworm.com> (http://happyworm.com)"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyperaudio/hyperaudio-pad.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hyperaudio/hyperaudio-pad/issues"
+  },
+  "browserslist": [
+    "> 1%"
+  ],
+  "homepage": "https://github.com/hyperaudio/hyperaudio-pad#readme",
+  "keywords": [
+    "audio",
+    "video",
+    "transcript"
+  ],
   "main": "dist/index.js",
   "scripts": {
     "start": "yarn dev",
@@ -12,19 +34,6 @@
     "precommit": "yarn test",
     "prepush": "yarn test && yarn build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hyperaudio/hyperaudio-pad.git"
-  },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/hyperaudio/hyperaudio-pad/issues"
-  },
-  "browserslist": [
-    "> 1%"
-  ],
-  "homepage": "https://github.com/hyperaudio/hyperaudio-pad#readme",
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "debug": "^2.6.8"
