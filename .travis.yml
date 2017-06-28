@@ -15,7 +15,7 @@ install:
   - yarn
 
 script:
-  - yarn run build
+  - yarn test && yarn build
 
 notifications:
   irc: "chat.freenode.net#hyperaudio"
