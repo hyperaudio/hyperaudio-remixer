@@ -27,7 +27,7 @@ deploy:
     acl: public_read
     skip_cleanup: true
     local_dir: dist
-    upload-dir: dist
+    upload-dir: releases/hyperaudio-pad/develop
     on:
       branch: develop
 
