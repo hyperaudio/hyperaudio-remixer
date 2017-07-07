@@ -17,33 +17,35 @@
     }
 
     main {
-      margin: 0 auto;
-      width: 1300px;
-    }
-
-    main > section {
-      float: left;
-      width: 50%;
-      width: 640px;
+      display: flex;
+      flex-direction: column;
       text-align: left;
-    }
-
-    main > section + section {
-      margin-left: 20px;
     }
 
     main > header {
+      flex-basis: 60px;
       background-color: #d74b36;
-      height: 60px;
-      margin-bottom: 1em;
-      text-align: left;
     }
 
-    /*#d74b36*/
+    main > div {
+      flex-basis: 100%;
+      display: flex;
+    }
+
+    main > div > section {
+      flex-basis: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    main > div > section > article {
+      flex-basis: 100%;
+    }
+
     ::selection {
       background: #87d8e7;
       text-shadow: none;
-      /*color: white;*/
     }
   </style>
 
@@ -89,7 +91,7 @@
     }
 
     /* FIXME */
-    .hyperaudio-sink article > div {
+    /*.hyperaudio-sink article > div {
       height: 10em;
       background-color: transparent;
       transition: background-color 0.15s;
@@ -99,10 +101,11 @@
       height: 10em;
       background-color: #e9f8fb;
       transition: background-color 0.15s;
-    }
+    }*/
 
-    .hyperaudio-player header, .hyperaudio-player video {
-      max-width: 634px;
+    .hyperaudio-player header {
+      flex-basis: 360px;
+      /*max-width: 634px;*/
       max-height: 360px;
       margin-bottom: 2em;
       background-color: black;
@@ -114,6 +117,8 @@
 
     .hyperaudio-player video {
       width: 100%;
+      height: 100%;
+      /*max-width: 634px;*/
     }
 
     .hyperaudio-player p {
@@ -153,6 +158,8 @@
     <header>
       <select></select>
     </header>
+
+  <div>
     <!-- Player -->
     <section id="player" class="hyperaudio-player hyperaudio-source">
       <header class="hyperaudio-media">
@@ -187,19 +194,21 @@
             <span data-t="8.91,.17">him. </span>
           </p>
         </section>
-        <div>
+        <!-- <div> -->
           <!-- drop area -->
-        </div>
+        <!-- </div> -->
+        <section class="hyperaudio-effect"></section>
       </article>
     </section>
 
+  </div>
   </main>
 
   <script>
     window.hyperaudio = {};
   </script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="bundle.js"></script>
+  <script src="hyperaudio.js"></script>
   <script>
     document
       .querySelectorAll('.hyperaudio-sink')
