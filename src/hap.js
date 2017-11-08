@@ -102,7 +102,9 @@ HAP = (function (window, document, HA) {
 		HA.api.init({
 			org: namespace, // The organisations namespace / sub-domain. EG. 'chattanooga'
 			domain: domain,
-			protocol: 'https://'
+			protocol: 'https://',
+			bgm: '/media?user=bgm',
+			whoami: 'auth/whoami/' + window.localStorage.getItem('token')
 		});
 
 		// Init the Clipboard utility
