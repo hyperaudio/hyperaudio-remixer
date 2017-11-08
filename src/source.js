@@ -17,8 +17,10 @@ export default class Source extends Player {
 
     // flow-disable-next-line
     const collection = this.root.querySelector(this.itemSelector).parentNode;
-    if (collection)
+    if (collection && !collection.classList.contains('hyperaudio-enabled')) {
       collection.addEventListener('mouseup', this.onMouseUp.bind(this));
+      collection.classList.add('hyperaudio-enabled');
+    }
   }
 
   onSelectionChange() {
