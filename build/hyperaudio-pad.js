@@ -1,4 +1,4 @@
-/*! hyperaudio-pad v0.6.6 ~ (c) 2012-2015 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 3rd July 2015 18:42:35 */
+/*! hyperaudio-pad v0.6.6 ~ (c) 2012-2017 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 8th November 2017 13:57:34 */
 /*! hyperaudio-lib v0.6.5 ~ (c) 2012-2015 Hyperaudio Inc. <hello@hyperaud.io> (http://hyperaud.io) http://hyperaud.io/licensing/ ~ Built: 3rd July 2015 18:38:25 */
 (function(global, document) {
 
