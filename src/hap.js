@@ -69,7 +69,7 @@ HAP = (function (window, document, HA) {
 	}
 
 	function getUrls() {
-		var edit = 'http://' + (namespace ? namespace + '.' : '') + domain + '/pad/';
+		var edit = 'https://' + (namespace ? namespace + '.' : '') + domain + '/pad/';
 		var share = edit + 'viewer/';
 		var params = '';
 		if(mixId && transcriptId) {
@@ -89,7 +89,7 @@ HAP = (function (window, document, HA) {
 	}
 
 	function loaded () {
-		
+
 		if (document.location.hostname.indexOf('hyperaud') > -1) {
 			namespace = document.location.hostname.substring(0, document.location.hostname.indexOf('hyperaud') - 1);
 		}
@@ -101,7 +101,8 @@ HAP = (function (window, document, HA) {
 		// Init the API utility
 		HA.api.init({
 			org: namespace, // The organisations namespace / sub-domain. EG. 'chattanooga'
-			domain: domain
+			domain: domain,
+			protocol: 'https://'
 		});
 
 		// Init the Clipboard utility
@@ -276,7 +277,7 @@ HAP = (function (window, document, HA) {
 			// Init special fx
 			fade = new HA.DragDrop({
 				handle: '#fadeFX',
-				dropArea: stage.target, 
+				dropArea: stage.target,
 				draggableClass: 'draggableEffect',
 				onDragStart: function (e) {
 					HA.addClass(stage.target, 'dragdrop');
