@@ -103,8 +103,9 @@ HAP = (function (window, document, HA) {
 			org: namespace, // The organisations namespace / sub-domain. EG. 'chattanooga'
 			domain: domain,
 			protocol: 'https://',
-			bgm: '/media?user=bgm',
-			whoami: 'auth/whoami/' + window.localStorage.getItem('token')
+			bgm: 'media?tag=bgm',
+			whoami: 'auth/whoami/' + window.localStorage.getItem('token'),
+			// channels: 'channels/',
 		});
 
 		// Init the Clipboard utility
