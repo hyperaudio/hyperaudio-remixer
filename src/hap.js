@@ -105,7 +105,7 @@ HAP = (function (window, document, HA) {
 			protocol: 'https://',
 			bgm: 'media?tag=bgm',
 			whoami: 'auth/whoami/' + window.localStorage.getItem('token'),
-			// channels: 'channels/',
+			withCredentials: false
 		});
 
 		// Init the Clipboard utility
