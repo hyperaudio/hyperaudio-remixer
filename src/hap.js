@@ -104,7 +104,7 @@ HAP = (function (window, document, HA) {
 			domain: domain,
 			protocol: 'https://',
 			bgm: 'media?tag=bgm',
-			whoami: 'auth/whoami/' + window.localStorage.getItem('token'),
+			whoami: 'auth/whoami/',
 			signin: 'accounts/token',
 			withCredentials: false
 		});
