@@ -36,7 +36,7 @@ deploy:
     skip_cleanup: true
     upload-dir: pad
     on:
-      branch: develop
+      branch: master
 
 notifications:
   irc: chat.freenode.net#hyperaudio
