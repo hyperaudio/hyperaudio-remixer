@@ -123,6 +123,11 @@ export default class Sink extends Player {
       this.setup(item);
     }
 
+    // this.root
+    document // FIXME
+      .querySelectorAll('.hyperaudio-source > section')
+      .forEach(section => section.remove());
+
     this.onDragEnd();
   }
 }
