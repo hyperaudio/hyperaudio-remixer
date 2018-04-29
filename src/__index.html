@@ -154,14 +154,17 @@
 </head>
 <body>
   <main>
+    <header>
+      <select id="media"></select>
+      <select id="remixes"></select>
+    </header>
+
   <div>
     <!-- Player -->
     <section id="player" class="hyperaudio-player hyperaudio-source">
       <header class="hyperaudio-media">
       </header>
-      <div>
-        <input type="search" />
-      </div>
+
       <article>
       </article>
     </section>
@@ -170,11 +173,6 @@
     <section id="remixer" class="hyperaudio-player hyperaudio-sink">
       <header class="hyperaudio-media">
       </header>
-      <div>
-        <button>Fade</button>
-        <button>Trim</button>
-        <button>Share</button>
-      </div>
 
       <article>
         <!-- <div> -->
@@ -191,7 +189,6 @@
     window.hyperaudio = {};
   </script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="hyperaudio.js"></script>
   <script>
     document
@@ -234,46 +231,50 @@
       loadURL('http://studsterkel.api.hyperaud.io/v1/transcripts/' + id, callback);
     }
 
-    // function loadMediaID(id, callback) {
-    //   console.log(id);
-    //   loadURL('http://studsterkel.api.hyperaud.io/v1/media/' + id + '/transcripts', function(data){
-    //     // callback(data[0]);
-    //     loadID(data[0]._id, load);
-    //   });
-    // }
+    function loadMediaID(id, callback) {
+      console.log(id);
+      loadURL('http://studsterkel.api.hyperaud.io/v1/media/' + id + '/transcripts', function(data){
+        // callback(data[0]);
+        loadID(data[0]._id, load);
+      });
+    }
 
     // default
     // loadURL('http://studsterkel.api.hyperaud.io/v1/transcripts/UO5wDCaqSRawl22uTb6ciw', load);
     // loadID('UO5wDCaqSRawl22uTb6ciw', load);
     loadID("ORdQOjpETuKGv9OwiWnEMQ", load);
 
-    $.get('https://api.contextubot.net/proxy?url=' + escape('http://live-stra-jell.pantheonsite.io/program-search?query=&sort_by=title&sort_order=DESC&f%5B0%5D=program_includes%3A573'), function(data) {
-      var results = $(data.replace(/src=/g, 'zrc=')).find('.results_tiles a').toArray().map(function(result) {
-        return {
-          title: $(result).find('h3').text().trim(),
-          link: $(result).attr('href')
-        };
-      }).filter(function(result) {
-        return result.title !== "";
+    loadURL('http://studsterkel.api.hyperaud.io/v1/media', function(data) {
+      // console.log(data);
+      var select = document.querySelector('select#media');
+      data.forEach(function(media) {
+        if (media.channel !== 'Interviews') return;
+        var option = document.createElement('option');
+        option.innerText = media.label;
+        option.setAttribute('value', media._id);
+        select.appendChild(option);
       });
-      console.log(results);
+
+      select.addEventListener('change', function(event) {
+        loadMediaID(this.value, load);
+      });
     });
 
-    // loadURL('https://api.contextubot.net/proxy?url=' + escape('http://live-stra-jell.pantheonsite.io/program-search?query=&sort_by=title&sort_order=DESC&f%5B0%5D=program_includes%3A573'), function(data) {
-    //   console.log(data);
-    //   // var select = document.querySelector('select#media');
-    //   // data.forEach(function(media) {
-    //   //   if (media.channel !== 'Interviews') return;
-    //   //   var option = document.createElement('option');
-    //   //   option.innerText = media.label;
-    //   //   option.setAttribute('value', media._id);
-    //   //   select.appendChild(option);
-    //   // });
-    //   //
-    //   // select.addEventListener('change', function(event) {
-    //   //   loadMediaID(this.value, load);
-    //   // });
-    // });
+    loadURL('http://studsterkel.api.hyperaud.io/v1/mixes', function(data) {
+      console.log(data);
+      // var select = document.querySelector('select#media');
+      // data.forEach(function(media) {
+      //   if (media.channel !== 'Interviews') return;
+      //   var option = document.createElement('option');
+      //   option.innerText = media.label;
+      //   option.setAttribute('value', media._id);
+      //   select.appendChild(option);
+      // });
+      //
+      // select.addEventListener('change', function(event) {
+      //   loadMediaID(this.value, load);
+      // });
+    });
 
   </script>
 

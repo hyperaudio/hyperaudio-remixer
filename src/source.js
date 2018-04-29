@@ -16,7 +16,7 @@ export default class Source extends Player {
     );
 
     // flow-disable-next-line
-    const collection = this.root.querySelector(this.itemSelector).parentNode;
+    const collection = this.root.querySelector(this.itemSelector).parentElement;
     if (collection && !collection.classList.contains('hyperaudio-enabled')) {
       collection.addEventListener('mouseup', this.onMouseUp.bind(this));
       collection.classList.add('hyperaudio-enabled');
@@ -34,14 +34,14 @@ export default class Source extends Player {
 
     // document.TEXT_NODE
     if (commonAncestor.nodeType === 3) {
-      range.setStartBefore(commonAncestor.parentNode);
+      range.setStartBefore(commonAncestor.parentElement);
       return;
     }
 
     if (
       !(
         commonAncestor.matches('section[data-src]') ||
-        commonAncestor.parentNode.matches('section[data-src]')
+        commonAncestor.parentElement.matches('section[data-src]')
       )
     )
       return;
@@ -49,7 +49,7 @@ export default class Source extends Player {
     this.root.querySelectorAll('.hyperaudio-selected').forEach(selected => {
       if (
         selection.containsNode(selected, true) ||
-        selection.containsNode(selected.parentNode, true)
+        selection.containsNode(selected.parentElement, true)
       )
         return;
       selected.classList.remove('hyperaudio-selected');
@@ -74,7 +74,7 @@ export default class Source extends Player {
     selected.forEach(node => {
       if (
         selection.containsNode(node, true) // ||
-        // selection.containsNode(node.parentNode, true)
+        // selection.containsNode(node.parentElement, true)
       ) {
         node.setAttribute('draggable', 'true');
         node.addEventListener('dragstart', this.onDragStart.bind(this));
@@ -113,17 +113,19 @@ export default class Source extends Player {
       clone.removeAttribute('draggable');
 
       // flow-disable-next-line
-      if (!item) item = selected.parentNode.parentNode.cloneNode(false);
+      if (!item) item = selected.parentElement.parentElement.cloneNode(false);
       if (!parent) {
         // flow-disable-next-line
-        parent = selected.parentNode.cloneNode(false);
+        parent = selected.parentElement.cloneNode(false);
         // parent.removeAttribute('class');
         item.appendChild(parent);
       }
 
-      if (prevSelected && prevSelected.parentNode !== selected.parentNode) {
+      if (
+        prevSelected && prevSelected.parentElement !== selected.parentElement
+      ) {
         // flow-disable-next-line
-        parent = selected.parentNode.cloneNode(false);
+        parent = selected.parentElement.cloneNode(false);
         item.appendChild(parent);
       }
       parent.appendChild(clone);

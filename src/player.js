@@ -20,13 +20,13 @@ export default class Player {
     // flow-disable-next-line
     this.root
       .querySelector(this.itemSelector)
-      .parentNode.querySelectorAll(this.itemSelector)
+      .parentElement.querySelectorAll(this.itemSelector)
       .forEach(item => this.setup(item));
 
     // flow-disable-next-line
     this.root
       .querySelector(this.itemSelector)
-      .parentNode.addEventListener('click', this.onClick.bind(this));
+      .parentElement.addEventListener('click', this.onClick.bind(this));
   }
 
   setup(item: Object) {
@@ -48,21 +48,21 @@ export default class Player {
       element.removeAttribute('data-m');
       element.removeAttribute('data-d');
       element.removeAttribute('class');
-      element.parentNode.removeAttribute('class');
+      element.parentElement.removeAttribute('class');
     });
   }
 
   // empty() {
-  //   this.root.querySelector(this.itemSelector).parentNode.innerHTML = '';
-  //   this.root.querySelector('header').parentNode.innerHTML = '';
+  //   this.root.querySelector(this.itemSelector).parentElement.innerHTML = '';
+  //   this.root.querySelector('header').parentElement.innerHTML = '';
   // }
 
   onClick(event: Object) {
     const t = event.target.getAttribute('data-t');
     if (!t) return;
 
-    let item = event.target.parentNode;
-    while (item && !item.matches(this.itemSelector)) item = item.parentNode;
+    let item = event.target.parentElement;
+    while (item && !item.matches(this.itemSelector)) item = item.parentElement;
     if (!item) return;
 
     const src = item.getAttribute('data-src');
@@ -175,7 +175,7 @@ export default class Player {
       const source = this.root.querySelector(
         `source[src="${src}"], source[src="${src}"]`,
       );
-      if (source) media = source.parentNode;
+      if (source) media = source.parentElement;
     }
 
     return media;
@@ -219,12 +219,9 @@ export default class Player {
       media.style.display = '';
     }
 
-    // flow-disable-next-line
     if (media && !media.classList.contains('hyperaudio-enabled')) {
       media.addEventListener('timeupdate', this.onTimeUpdate.bind(this));
-      // flow-disable-next-line
       media.setAttribute('data-src', src);
-      // flow-disable-next-line
       media.classList.add('hyperaudio-enabled');
     }
 

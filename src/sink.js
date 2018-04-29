@@ -11,7 +11,7 @@ export default class Sink extends Player {
     super(rootNodeOrSelector, itemSelector);
 
     // flow-disable-next-line
-    const collection = this.root.querySelector(this.itemSelector).parentNode;
+    const collection = this.root.querySelector(this.itemSelector).parentElement;
     if (collection) {
       collection.addEventListener('dragover', this.onDragOver.bind(this));
       collection.addEventListener('dragenter', this.onDragEnter.bind(this));
@@ -31,6 +31,8 @@ export default class Sink extends Player {
   }
 
   onDragStart(event: Object) {
+    // console.log(event.target);
+
     event.dataTransfer.setData('text/html', event.target.outerHTML);
     event.dataTransfer.setData('text/plain', event.target.innerText);
     // eslint-disable-next-line no-param-reassign
@@ -65,7 +67,7 @@ export default class Sink extends Player {
       !target.matches(`${this.itemSelector}[draggable]`)
     ) {
       // FIXME
-      target = target.parentNode;
+      target = target.parentElement;
       if (!target) return;
       if (typeof target.matches !== 'function') return;
     }
@@ -97,8 +99,12 @@ export default class Sink extends Player {
 
     const item = wrapper.children[0];
 
+    // const controls = document.createElement('div');
+    // controls.innerHTML = '<input type="range" />';
+    // item.append(controls);
+
     // FIXME
-    if (target.nodeName === 'DIV') target = target.parentNode;
+    if (target.nodeName === 'DIV') target = target.parentElement;
     if (target.nodeName === 'ARTICLE') {
       // target.appendChild(item);
       target.insertBefore(item, target.querySelector('div'));
@@ -110,10 +116,10 @@ export default class Sink extends Player {
         typeof target.matches === 'function' &&
         !target.matches(`${this.itemSelector}[draggable]`)
       ) {
-        target = target.parentNode;
+        target = target.parentElement;
       }
 
-      target.parentNode.insertBefore(item, target);
+      target.parentElement.insertBefore(item, target);
       this.setup(item);
     }
 
