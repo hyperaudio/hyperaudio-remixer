@@ -1,24 +1,46 @@
 // @flow
-/* eslint-disable class-methods-use-this */
+/* eslint-disable class-methods-use-this, no-param-reassign */
 
 import Player from './player';
 
+const templates = {
+  trim:  '<section class="hyperaudio-effect" data-type="trim"><label>Trim <span>1</span>s <input type="range" value="1" min="0.5" max="7" step="0.1"></label></section>',
+  fade:  '<section class="hyperaudio-effect" data-type="fade"><label>Fade <span>1</span>s <input type="range" value="1" min="0.5" max="7" step="0.1"></label></section>',
+};
+
 export default class Sink extends Player {
+  target: Element;
+
   constructor(
     rootNodeOrSelector: Element | string,
     itemSelector: string = '.hyperaudio-transcript, .hyperaudio-effect',
   ) {
     super(rootNodeOrSelector, itemSelector);
 
-    // flow-disable-next-line
-    const collection = this.root.querySelector(this.itemSelector).parentElement;
-    if (collection) {
-      collection.addEventListener('dragover', this.onDragOver.bind(this));
-      collection.addEventListener('dragenter', this.onDragEnter.bind(this));
-      collection.addEventListener('dragend', this.onDragEnd.bind(this));
-      collection.addEventListener('drop', this.onDrop.bind(this));
-      // collection.addEventListener('dragleave', this.onDragLeave.bind(this));
+    if (this.root.querySelector(this.itemSelector)) {
+      // flow-disable-next-line
+      const collection = this.root.querySelector(this.itemSelector).parentElement;
+      if (collection) {
+        collection.addEventListener('dragover', this.onDragOver.bind(this));
+        collection.addEventListener('dragenter', this.onDragEnter.bind(this));
+        collection.addEventListener('dragend', this.onDragEnd.bind(this));
+        collection.addEventListener('drop', this.onDrop.bind(this));
+        // collection.addEventListener('dragleave', this.onDragLeave.bind(this));
+      }
     }
+
+    this.root
+      .querySelectorAll('button.hyperaudio-effect-source')
+      .forEach(button => {
+        const type = button.getAttribute('data-type') || 'trim';
+        const html = templates[type];
+        button.setAttribute('draggable', 'true');
+        button.addEventListener('dragstart', (event: Object) => {
+          event.dataTransfer.setData('text/html', html);
+          event.dataTransfer.effectAllowed = 'copy';
+          event.dataTransfer.dropEffect = 'copy';
+        });
+      });
   }
 
   setup(item: Object) {
@@ -26,19 +48,30 @@ export default class Sink extends Player {
 
     item.setAttribute('draggable', 'true');
     item.setAttribute('tabindex', 0);
+    item.addEventListener('mousedown', this.onMouseDown.bind(this));
     item.addEventListener('dragstart', this.onDragStart.bind(this));
     item.addEventListener('dragend', this.onDragEnd2.bind(this));
   }
 
-  onDragStart(event: Object) {
-    // console.log(event.target);
+  onMouseDown(event: Object) {
+    this.target = event.target;
+  }
 
-    event.dataTransfer.setData('text/html', event.target.outerHTML);
-    event.dataTransfer.setData('text/plain', event.target.innerText);
-    // eslint-disable-next-line no-param-reassign
-    event.dataTransfer.effectAllowed = 'copy';
-    // eslint-disable-next-line no-param-reassign
-    event.dataTransfer.dropEffect = 'copy';
+  onDragStart(event: Object) {
+    if (
+      event.target.classList.contains('hyperaudio-effect') &&
+      this.target &&
+      this.target.nodeName === 'INPUT'
+    ) {
+      event.preventDefault();
+    } else {
+      event.dataTransfer.setData('text/html', event.target.outerHTML);
+      event.dataTransfer.setData('text/plain', event.target.innerText);
+      // eslint-disable-next-line no-param-reassign
+      event.dataTransfer.effectAllowed = 'copy';
+      // eslint-disable-next-line no-param-reassign
+      event.dataTransfer.dropEffect = 'copy';
+    }
   }
 
   onDragEnd2(event: Object) {

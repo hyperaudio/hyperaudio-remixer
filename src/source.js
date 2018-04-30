@@ -122,7 +122,8 @@ export default class Source extends Player {
       }
 
       if (
-        prevSelected && prevSelected.parentElement !== selected.parentElement
+        prevSelected &&
+        prevSelected.parentElement !== selected.parentElement
       ) {
         // flow-disable-next-line
         parent = selected.parentElement.cloneNode(false);

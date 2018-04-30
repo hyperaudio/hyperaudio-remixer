@@ -17,16 +17,18 @@ export default class Player {
           document.createElement('section')
       : rootNodeOrSelector;
 
-    // flow-disable-next-line
-    this.root
-      .querySelector(this.itemSelector)
-      .parentElement.querySelectorAll(this.itemSelector)
-      .forEach(item => this.setup(item));
+    if (this.root.querySelector(this.itemSelector)) {
+      // flow-disable-next-line
+      this.root
+        .querySelector(this.itemSelector)
+        .parentElement.querySelectorAll(this.itemSelector)
+        .forEach(item => this.setup(item));
 
-    // flow-disable-next-line
-    this.root
-      .querySelector(this.itemSelector)
-      .parentElement.addEventListener('click', this.onClick.bind(this));
+      // flow-disable-next-line
+      this.root
+        .querySelector(this.itemSelector)
+        .parentElement.addEventListener('click', this.onClick.bind(this));
+    }
   }
 
   setup(item: Object) {
