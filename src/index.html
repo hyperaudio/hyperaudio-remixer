@@ -207,10 +207,6 @@
   <script>
     document.querySelectorAll('.hyperaudio-sink').forEach(sinkNode => new window.Sink(sinkNode));
 
-    // $.get('https://api.contextubot.net/proxy?url=' + escape('https://live-stra-jell.pantheonsite.io/api/programs/search/?_format=json&keywords=Hell'), function(data) {
-    //   console.log(data);
-    // });
-
     $('#transcript-search').easyAutocomplete({
       placeholder: 'search titles…',
       url: function(phrase) {
@@ -235,58 +231,6 @@
       }
     });
 
-    // $.get('https://api.contextubot.net/proxy?url=' + escape('http://live-stra-jell.pantheonsite.io/program-search?query=&sort_by=title&sort_order=DESC&f%5B0%5D=program_includes%3A573'), function(data) {
-    //   var results = $(data.replace(/src=/g, 'zrc=')).find('.results_tiles a').toArray().map(function(result) {
-    //     return {
-    //       title: $(result).find('h3').text().trim(),
-    //       link: $(result).attr('href')
-    //     };
-    //   }).filter(function(result) {
-    //     return result.title !== "";
-    //   });
-    //
-    //   $('#transcript-search').easyAutocomplete({
-    //     placeholder: 'search titles…',
-    //     data: results,
-    //     getValue: 'title',
-    //     template: {
-    //       type: "description",
-    //       fields: {
-    //         description: "link"
-    //       }
-    //     },
-    //     list: {
-    //       maxNumberOfElements: 32,
-    //       match: { enabled: true },
-    //       onChooseEvent: function() {
-    //         var id = $("#transcript-search").getSelectedItemData().link.split('/').pop();
-    //         console.log(id);
-    //         loadItem(id);
-    //       }
-    //     }
-    //   });
-    //
-    //   console.log(results);
-    // });
-
-    // function loadItem(node) {
-    //   $('.hyperaudio-source article').empty().append('<p>loading…</p>');
-    //   $.get('https://api.contextubot.net/proxy?url=' + escape('http://live-stra-jell.pantheonsite.io/node/' + node), function(data) {
-    //     var $transcript = $(data.replace(/src=/g, 'zrc=')).find('.hypertranscript');
-    //     var media = $transcript.data('media');
-    //     var id = media.match(/([0-9]*).mp3$/).pop();
-    //     // var media = 'https://s3.amazonaws.com/wfmt-studs-terkel/published/' + id + '.mp4';
-    //
-    //     var $section = $transcript.find('section');
-    //     $section.addClass('hyperaudio-transcript').attr('data-src', media).attr('data-type', 'video');
-    //
-    //     $('.hyperaudio-source article').empty().append($section);
-    //
-    //     document.querySelectorAll('.hyperaudio-source').forEach(sourceNode => new window.Source(sourceNode));
-    //   });
-    // }
-
-    // loadItem(1591);
 
     function loadNode(node) {
       $('.hyperaudio-source article').empty().append('<p>loading…</p>');
