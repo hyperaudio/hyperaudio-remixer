@@ -83,6 +83,14 @@ export default class Player {
 
     // flow-disable-next-line
     if (media.paused) media.play();
+
+    // const first = event.target.previousElementSibling === null && event.target.parentElement.previousElementSibling === null;
+
+    if (media.style.opacity === '0') {
+      media.style.opacity = '1';
+      media.classList.remove('hyperaudio-fade');
+      media.style.transition = 'opacity .5s ease-in-out';
+    }
   }
 
   setHead(time: number, src: string) {
@@ -122,9 +130,28 @@ export default class Player {
         if (isNaN(trim)) trim = 0;
       }
 
+      let fade = 0;
+      if (
+        item.nextElementSibling &&
+        item.nextElementSibling.classList.contains('hyperaudio-effect') &&
+        item.nextElementSibling.getAttribute('data-type') === 'fade'
+      ) {
+        fade = parseFloat(item.nextElementSibling.getAttribute('data-value'));
+        if (isNaN(fade)) fade = 0;
+      }
+
       // flow-disable-next-line
       const [ti, di] = last.getAttribute('data-t').split(',');
       if (time > parseFloat(ti) + parseFloat(di) + trim) continue;
+
+      if (time > parseFloat(ti) + parseFloat(di) - fade) {
+        const media = this.getMedia(src);
+        if (media && !media.classList.contains('hyperaudio-fade')) {
+          media.classList.add('hyperaudio-fade');
+          media.style.transition = `opacity ${parseFloat(ti) + parseFloat(di) - time}s ease-in-out`;
+          media.style.opacity = '0';
+        }
+      }
 
       found = true;
       this.lastSegment = item;
@@ -200,6 +227,8 @@ export default class Player {
         // flow-disable-next-line
         media.pause();
         media.style.display = 'none';
+        media.style.opacity = '1';
+        media.classList.remove('hyperaudio-fade');
       });
   }
 
@@ -229,6 +258,8 @@ export default class Player {
       this.hideOtherMediaThan(src);
       // flow-disable-next-line
       media.style.display = '';
+      // flow-disable-next-line
+      // media.style.opacity = '1';
     }
 
     if (media && !media.classList.contains('hyperaudio-enabled')) {
