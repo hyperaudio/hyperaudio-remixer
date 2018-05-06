@@ -112,9 +112,19 @@ export default class Player {
       const [t0] = first.getAttribute('data-t').split(',');
       if (time < parseFloat(t0)) continue;
 
+      let trim = 0;
+      if (
+        item.nextElementSibling &&
+        item.nextElementSibling.classList.contains('hyperaudio-effect') &&
+        item.nextElementSibling.getAttribute('data-type') === 'trim'
+      ) {
+        trim = parseFloat(item.nextElementSibling.getAttribute('data-value'));
+        if (isNaN(trim)) trim = 0;
+      }
+
       // flow-disable-next-line
       const [ti, di] = last.getAttribute('data-t').split(',');
-      if (time > parseFloat(ti) + parseFloat(di)) continue;
+      if (time > parseFloat(ti) + parseFloat(di) + trim) continue;
 
       found = true;
       this.lastSegment = item;
@@ -124,7 +134,7 @@ export default class Player {
         // flow-disable-next-line
         let [t, d] = tc.split(',');
         t = parseFloat(t);
-        d = parseFloat(d);
+        d = parseFloat(d) + (i === candidates.length - 1 ? trim : 0);
 
         if (t < time) {
           candidates[i].classList.add('hyperaudio-past');

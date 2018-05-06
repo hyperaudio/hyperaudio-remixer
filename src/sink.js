@@ -4,8 +4,8 @@
 import Player from './player';
 
 const templates = {
-  trim:  '<section class="hyperaudio-effect" data-type="trim"><label>Trim <span>1</span>s <input type="range" value="1" min="0.5" max="7" step="0.1"></label></section>',
-  fade:  '<section class="hyperaudio-effect" data-type="fade"><label>Fade <span>1</span>s <input type="range" value="1" min="0.5" max="7" step="0.1"></label></section>',
+  trim:  '<section class="hyperaudio-effect" data-type="trim" data-value="1"><label>Trim <span>1</span>s <input type="range" value="1" min="0.5" max="7" step="0.1"></label></section>',
+  fade:  '<section class="hyperaudio-effect" data-type="fade" data-value="1"><label>Fade <span>1</span>s <input type="range" value="1" min="0.5" max="7" step="0.1"></label></section>',
 };
 
 export default class Sink extends Player {
@@ -51,6 +51,18 @@ export default class Sink extends Player {
     item.addEventListener('mousedown', this.onMouseDown.bind(this));
     item.addEventListener('dragstart', this.onDragStart.bind(this));
     item.addEventListener('dragend', this.onDragEnd2.bind(this));
+
+    if (
+      item.classList.contains('hyperaudio-effect') &&
+      item.querySelector('input')
+    ) {
+      item.querySelector('input').addEventListener('input', event => {
+        const value = event.target.value;
+        item.querySelector('span').innerText = value;
+        event.target.setAttribute('value', value);
+        item.setAttribute('data-value', value);
+      });
+    }
   }
 
   onMouseDown(event: Object) {
