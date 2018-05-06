@@ -29,18 +29,16 @@ export default class Sink extends Player {
       }
     }
 
-    this.root
-      .querySelectorAll('button.hyperaudio-effect-source')
-      .forEach(button => {
-        const type = button.getAttribute('data-type') || 'trim';
-        const html = templates[type];
-        button.setAttribute('draggable', 'true');
-        button.addEventListener('dragstart', (event: Object) => {
-          event.dataTransfer.setData('text/html', html);
-          event.dataTransfer.effectAllowed = 'copy';
-          event.dataTransfer.dropEffect = 'copy';
-        });
+    this.root.querySelectorAll('.hyperaudio-effect-source').forEach(button => {
+      const type = button.getAttribute('data-type') || 'trim';
+      const html = templates[type];
+      button.setAttribute('draggable', 'true');
+      button.addEventListener('dragstart', (event: Object) => {
+        event.dataTransfer.setData('text/html', html);
+        event.dataTransfer.effectAllowed = 'copy';
+        event.dataTransfer.dropEffect = 'copy';
       });
+    });
   }
 
   setup(item: Object) {
