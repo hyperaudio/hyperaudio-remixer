@@ -4,14 +4,13 @@
   <title>Hyperaudio Pad</title>
   <meta charset='utf-8' />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/easy-autocomplete.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/easy-autocomplete.themes.css">
   <style>
     /* demo layout */
     html, body {
       text-align: center;
-      font-family: 'Merriweather', serif;
+      font-family: serif;
       line-height: 1.7em;
       word-spacing: 0.1em;
     }
@@ -20,11 +19,6 @@
       display: flex;
       flex-direction: column;
       text-align: left;
-    }
-
-    main > header {
-      flex-basis: 60px;
-      background-color: #d74b36;
     }
 
     main > div {
@@ -47,12 +41,9 @@
       background: #87d8e7;
       text-shadow: none;
     }
-  </style>
 
-  <style>
     /* hyperaudio styles */
     .hyperaudio-sink .hyperaudio-effect:focus {
-      border-left: 2px solid #d74b36;
       outline: none;
     }
 
@@ -73,7 +64,7 @@
     }
 
     .hyperaudio-sink .hyperaudio-transcript:focus {
-      border-left: 1px solid red;
+      /* border-left: 1px solid red; */
       border-right: 1px solid transparent;
       padding-left: 1em;
       padding-right: 1em;
@@ -89,19 +80,6 @@
       border-top: 2em solid #e9f8fb;
       transition: border-top 0.15s;
     }
-
-    /* FIXME */
-    /*.hyperaudio-sink article > div {
-      height: 10em;
-      background-color: transparent;
-      transition: background-color 0.15s;
-    }
-
-    .hyperaudio-sink article.over > div {
-      height: 10em;
-      background-color: #e9f8fb;
-      transition: background-color 0.15s;
-    }*/
 
     .hyperaudio-player header {
       flex-basis: 360px;
@@ -131,6 +109,11 @@
       color: black;
     }
 
+    .hyperaudio-player .speaker {
+      font-weight: bold;
+      color: black;
+    }
+
     .hyperaudio-player .hyperaudio-active {
       color: #d74b36;
     }
@@ -146,14 +129,16 @@
       opacity: 0;
     }
 
-    /*.hyperaudio-effect {
-      background-color: #fafaff;
-      padding: .5em;
-    }
+     .hyperaudio-buttons {
+       display: flex;
+     }
 
-    .hyperaudio-effect input {
-      width: 33%;
-    }*/
+     .hyperaudio-buttons > div {
+       display: flex;
+       flex-basis: 33%;
+       flex-direction: column;
+       justify-content: flex-start;
+     }
 
     .hyperaudio-source input {
       width: 100%;
@@ -168,7 +153,7 @@
     <section id="player" class="hyperaudio-player hyperaudio-source">
       <header class="hyperaudio-media">
       </header>
-      <div>
+      <div class="hyperaudio-search">
         <input id="transcript-search" type="search" />
       </div>
       <article>
@@ -179,21 +164,13 @@
     <section id="remixer" class="hyperaudio-player hyperaudio-sink">
       <header class="hyperaudio-media">
       </header>
-      <div>
-        <span class="hyperaudio-effect-source" data-type="fade">Fade</span>
-        <span class="hyperaudio-effect-source" data-type="trim">Trim</span>
-        <span>Share</span>
+      <div class="hyperaudio-buttons">
+        <div class="hyperaudio-effect-source" data-type="fade">Fade</div>
+        <div class="hyperaudio-effect-source" data-type="trim">Trim</div>
+        <div>Share</div>
       </div>
 
       <article>
-        <!-- <div> -->
-          <!-- drop area -->
-        <!-- </div> -->
-        <!-- <section class="hyperaudio-effect" data-type="trim">
-          <label>
-            Trim <span>1</span>s <input type="range" value="1" min="0.5" max="7" step="0.1">
-          </label>
-        </section> -->
         <section class="hyperaudio-effect"></section>
       </article>
     </section>
@@ -201,66 +178,147 @@
   </div>
   </main>
 
-  <script>
-    window.hyperaudio = {};
-  </script>
-  <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/jquery.easy-autocomplete.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.5.2/qs.min.js"></script>
   <script src="hyperaudio.js"></script>
+
+
   <script>
-    document.querySelectorAll('.hyperaudio-sink').forEach(sinkNode => new window.Sink(sinkNode));
+    function remixInit() {
 
-    $('#transcript-search').easyAutocomplete({
-      placeholder: 'search titles…',
-      url: function(phrase) {
-        return 'https://api.contextubot.net/proxy?url=' + escape('https://live-stra-jell.pantheonsite.io/api/programs/search/?_format=json&keywords=' + escape(phrase)) ;
-      },
-      getValue: 'title',
-      template: {
-        type: "description",
-        fields: {
-          description: "nid"
+      $('#transcript-search').easyAutocomplete({
+        placeholder: 'search titles…',
+        url: function(phrase) {
+          return 'https://api.contextubot.net/proxy?url=' + escape('https://live-stra-jell.pantheonsite.io/api/programs/search/?_format=json&keywords=' + escape(phrase)) ;
+        },
+        getValue: 'title',
+        // template: {
+        //   type: "description",
+        //   fields: {
+        //     description: "nid"
+        //   }
+        // },
+        requestDelay: 200,
+        list: {
+          maxNumberOfElements: 32,
+          match: { enabled: true },
+          onChooseEvent: function() {
+            var nid = $('#transcript-search').getSelectedItemData().nid;
+            loadTranscript(nid, null);
+          }
         }
-      },
-      requestDelay: 200,
-      list: {
-        maxNumberOfElements: 32,
-        match: { enabled: true },
-        onChooseEvent: function() {
-          var id = $('#transcript-search').getSelectedItemData().nid;
-          console.log(id);
-          loadNode(id);
-        }
-      }
-    });
-
-
-    function loadNode(node) {
-      $('.hyperaudio-source article').empty().append('<p>loading…</p>');
-
-      $.get('https://api.contextubot.net/proxy?url=' + escape('https://live-stra-jell.pantheonsite.io/api/programs/nid/' + node + '?_format=json'), function(data) {
-        // console.log(data);
-        var transcript = JSON.parse(data[0].transcript);
-
-        var $section = $('<section></section');
-        $section.addClass('hyperaudio-transcript')
-          .attr('data-src', transcript.media.mp4)
-          .attr('data-node', node)
-          .attr('data-id', data[0].starchive_id)
-          .attr('data-type', 'video');
-
-        window.transcriptRenderer(transcript.content, document, $section[0], 'T', true, 3);
-
-        $('.hyperaudio-source article').empty().append($section);
-        document.querySelectorAll('.hyperaudio-source').forEach(sourceNode => new window.Source(sourceNode)); // FIXME jquery and no arrow fn
       });
+
+
+      function loadTranscript(nid, starchiveId) {
+        $('.hyperaudio-source article').empty().append('<p>loading…</p>');
+
+        var url = 'https://api.contextubot.net/proxy?url=' + escape('https://live-stra-jell.pantheonsite.io/api/programs/nid/' + nid + '?_format=json');
+        if (starchiveId) {
+          url = 'https://api.contextubot.net/proxy?url=' + escape('https://live-stra-jell.pantheonsite.io/api/programs/starchiveid/' + starchiveId + '?_format=json');
+        }
+
+        $.get(url, function(data) {
+          var transcript = JSON.parse(data[0].transcript);
+          // console.log(transcript);
+          if (data[0].starchive_id) starchiveId = data[0].starchive_id;
+          if (data[0].nid) nid = data[0].nid;
+
+          var $section = $('<section></section>');
+          $section.addClass('hyperaudio-transcript')
+            .attr('data-src', transcript.media.mp4)
+            .attr('data-id', starchiveId)
+            .attr('data-type', 'video');
+
+          window.transcriptRenderer(transcript.content, document, $section[0], 'T', true, 3);
+
+          $('.hyperaudio-source article').empty().append($section);
+          document.querySelectorAll('.hyperaudio-source').forEach(function(sourceNode) { new window.Source(sourceNode); });
+        });
+      }
+
+      function loadSegments(segments) {
+        var segment = segments.pop();
+        var starchiveId = segment.split(':')[0];
+        var interval = segment.split(':')[1].split(',').map(function(v) { return parseFloat(v); });
+        var url = 'https://api.contextubot.net/proxy?url=' + escape('https://live-stra-jell.pantheonsite.io/api/programs/starchiveid/' + starchiveId + '?_format=json');
+
+        $.get(url, function(data) {
+          var transcript = JSON.parse(data[0].transcript);
+          // console.log(transcript);
+          if (data[0].starchive_id) starchiveId = data[0].starchive_id;
+          if (data[0].nid) nid = data[0].nid;
+
+          var $section = $('<section></section>');
+          $section.addClass('hyperaudio-transcript')
+            .attr('data-src', transcript.media.mp4)
+            .attr('data-id', starchiveId)
+            .attr('data-type', 'video');
+
+          window.transcriptRenderer(transcript.content, document, $section[0], 'T', true, 3);
+
+          $section.find('p').each(function(i, p) {
+            var start = parseFloat($(p).find('span[data-t]').first().data('t').split(',')[0]);
+            var end = $(p).find('span[data-t]').last().data('t').split(',').reduce(function(acc, v) { return acc + parseFloat(v); }, 0);
+            // console.log(start, end, interval, p);
+
+            if (end <= interval[0] || start >= interval[1]) {
+              $(p).remove();
+            } else {
+              $(p).find('span[data-t]').each(function(i, w) {
+                var t = $(w).data('t').split(',').map(function(v) { return parseFloat(v); });
+                var s = t[0];
+                var e = t[0] + t[1];
+                if (s < interval[0] || s >= interval[1]) {
+                  $(w).remove();
+                }
+              });
+            }
+          });
+
+
+          $('.hyperaudio-sink article').append($section);
+
+          if (segment.split(':').length > 2) {
+            var effect = segment.split(':')[2];
+            var effectName = effect.startsWith('f') ? 'fade' : 'trim';
+            var effectValue = parseFloat(effect.substring(1));
+            var $template = $(window.SinkTemplates[effectName]);
+
+            // console.log('effect', effectName, effectValue, $template);
+
+            $template.attr('data-value', effectValue);
+            $template.find('span').text(effectValue);
+            $template.find('input').val(effectValue);
+            $('.hyperaudio-sink article').append($template);
+          }
+
+          if (segments.length > 0) {
+            loadSegments(segments);
+          } else {
+            document.querySelectorAll('.hyperaudio-sink').forEach(function(sinkNode) { new window.Sink(sinkNode); });
+          }
+        });
+      }
+
+      var query = Qs.parse(document.location.search.indexOf('?') === 0 ? document.location.search.substring(1) : document.location.search);
+      if (query.nid || query.id) loadTranscript(query.nid, query.id);
+      if (query.r) {
+        $('.hyperaudio-sink article').empty();
+        loadSegments(query.r.split(';').reverse());
+      } else {
+        document.querySelectorAll('.hyperaudio-sink').forEach(function(sinkNode) { new window.Sink(sinkNode); });
+      }
+
     }
 
-    loadNode(1340);
-
-
+    remixInit();
   </script>
+
+
+
 
 </body>
 </html>

@@ -16,13 +16,18 @@ export default (
       const word = document.createElement(
         format.startsWith('T') ? 'span' : 'a',
       );
-      word.appendChild(document.createTextNode(pData.speaker));
+      word.appendChild(document.createTextNode(`${pData.speaker} `));
       word.setAttribute('class', 'speaker');
 
       if (format === 'M') {
         word.setAttribute(
           'data-m',
           parseFloat((pData.start * unit).toFixed(digits)),
+        );
+      } else if (format === 'T') {
+        word.setAttribute(
+          'data-t',
+          `${parseFloat((pData.start * unit).toFixed(digits))},0`.replace(/^0/, ''),
         );
       }
 

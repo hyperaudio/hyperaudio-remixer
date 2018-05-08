@@ -3,7 +3,7 @@
 
 import Player from './player';
 
-const templates = {
+export const templates = {
   trim:  '<section class="hyperaudio-effect" data-type="trim" data-value="1"><label>Trim <span>1</span>s <input type="range" value="1" min="0.5" max="7" step="0.1"></label></section>',
   fade:  '<section class="hyperaudio-effect" data-type="fade" data-value="1"><label>Fade <span>1</span>s <input type="range" value="1" min="0.5" max="7" step="0.1"></label></section>',
 };
@@ -59,8 +59,50 @@ export default class Sink extends Player {
         item.querySelector('span').innerText = value;
         event.target.setAttribute('value', value);
         item.setAttribute('data-value', value);
+        this.exposeURL();
       });
     }
+
+    this.exposeURL();
+  }
+
+  exposeURL() {
+    const data = [];
+    this.root.querySelector('article').querySelectorAll(this.itemSelector).forEach(item => {
+      if (item.classList.contains('hyperaudio-effect')) {
+        data.push({
+          mode: 'effect',
+          type: item.getAttribute('data-type'),
+          value: item.getAttribute('data-value'),
+        });
+      } else {
+        const start = parseFloat(item.querySelector('span[data-t]').getAttribute('data-t').split(',')[0]);
+        const end = parseFloat(item.querySelector('span[data-t]:last-child').getAttribute('data-t').split(',').map(v => parseFloat(v)).reduce((acc, v) => v + acc));
+        data.push({
+          mode: 'transcript',
+          id: item.getAttribute('data-id'),
+          start, end,
+        });
+      }
+    });
+
+    // console.log(data);
+
+    const fragments = data.reduce((acc, segment) => {
+      if (segment.mode === 'effect') {
+        if (segment.value) {
+          const prevSegment = acc.pop();
+          return [...acc, `${prevSegment}:${segment.type === 'fade' ? 'f' : 't'}${segment.value}`];
+        }
+        return [...acc];
+      }
+
+      return [...acc, `${segment.id}:${segment.start},${segment.end}`];
+    }, []);
+    console.log(fragments);
+
+    window.history.replaceState({}, document.title, `?r=${fragments.join(';')}`);
+    window.HyperaudioURL = window.location.href;
   }
 
   onMouseDown(event: Object) {

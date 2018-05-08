@@ -2,14 +2,10 @@
   "extends": [
     "airbnb",
     "plugin:flowtype/recommended",
-    "prettier",
-    "prettier/flowtype",
-    "prettier/react"
   ],
   "plugins": [
     "flowtype",
     "compat",
-    "prettier"
   ],
   "rules": {
     "compat/compat": 2,
