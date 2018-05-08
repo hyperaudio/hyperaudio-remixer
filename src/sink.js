@@ -85,7 +85,6 @@ export default class Sink extends Player {
         });
       }
     });
-
     // console.log(data);
 
     const fragments = data.reduce((acc, segment) => {
@@ -98,7 +97,7 @@ export default class Sink extends Player {
       }
 
       return [...acc, `${segment.id}:${segment.start},${segment.end}`];
-    }, []);
+    }, []).filter(fragment => !fragment.startsWith('undef'));
     // console.log(fragments);
 
     window.history.replaceState({}, document.title, `?r=${fragments.join(';')}`);

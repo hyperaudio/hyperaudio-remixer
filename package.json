@@ -32,7 +32,7 @@
     "lint": "eslint src webpack.config.babel.js --ext .js,.jsx",
     "test": "yarn lint && flow && echo jest --coverage",
     "__precommit": "yarn test",
-    "prepush": "yarn test && yarn build"
+    "__prepush": "yarn test && yarn build"
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
