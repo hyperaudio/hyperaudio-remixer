@@ -133,9 +133,9 @@
        display: flex;
      }
 
-     .hyperaudio-buttons > div {
+     .hyperaudio-buttons > div, .hyperaudio-buttons > button {
        display: flex;
-       flex-basis: 33%;
+       /* flex-basis: 20%; */
        flex-direction: column;
        justify-content: flex-start;
      }
@@ -167,7 +167,8 @@
       <div class="hyperaudio-buttons">
         <div class="hyperaudio-effect-source" data-type="fade">Fade</div>
         <div class="hyperaudio-effect-source" data-type="trim">Trim</div>
-        <div>Share</div>
+        <button class="hyperaudio-twitter-share">Share on Twitter</button>
+        <button class="hyperaudio-fb-share">Share on Facebook</button>
       </div>
 
       <article>
@@ -187,19 +188,12 @@
 
   <script>
     function remixInit() {
-
       $('#transcript-search').easyAutocomplete({
         placeholder: 'search titles…',
         url: function(phrase) {
           return 'https://api.contextubot.net/proxy?url=' + escape('https://live-stra-jell.pantheonsite.io/api/programs/search/?_format=json&keywords=' + escape(phrase)) ;
         },
         getValue: 'title',
-        // template: {
-        //   type: "description",
-        //   fields: {
-        //     description: "nid"
-        //   }
-        // },
         requestDelay: 200,
         list: {
           maxNumberOfElements: 32,
@@ -211,6 +205,16 @@
         }
       });
 
+      $(".hyperaudio-twitter-share").on("click", function() {
+        window.open("https://twitter.com/share?url=" + escape(window.HyperaudioURL) + "&text=" + escape(document.title), '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+        return false;
+      });
+
+      $(".hyperaudio-fb-share").on("click", function() {
+        window.open("https://www.facebook.com/sharer/sharer.php?u=" + escape(window.HyperaudioURL) + "&t=" + escape(document.title), '',
+          'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+          return false;
+      });
 
       function loadTranscript(nid, starchiveId) {
         $('.hyperaudio-source article').empty().append('<p>loading…</p>');
@@ -222,7 +226,6 @@
 
         $.get(url, function(data) {
           var transcript = JSON.parse(data[0].transcript);
-          // console.log(transcript);
           if (data[0].starchive_id) starchiveId = data[0].starchive_id;
           if (data[0].nid) nid = data[0].nid;
 
@@ -247,7 +250,6 @@
 
         $.get(url, function(data) {
           var transcript = JSON.parse(data[0].transcript);
-          // console.log(transcript);
           if (data[0].starchive_id) starchiveId = data[0].starchive_id;
           if (data[0].nid) nid = data[0].nid;
 
@@ -286,8 +288,6 @@
             var effectName = effect.startsWith('f') ? 'fade' : 'trim';
             var effectValue = parseFloat(effect.substring(1));
             var $template = $(window.SinkTemplates[effectName]);
-
-            // console.log('effect', effectName, effectValue, $template);
 
             $template.attr('data-value', effectValue);
             $template.find('span').text(effectValue);

@@ -99,7 +99,7 @@ export default class Sink extends Player {
 
       return [...acc, `${segment.id}:${segment.start},${segment.end}`];
     }, []);
-    console.log(fragments);
+    // console.log(fragments);
 
     window.history.replaceState({}, document.title, `?r=${fragments.join(';')}`);
     window.HyperaudioURL = window.location.href;
