@@ -876,3 +876,13 @@ h1 input:focus {
 	height: 1px;
 	padding: 0px;
 }
+
+/* CSS for speaker styling */
+
+a.speaker::after {
+    	content: ":";
+}
+a.speaker {
+    	color: #000;
+    	font-weight: bold;
+}
