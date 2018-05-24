@@ -118,6 +118,15 @@
       color: #d74b36;
     }
 
+    /* .hyperaudio-player .hyperaudio-active:not(:nth-child(2)) {
+      color: #d74b36;
+    } */
+
+    /* .hyperaudio-player .hyperaudio-duration {
+      color: #d74b36;
+      text-decoration: underline;
+    } */
+
     .hyperaudio-source .hyperaudio-selected, hyperaudio-player .hyperaudio-active.hyperaudio-selected {
       /*background-color: lightpink;*/
       background: #87d8e7;
@@ -242,6 +251,28 @@
         });
       }
 
+      function loadHATranscript(hid) {
+        $('.hyperaudio-source article').empty().append('<p>loading…</p>');
+
+        var url = 'https://studsterkel.api.hyperaudio.net/v1/transcripts/' + hid + '?format=json';
+
+        $.get(url, function(data) {
+          var transcript = data;
+          var starchiveId = hid; // FIMXE
+
+          var $section = $('<section></section>');
+          $section.addClass('hyperaudio-transcript')
+            .attr('data-src', transcript.media.source.mp4.url)
+            .attr('data-id', starchiveId)
+            .attr('data-type', 'video');
+
+          window.transcriptRenderer(transcript.content, document, $section[0], 'T', true, 3);
+
+          $('.hyperaudio-source article').empty().append($section);
+          document.querySelectorAll('.hyperaudio-source').forEach(function(sourceNode) { new window.Source(sourceNode); });
+        });
+      }
+
       function loadSegments(segments) {
         var segment = segments.pop();
         var starchiveId = segment.split(':')[0];
@@ -305,6 +336,7 @@
 
       var query = Qs.parse(document.location.search.indexOf('?') === 0 ? document.location.search.substring(1) : document.location.search);
       if (query.nid || query.id) loadTranscript(query.nid, query.id);
+      if (query.hid) loadHATranscript(query.hid);
       if (query.r) {
         $('.hyperaudio-sink article').empty();
         loadSegments(query.r.split(';').reverse());
@@ -314,7 +346,7 @@
 
     }
 
-    remixInit();
+    $(remixInit);
   </script>
 
 
