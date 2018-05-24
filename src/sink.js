@@ -76,8 +76,11 @@ export default class Sink extends Player {
           value: item.getAttribute('data-value'),
         });
       } else {
-        const start = parseFloat(item.querySelector('span[data-t]').getAttribute('data-t').split(',')[0]);
-        const end = parseFloat(item.querySelector('span[data-t]:last-child').getAttribute('data-t').split(',').map(v => parseFloat(v)).reduce((acc, v) => v + acc));
+        const first = item.querySelector('span[data-t]');
+        const last = Array.from(item.querySelectorAll('span[data-t]:last-child')).pop();
+
+        const start = parseFloat(first.getAttribute('data-t').split(',')[0]);
+        const end = parseFloat(last.getAttribute('data-t').split(',').map(v => parseFloat(v)).reduce((acc, v) => v + acc));
         data.push({
           mode: 'transcript',
           id: item.getAttribute('data-id'),

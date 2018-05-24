@@ -46,6 +46,18 @@ export default class Source extends Player {
     )
       return;
 
+    commonAncestor.querySelectorAll('*').forEach(candidate => {
+      // FIXME
+      if (
+        selection.containsNode(candidate, true) &&
+        candidate.nodeName !== 'P'
+      ) {
+        candidate.classList.add('hyperaudio-selected');
+      } else {
+        candidate.classList.remove('hyperaudio-selected');
+      }
+    });
+
     this.root.querySelectorAll('.hyperaudio-selected').forEach(selected => {
       if (
         selection.containsNode(selected, true) ||
@@ -54,16 +66,6 @@ export default class Source extends Player {
         return;
       selected.classList.remove('hyperaudio-selected');
       selected.removeAttribute('draggable');
-    });
-
-    commonAncestor.querySelectorAll('*').forEach(candidate => {
-      // FIXME
-      if (
-        selection.containsNode(candidate, true) &&
-        candidate.nodeName !== 'P'
-      ) {
-        candidate.classList.add('hyperaudio-selected');
-      }
     });
   }
 

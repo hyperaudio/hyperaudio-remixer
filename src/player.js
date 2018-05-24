@@ -19,10 +19,11 @@ export default class Player {
 
     if (this.root.querySelector(this.itemSelector)) {
       // flow-disable-next-line
-      this.root
-        .querySelector(this.itemSelector)
-        .parentElement.querySelectorAll(this.itemSelector)
-        .forEach(item => this.setup(item));
+      Array.from(
+        this.root
+          .querySelector(this.itemSelector)
+          .parentElement.querySelectorAll(this.itemSelector)
+      ).reverse().forEach(item => this.setup(item));
 
       // flow-disable-next-line
       this.root
@@ -173,6 +174,7 @@ export default class Player {
           if (!candidates[i].classList.contains('hyperaudio-duration'))
             setInterval(() => {
               candidates[i].classList.remove('hyperaudio-duration');
+              candidates[i].classList.remove('hyperaudio-active');
             }, (d - (time - t)) * 1e3);
           candidates[i].classList.add('hyperaudio-duration');
         }
@@ -265,6 +267,14 @@ export default class Player {
     if (media && !media.classList.contains('hyperaudio-enabled')) {
       media.addEventListener('timeupdate', this.onTimeUpdate.bind(this));
       media.setAttribute('data-src', src);
+
+      media.addEventListener('loadedmetadata', (event) => {
+        const item = this.root.querySelector(`.hyperaudio-transcript[data-src="${src}"]`);
+        const first = item.querySelector('span[data-t]');
+        const start = parseFloat(first.getAttribute('data-t').split(',')[0]);
+        media.currentTime = start;
+      });
+
       media.classList.add('hyperaudio-enabled');
     }
 
