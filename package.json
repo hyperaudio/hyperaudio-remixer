@@ -28,7 +28,7 @@
   "scripts": {
     "start": "yarn dev",
     "dev": "webpack-dev-server --progress",
-    "build": "rimraf lib/* dist/* && babel src -d lib --ignore .test.js && cross-env NODE_ENV=production webpack -p --progress && cp src/*.html dist/",
+    "build": "rimraf lib/* dist/* && babel src -d lib --ignore .test.js && cross-env NODE_ENV=production webpack -p --progress && cp src/*.html dist/ && cp public/* dist/",
     "lint": "eslint src webpack.config.babel.js --ext .js,.jsx",
     "test": "yarn lint && flow && echo jest --coverage",
     "__precommit": "yarn test",
