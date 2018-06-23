@@ -226,7 +226,10 @@ export default class Player {
   }
 
   onSeek(event: Object) {
-    const { x, width } = event.target.getClientRects()[0];
+    let element = event.target;
+    if (element.classList.contains('hyperaudio-progress-bar')) element = element.parentElement;
+    const { x, width } = element.getClientRects()[0];
+    console.log(x, width, event.clientX, element);
     const progress = (event.clientX - x) / width;
 
     const sections = Array.from(this.root.querySelectorAll('section[data-duration]'));
@@ -246,7 +249,8 @@ export default class Player {
     click.initEvent('click', true, false);
     // targetSection.querySelector('*[data-t]').dispatchEvent(click);
 
-    const targetToken = Array.from(targetSection.querySelectorAll('*[data-t]')).find(token => localTime >= parseFloat(token.getAttribute('data-t'), 10));
+    const targetToken = Array.from(targetSection.querySelectorAll('*[data-t]')).find(token => parseFloat(token.getAttribute('data-t'), 10) >= localTime);
+    console.log(time, localTime, targetToken);
     targetToken.dispatchEvent(click);
   }
 
