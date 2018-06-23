@@ -30,6 +30,10 @@ export default class Player {
         .querySelector(this.itemSelector)
         .parentElement.addEventListener('click', this.onClick.bind(this));
     }
+
+    this.root
+      .querySelector('.hyperaudio-progress')
+      .parentElement.addEventListener('click', this.onSeek.bind(this));
   }
 
   setup(item: Object) {
@@ -53,6 +57,19 @@ export default class Player {
       element.removeAttribute('class');
       element.parentElement.removeAttribute('class');
     });
+
+    const tokens = Array.from(item.querySelectorAll('*[data-t]'));
+    if (tokens.length > 0) {
+      const start = parseFloat(tokens[0].getAttribute('data-t').split(',').reverse().pop(), 10);
+      const end = tokens[tokens.length - 1].getAttribute('data-t').split(',').reduce((acc, v) => {
+        return parseFloat(acc, 10) + parseFloat(v, 10);
+      });
+      item.setAttribute('data-start', start);
+      item.setAttribute('data-end', end);
+      item.setAttribute('data-duration', end - start);
+    }
+
+    this.progress(null);
   }
 
   // empty() {
@@ -75,6 +92,11 @@ export default class Player {
     // flow-disable-next-line
     const media = this.getMedia(src);
     if (!media) return;
+
+    this.root
+      .querySelectorAll('.hyperaudio-current')
+      .forEach(active => active.classList.remove('hyperaudio-current'));
+    item.classList.add('hyperaudio-current');
 
     const [start, duration] = t.split(',');
     // event.target.classList.add('hyperaudio-duration');
@@ -200,6 +222,55 @@ export default class Player {
         }
       }
     }
+    this.progress(time);
+  }
+
+  onSeek(event: Object) {
+    const { x, width } = event.target.getClientRects()[0];
+    const progress = (event.clientX - x) / width;
+
+    const sections = Array.from(this.root.querySelectorAll('section[data-duration]'));
+    const duration = sections.reduce((acc, section) => acc + parseFloat(section.getAttribute('data-duration'), 10), 0);
+    const time = progress * duration;
+
+    let localTime = 0;
+    const targetSection = sections.find((section, index) => {
+      const timeOffset = sections.slice(0, index).reduce((acc, section) => acc + parseFloat(section.getAttribute('data-duration'), 10), 0);
+      localTime = time - timeOffset;
+      return localTime >= parseFloat(section.getAttribute('data-start'), 10) && localTime < parseFloat(section.getAttribute('data-end'), 10);
+    });
+
+    if (!targetSection) return;
+
+    const click = document.createEvent('HTMLEvents');
+    click.initEvent('click', true, false);
+    // targetSection.querySelector('*[data-t]').dispatchEvent(click);
+
+    const targetToken = Array.from(targetSection.querySelectorAll('*[data-t]')).find(token => localTime >= parseFloat(token.getAttribute('data-t'), 10));
+    targetToken.dispatchEvent(click);
+  }
+
+  progress(time) {
+    // hyperaudio-progress-bar
+    const sections = Array.from(this.root.querySelectorAll('section[data-duration]'));
+    const duration = sections.reduce((acc, section) => acc + parseFloat(section.getAttribute('data-duration'), 10), 0);
+    const media = Array.from(this.root.querySelectorAll('video, audio')).find(el => el.style.display !== 'none');
+    if (time === null) time = media.currentTime;
+
+    let currentIndex = sections.findIndex(section => section.classList.contains('hyperaudio-current'));
+    if (currentIndex === -1 && media) currentIndex = sections.findIndex(section => section.getAttribute('data-src') === media.getAttribute('data-src'));
+    // console.log(duration, currentIndex);
+    const bar = this.root.querySelector('.hyperaudio-progress-bar');
+    if (currentIndex > -1) {
+      const currentSection = sections[currentIndex];
+      let progress = time - parseFloat(currentSection.getAttribute('data-start'), 10) + sections.slice(0, currentIndex).reduce((acc, section) => acc + parseFloat(section.getAttribute('data-duration'), 10), 0);
+      // console.log(duration, progress);
+      progress = progress * 100 / duration;
+      if (progress > 100) progress = 100;
+      if (bar) bar.style.width = `${progress}%`;
+    } else {
+      if (bar) bar.style.width = '0%';
+    }
   }
 
   onTimeUpdate(event: Object) {
@@ -232,6 +303,13 @@ export default class Player {
         media.style.opacity = '1';
         media.classList.remove('hyperaudio-fade');
       });
+    // mute all other media
+    document
+      .querySelectorAll(`video:not([src="${src}"]), audio:not([src="${src}"])`)
+      .forEach(media => {
+        // flow-disable-next-line
+        media.pause();
+      });
   }
 
   createMedia(src: string, type: string) {
@@ -239,16 +317,18 @@ export default class Player {
 
     switch (type.split('/').splice(0, 1).pop()) {
       case 'audio':
-        wrapper.innerHTML = `<audio src="${src}" type="${type}" controls preload></audio>`;
+        wrapper.innerHTML = `<audio src="${src}" type="${type}" preload></audio>`;
         break;
 
       default:
-        wrapper.innerHTML = `<video src="${src}" type="${type}" controls preload playsinline></video>`;
+        wrapper.innerHTML = `<video src="${src}" type="${type}" preload playsinline></video>`;
     }
 
     const media = wrapper.querySelector('audio, video');
     // flow-disable-next-line
-    this.root.querySelector('header').appendChild(media);
+    // this.root.querySelector('header').appendChild(media);
+    const header = this.root.querySelector('header');
+    header.insertBefore(media, header.firstChild);
 
     return media;
   }
@@ -266,6 +346,19 @@ export default class Player {
 
     if (media && !media.classList.contains('hyperaudio-enabled')) {
       media.addEventListener('timeupdate', this.onTimeUpdate.bind(this));
+      media.addEventListener('click', () => {
+        if (media.paused) {
+          media.play();
+          document
+            .querySelectorAll(`video:not([src="${src}"]), audio:not([src="${src}"])`)
+            .forEach(media2 => {
+              // flow-disable-next-line
+              media2.pause();
+            });
+        } else {
+          media.pause();
+        }
+      });
       media.setAttribute('data-src', src);
 
       media.addEventListener('loadedmetadata', (event) => {

@@ -105,6 +105,7 @@
       width: 100%;
       height: 100%;
       /*max-width: 634px;*/
+      cursor: pointer;
     }
 
     .hyperaudio-player p {
@@ -160,6 +161,24 @@
     .hyperaudio-source input {
       width: 100%;
     }
+
+    .hyperaudio-current {
+      border-left: 1px solid red !important;
+    }
+
+    .hyperaudio-progress {
+      width: 100%;
+      background-color: gray;
+      height: 10px;
+      cursor: pointer;
+    }
+
+    .hyperaudio-progress-bar {
+      background-color: red;
+      height: 10px;
+      cursor: pointer;
+    }
+
   </style>
 
 </head>
@@ -169,6 +188,10 @@
     <!-- Player -->
     <section id="player" class="hyperaudio-player hyperaudio-source">
       <header class="hyperaudio-media">
+        <div class="hyperaudio-progress">
+          <div class="hyperaudio-progress-bar" style="width: 0%">
+          </div>
+        </div>
       </header>
       <div class="hyperaudio-search">
         <input id="transcript-search" type="search" />
@@ -180,6 +203,10 @@
     <!-- Remixer -->
     <section id="remixer" class="hyperaudio-player hyperaudio-sink">
       <header class="hyperaudio-media">
+        <div class="hyperaudio-progress">
+          <div class="hyperaudio-progress-bar" style="width: 0%">
+          </div>
+        </div>
       </header>
       <div class="hyperaudio-buttons">
         <div class="hyperaudio-effect-source" data-type="fade">Fade</div>
