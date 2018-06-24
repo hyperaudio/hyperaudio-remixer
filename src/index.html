@@ -218,14 +218,14 @@
     }
 
     .hyperaudio-player p {
-      color: #658898;
+      /* color: #658898; */
       margin: 0;
       padding: .5em 0;
     }
 
-    .hyperaudio-player .hyperaudio-past {
-      /* color: black; */
-    }
+    /* .hyperaudio-player .hyperaudio-past {
+      color: black;
+    } */
 
     .hyperaudio-player .speaker {
       font-weight: bold;
@@ -271,19 +271,27 @@
       width: 100%;
     }
 
+
+    .hyperaudio-transcript {
+      color: black;
+    }
+
     .hyperaudio-current {
       color: #658898;
-      border-left: 1px solid red !important;
+      /* border-left: 1px solid red !important; */
     }
 
     .hyperaudio-current .hyperaudio-past {
       color: black;
     }
 
-    .hyperaudio-current ~ .hyperaudio-transcript .hyperaudio-past {
+    .hyperaudio-current ~ .hyperaudio-transcript {
       color: #658898;
-      border-bottom: 1px solid red;
     }
+
+    /* .hyperaudio-current ~ .hyperaudio-transcript .hyperaudio-past {
+      border-bottom: 1px solid red;
+    } */
 
     .hyperaudio-progress {
       /* position: absolute;

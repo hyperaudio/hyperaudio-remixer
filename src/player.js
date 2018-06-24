@@ -377,12 +377,12 @@ export default class Player {
       });
       media.setAttribute('data-src', src);
 
-      // media.addEventListener('loadedmetadata', (event) => {
-      //   const item = this.root.querySelector(`.hyperaudio-transcript[data-src="${src}"]`);
-      //   const first = item.querySelector('span[data-t]');
-      //   const start = parseFloat(first.getAttribute('data-t').split(',')[0]);
-      //   media.currentTime = start;
-      // });
+      media.addEventListener('loadedmetadata', (event) => {
+        const item = this.root.querySelector(`.hyperaudio-transcript[data-src="${src}"]`);
+        const first = item.querySelector('span[data-t]');
+        const start = parseFloat(first.getAttribute('data-t').split(',')[0]);
+        media.currentTime = start;
+      });
 
       media.classList.add('hyperaudio-enabled');
     }
