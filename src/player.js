@@ -33,7 +33,7 @@ export default class Player {
 
     this.root
       .querySelector('.hyperaudio-progress')
-      .parentElement.addEventListener('click', this.onSeek.bind(this));
+      .addEventListener('click', this.onSeek.bind(this));
   }
 
   setup(item: Object) {
@@ -130,9 +130,9 @@ export default class Player {
       item
         .querySelectorAll('.hyperaudio-past')
         .forEach(active => active.classList.remove('hyperaudio-past'));
-      item
-        .querySelectorAll('.hyperaudio-active')
-        .forEach(active => active.classList.remove('hyperaudio-active'));
+      // item
+      //   .querySelectorAll('.hyperaudio-active')
+      //   .forEach(active => active.classList.remove('hyperaudio-active'));
 
       const candidates = item.querySelectorAll('*[data-t]');
 
@@ -192,13 +192,15 @@ export default class Player {
 
         if (t <= time && time < t + d) {
           // console.log(time - (t + d) * 1e3);
-          candidates[i].classList.add('hyperaudio-active');
-          if (!candidates[i].classList.contains('hyperaudio-duration'))
-            setInterval(() => {
-              candidates[i].classList.remove('hyperaudio-duration');
-              candidates[i].classList.remove('hyperaudio-active');
-            }, (d - (time - t)) * 1e3);
-          candidates[i].classList.add('hyperaudio-duration');
+          candidates[i].classList.add('hyperaudio-past');
+
+          // candidates[i].classList.add('hyperaudio-active');
+          // if (!candidates[i].classList.contains('hyperaudio-duration'))
+          //   setTimeout(() => {
+          //     candidates[i].classList.remove('hyperaudio-duration');
+          //     candidates[i].classList.remove('hyperaudio-active');
+          //   }, (d - (time - t)) * 1e3);
+          // candidates[i].classList.add('hyperaudio-duration');
         }
 
         if (t > time) break;
@@ -239,10 +241,12 @@ export default class Player {
     let localTime = 0;
     const targetSection = sections.find((section, index) => {
       const timeOffset = sections.slice(0, index).reduce((acc, section) => acc + parseFloat(section.getAttribute('data-duration'), 10), 0);
-      localTime = time - timeOffset;
+      localTime = time - timeOffset + parseFloat(section.getAttribute('data-start'), 10);
+      console.log(time, timeOffset, localTime, section);
       return localTime >= parseFloat(section.getAttribute('data-start'), 10) && localTime < parseFloat(section.getAttribute('data-end'), 10);
     });
 
+    console.log(time, targetSection);
     if (!targetSection) return;
 
     const click = document.createEvent('HTMLEvents');
@@ -322,6 +326,10 @@ export default class Player {
   createMedia(src: string, type: string) {
     const wrapper = document.createElement('div');
 
+    let poster = null;
+    const section = this.root.querySelector(`.hyperaudio-transcript[data-src="${src}"]`);
+    if (section && section.getAttribute('data-poster')) poster = section.getAttribute('data-poster');
+
     switch (type.split('/').splice(0, 1).pop()) {
       case 'audio':
         wrapper.innerHTML = `<audio src="${src}" type="${type}" preload></audio>`;
@@ -332,6 +340,7 @@ export default class Player {
     }
 
     const media = wrapper.querySelector('audio, video');
+    if (poster) media.setAttribute('poster', poster);
     // flow-disable-next-line
     // this.root.querySelector('header').appendChild(media);
     const header = this.root.querySelector('header');
@@ -368,12 +377,12 @@ export default class Player {
       });
       media.setAttribute('data-src', src);
 
-      media.addEventListener('loadedmetadata', (event) => {
-        const item = this.root.querySelector(`.hyperaudio-transcript[data-src="${src}"]`);
-        const first = item.querySelector('span[data-t]');
-        const start = parseFloat(first.getAttribute('data-t').split(',')[0]);
-        media.currentTime = start;
-      });
+      // media.addEventListener('loadedmetadata', (event) => {
+      //   const item = this.root.querySelector(`.hyperaudio-transcript[data-src="${src}"]`);
+      //   const first = item.querySelector('span[data-t]');
+      //   const start = parseFloat(first.getAttribute('data-t').split(',')[0]);
+      //   media.currentTime = start;
+      // });
 
       media.classList.add('hyperaudio-enabled');
     }

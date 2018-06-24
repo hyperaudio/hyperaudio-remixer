@@ -96,7 +96,7 @@ export default class Sink extends Player {
         });
       }
     });
-    console.log(data);
+    // console.log(data);
 
     const fragments = data.reduce((acc, segment) => {
       if (segment.mode === 'effect') {
@@ -116,7 +116,7 @@ export default class Sink extends Player {
 
       return [...acc, `${segment.id}:${segment.prefix.join('')},${segment.suffix.join('')}`];
     }, []).filter(fragment => !fragment.startsWith('undef'));
-    console.log(anchors);
+    // console.log(anchors);
 
     window.history.replaceState({}, document.title, `?r=${fragments.join(';')}&a=${anchors.join(';')}`);
     window.HyperaudioURL = window.location.href;

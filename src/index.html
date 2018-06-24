@@ -194,21 +194,26 @@
     }
 
     .hyperaudio-player header {
-      flex-basis: 360px;
+      /* flex-basis: 360px; */
       /*max-width: 634px;*/
-      max-height: 360px;
-      margin-bottom: 2em;
-      background-color: black;
+      /* max-height: 360px; */
+      /* margin-bottom: 2em; */
+      /* background-color: black; */
+      /* position: relative; */
+    }
+
+    .hyperaudio-player header video + img, .hyperaudio-player header audio + img {
+      display: none;
     }
 
     .hyperaudio-player:not(.hyperaudio-source) *[data-t] {
         cursor: pointer;
     }
 
-    .hyperaudio-player video {
+    .hyperaudio-player video, .hyperaudio-player audio {
+      /* position: relative; */
       width: 100%;
-      height: 100%;
-      /*max-width: 634px;*/
+      height: auto;
       cursor: pointer;
     }
 
@@ -219,7 +224,7 @@
     }
 
     .hyperaudio-player .hyperaudio-past {
-      color: black;
+      /* color: black; */
     }
 
     .hyperaudio-player .speaker {
@@ -267,10 +272,22 @@
     }
 
     .hyperaudio-current {
+      color: #658898;
       border-left: 1px solid red !important;
     }
 
+    .hyperaudio-current .hyperaudio-past {
+      color: black;
+    }
+
+    .hyperaudio-current ~ .hyperaudio-transcript .hyperaudio-past {
+      color: #658898;
+      border-bottom: 1px solid red;
+    }
+
     .hyperaudio-progress {
+      /* position: absolute;
+      bottom: 0; */
       width: 100%;
       background-color: gray;
       height: 10px;
@@ -317,11 +334,12 @@
     <!-- Player -->
     <section id="player" class="hyperaudio-player hyperaudio-source">
       <header class="hyperaudio-media">
-        <div class="hyperaudio-progress">
-          <div class="hyperaudio-progress-bar" style="width: 0%">
-          </div>
-        </div>
+        <img src="https://studsterkel.wfmt.com/modules/starchive/starchive/images/stra-program-transcript.jpg" />
       </header>
+      <div class="hyperaudio-progress">
+        <div class="hyperaudio-progress-bar" style="width: 0%">
+        </div>
+      </div>
       <div class="hyperaudio-search">
         <input id="transcript-search" type="search" />
       </div>
@@ -332,11 +350,12 @@
     <!-- Remixer -->
     <section id="remixer" class="hyperaudio-player hyperaudio-sink">
       <header class="hyperaudio-media">
-        <div class="hyperaudio-progress">
-          <div class="hyperaudio-progress-bar" style="width: 0%">
-          </div>
-        </div>
+        <img src="https://studsterkel.wfmt.com/modules/starchive/starchive/images/stra-program-transcript.jpg" />
       </header>
+      <div class="hyperaudio-progress">
+        <div class="hyperaudio-progress-bar" style="width: 0%">
+        </div>
+      </div>
       <div class="hyperaudio-buttons">
         <div class="hyperaudio-effect-source" data-type="fade">Fade</div>
         <div class="hyperaudio-effect-source" data-type="trim">Trim</div>
@@ -406,6 +425,7 @@
           var $section = $('<section></section>');
           $section.addClass('hyperaudio-transcript')
             .attr('data-src', transcript.media.mp4)
+            .attr('data-poster', transcript.poster.url)
             .attr('data-id', starchiveId)
             .attr('data-type', 'video');
 
@@ -500,7 +520,7 @@
             var prefix = prefixString.split(/(?=[A-Z])/);
             var suffixString = anchor.split(':')[1].split(',')[1];
             var suffix = suffixString.split(/(?=[A-Z])/);
-            console.log(prefix, suffix);
+            // console.log(prefix, suffix);
 
             var tokens = $section.find('span[data-t]').toArray();
             for (var i = 0; i < tokens.length; i++) {
@@ -509,10 +529,10 @@
                 var root = t.textContent.replace(/[^\w\s]|_/g, '').replace(/\s+/g, '').toLowerCase().trim();
                 return root.substr(0, 1).toUpperCase() + root.substr(1, 3);
               }).join('');
-              console.log(set, setString);
+              // console.log(set, setString);
 
               if (setString === prefixString) {
-                console.log(set);
+                // console.log(set);
                 $(set).addClass('hyperaudio-match-start');
                 $(tokens.slice(0, i)).addClass('hyperaudio-nomatch').remove();
                 break;
@@ -526,10 +546,10 @@
                 var root = t.textContent.replace(/[^\w\s]|_/g, '').replace(/\s+/g, '').toLowerCase().trim();
                 return root.substr(0, 1).toUpperCase() + root.substr(1, 3);
               }).join('');
-              console.log(set, setString);
+              // console.log(set, setString);
 
               if (setString === suffixString) {
-                console.log(set);
+                // console.log(set);
                 $(set).addClass('hyperaudio-match-end');
                 $(tokens.slice(0, i)).addClass('hyperaudio-nomatch').remove();
                 break;
