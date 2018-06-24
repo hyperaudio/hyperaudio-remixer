@@ -179,6 +179,31 @@
       cursor: pointer;
     }
 
+    .hyperaudio-match-start {
+      background-color: lightyellow;
+      border-top: 1px solid red;
+    }
+
+    .hyperaudio-match-end {
+      background-color: lightyellow;
+      border-bottom: 1px solid blue;
+    }
+
+    .hyperaudio-nomatch {
+      background-color: red;
+      outline: 1px solid red;
+    }
+
+    .hyperaudio-overlap {
+      background-color: lightpink;
+      border-top: 1px solid blue;
+    }
+
+    .hyperaudio-samestart {
+      background-color: lightpink;
+      border-bottom: 1px solid red;
+    }
+
   </style>
 
 </head>
@@ -281,6 +306,23 @@
 
           window.transcriptRenderer(transcript.content, document, $section[0], 'T', true, 3);
 
+          // $section.find('span[data-t]').toArray().forEach(function (token, i, arr) {
+          //   if (i === 0) return;
+          //   var prev = arr[i - 1];
+          //   var t0 = $(prev).attr('data-t').split(',').map(function(v) { return parseFloat(v) });
+          //   var t1 = $(token).attr('data-t').split(',').map(function(v) { return parseFloat(v) });
+          //
+          //   if (t0[0] === t1[0]) {
+          //     $(prev).addClass('hyperaudio-samestart').attr('title', t0[0] + ' - ' + (t0[0] + t0[1]));
+          //     $(token).attr('title', t1[0] + ' - ' + (t1[0] + t1[1]));
+          //   }
+          //
+          //   if (t0[0] + t0[1] > t1[0]) {
+          //     $(prev).addClass('hyperaudio-overlap').attr('title', t0[0] + ' - ' + (t0[0] + t0[1]));
+          //     $(token).attr('title', t1[0] + ' - ' + (t1[0] + t1[1]));
+          //   }
+          // });
+
           $('.hyperaudio-source article').empty().append($section);
           document.querySelectorAll('.hyperaudio-source').forEach(function(sourceNode) { new window.Source(sourceNode); });
         });
@@ -308,10 +350,12 @@
         });
       }
 
-      function loadSegments(segments) {
+      function loadSegments(segments, anchors) {
         var segment = segments.pop();
         var starchiveId = segment.split(':')[0];
         var interval = segment.split(':')[1].split(',').map(function(v) { return parseFloat(v); });
+
+        var anchor = anchors ? anchors.pop() : null;
         var url = 'https://api.contextubot.net/proxy?url=' + escape('https://live-stra-jell.pantheonsite.io/api/programs/starchiveid/' + starchiveId + '?_format=json');
 
         $.get(url, function(data) {
@@ -346,6 +390,48 @@
             }
           });
 
+          if (anchor && anchor.split(':')[0] === starchiveId) {
+            var prefixString = anchor.split(':')[1].split(',')[0];
+            var prefix = prefixString.split(/(?=[A-Z])/);
+            var suffixString = anchor.split(':')[1].split(',')[1];
+            var suffix = suffixString.split(/(?=[A-Z])/);
+            console.log(prefix, suffix);
+
+            var tokens = $section.find('span[data-t]').toArray();
+            for (var i = 0; i < tokens.length; i++) {
+              var set = tokens.slice(i, i + prefix.length);
+              var setString = set.map(function(t) {
+                var root = t.textContent.replace(/[^\w\s]|_/g, '').replace(/\s+/g, '').toLowerCase().trim();
+                return root.substr(0, 1).toUpperCase() + root.substr(1, 3);
+              }).join('');
+              console.log(set, setString);
+
+              if (setString === prefixString) {
+                console.log(set);
+                $(set).addClass('hyperaudio-match-start');
+                $(tokens.slice(0, i)).addClass('hyperaudio-nomatch').remove();
+                break;
+              }
+            }
+
+            tokens = tokens.reverse();
+            for (var i = 0; i < tokens.length; i++) {
+              var set = tokens.slice(i, i + suffix.length).reverse();
+              var setString = set.map(function(t) {
+                var root = t.textContent.replace(/[^\w\s]|_/g, '').replace(/\s+/g, '').toLowerCase().trim();
+                return root.substr(0, 1).toUpperCase() + root.substr(1, 3);
+              }).join('');
+              console.log(set, setString);
+
+              if (setString === suffixString) {
+                console.log(set);
+                $(set).addClass('hyperaudio-match-end');
+                $(tokens.slice(0, i)).addClass('hyperaudio-nomatch').remove();
+                break;
+              }
+            }
+          }
+
           var player = false;
           var $article = $('.hyperaudio-sink article');
           if ($article.length === 0) {
@@ -368,7 +454,7 @@
           }
 
           if (segments.length > 0) {
-            loadSegments(segments);
+            loadSegments(segments, anchors);
           } else if (player) {
             document.querySelectorAll('.hyperaudio-player').forEach(function(playerNode) { new window.Player(playerNode); });
           } else {
@@ -382,7 +468,7 @@
       if (query.hid) loadHATranscript(query.hid);
       if (query.r) {
         $('.hyperaudio-sink article').empty();
-        loadSegments(query.r.split(';').reverse());
+        loadSegments(query.r.split(';').reverse(), query.a ? query.a.split(';').reverse() : null);
       } else {
         document.querySelectorAll('.hyperaudio-sink').forEach(function(sinkNode) { new window.Sink(sinkNode); });
       }

@@ -85,10 +85,18 @@ export default class Sink extends Player {
           mode: 'transcript',
           id: item.getAttribute('data-id'),
           start, end,
+          prefix: Array.from(item.querySelectorAll('span[data-t]')).slice(0, 3).map(t => {
+            const root = t.textContent.replace(/[^\w\s]|_/g, '').replace(/\s+/g, '').toLowerCase().trim();
+            return `${root.substr(0, 1).toUpperCase()}${root.substr(1, 3)}`;
+          }),
+          suffix: Array.from(item.querySelectorAll('span[data-t]')).reverse().slice(0, 3).reverse().map(t => {
+            const root = t.textContent.replace(/[^\w\s]|_/g, '').replace(/\s+/g, '').toLowerCase().trim();
+            return `${root.substr(0, 1).toUpperCase()}${root.substr(1, 3)}`;
+          }),
         });
       }
     });
-    // console.log(data);
+    console.log(data);
 
     const fragments = data.reduce((acc, segment) => {
       if (segment.mode === 'effect') {
@@ -103,7 +111,14 @@ export default class Sink extends Player {
     }, []).filter(fragment => !fragment.startsWith('undef'));
     // console.log(fragments);
 
-    window.history.replaceState({}, document.title, `?r=${fragments.join(';')}`);
+    const anchors = data.reduce((acc, segment) => {
+      if (segment.mode === 'effect') return [...acc];
+
+      return [...acc, `${segment.id}:${segment.prefix.join('')},${segment.suffix.join('')}`];
+    }, []).filter(fragment => !fragment.startsWith('undef'));
+    console.log(anchors);
+
+    window.history.replaceState({}, document.title, `?r=${fragments.join(';')}&a=${anchors.join(';')}`);
     window.HyperaudioURL = window.location.href;
   }
 

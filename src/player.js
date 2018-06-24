@@ -259,7 +259,10 @@ export default class Player {
     const sections = Array.from(this.root.querySelectorAll('section[data-duration]'));
     const duration = sections.reduce((acc, section) => acc + parseFloat(section.getAttribute('data-duration'), 10), 0);
     const media = Array.from(this.root.querySelectorAll('video, audio')).find(el => el.style.display !== 'none');
-    if (time === null) time = media.currentTime;
+    if (time === null) {
+      time = 0;
+      if (media) time = media.currentTime;
+    }
 
     let currentIndex = sections.findIndex(section => section.classList.contains('hyperaudio-current'));
     if (currentIndex === -1 && media) currentIndex = sections.findIndex(section => section.getAttribute('data-src') === media.getAttribute('data-src'));
