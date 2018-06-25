@@ -4,8 +4,8 @@
 import Player from './player';
 
 export const templates = {
-  trim:  '<section class="hyperaudio-effect" data-type="trim" data-value="1"><label>Trim <span>1</span>s <input type="range" value="1" min="0.5" max="7" step="0.1"></label></section>',
-  fade:  '<section class="hyperaudio-effect" data-type="fade" data-value="1"><label>Fade <span>1</span>s <input type="range" value="1" min="0.5" max="7" step="0.1"></label></section>',
+  trim:  '<section class="hyperaudio-effect" data-type="trim" data-value="1"><label><div>Trim</div><div class="hyperaudio-range"><input type="range" value="1" min="0.5" max="7" step="0.1"></div><div><span>1</span>s</div></label></section>',
+  fade:  '<section class="hyperaudio-effect" data-type="fade" data-value="1"><label><div>Fade</div><div class="hyperaudio-range"><input type="range" value="1" min="0.5" max="7" step="0.1"></div><div><span>1</span>s</div></label></section>',
 };
 
 export default class Sink extends Player {
@@ -55,6 +55,7 @@ export default class Sink extends Player {
       item.querySelector('input')
     ) {
       if (jQuery && jQuery('input[type="range"]').rangeslider) {
+        // if (item.querySelector('.rangeslider')) jQuery(item).find('.rangeslider').remove();
         jQuery('input[type="range"]').rangeslider({
           polyfill: false,
           onSlide: (position, value) => {
