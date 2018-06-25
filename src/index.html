@@ -108,21 +108,24 @@
     }
 
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.2/rangeslider.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/easy-autocomplete.css">
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/easy-autocomplete.themes.css"> -->
   <style>
     /* demo layout */
-    /* html, body {
-      text-align: center;
-      font-family: serif;
-      line-height: 1.7em;
-      word-spacing: 0.1em;
-    } */
+    html, body {
+      background-color: black;
+      font-family: 'Kepler Std', 'Kepler W01 Regular', Georgia, "Times New Roman", Times, serif;
+      line-height: 1.66em;
+    }
 
     .hyperaudio-pad {
       display: flex;
       flex-direction: column;
       text-align: left;
+      background-color: white;
+      padding: 2em;
+      color: #1a1a1a;
     }
 
     .hyperaudio-pad > div {
@@ -135,6 +138,11 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
+      border: 2px solid #d8d8d8;
+    }
+
+    .hyperaudio-pad > div > section + section {
+      margin-left: 2em;
     }
 
     .hyperaudio-pad > div > section > article {
@@ -200,6 +208,7 @@
       /* margin-bottom: 2em; */
       /* background-color: black; */
       /* position: relative; */
+      background-color: #f4f4f4;
     }
 
     .hyperaudio-player header video + img, .hyperaudio-player header audio + img {
@@ -221,6 +230,7 @@
       /* color: #658898; */
       margin: 0;
       padding: .5em 0;
+      line-height: 1.66em;
     }
 
     /* .hyperaudio-player .hyperaudio-past {
@@ -230,6 +240,12 @@
     .hyperaudio-player .speaker {
       font-weight: bold;
       color: black;
+      margin-right: .3em;
+    }
+
+    .hyperaudio-player .speaker::after {
+      /* content: ':'; */
+      /* margin-right: .2em; */
     }
 
     .hyperaudio-player .hyperaudio-active {
@@ -256,15 +272,38 @@
       opacity: 0;
     }
 
-     .hyperaudio-buttons {
+     div.hyperaudio-buttons {
        display: flex;
+       background-color: #f4f4f4;
+       padding: 10px;
      }
 
-     .hyperaudio-buttons > div, .hyperaudio-buttons > button {
-       display: flex;
+     div.hyperaudio-buttons > div, .hyperaudio-buttons > button {
+       /* display: flex; */
        /* flex-basis: 20%; */
-       flex-direction: column;
-       justify-content: flex-start;
+       /* flex-direction: column; */
+       /* justify-content: flex-start; */
+       height: 38px;
+       border: 1px solid #d3d3d3;
+       flex-grow: 1;
+       font-size: 1rem;
+       font-family: sans-serif;
+       text-align: center;
+     }
+
+     div.hyperaudio-buttons > div {
+       /* height: 38px; */
+       background-color: white;
+       padding-top: 10px;
+     }
+
+     div.hyperaudio-buttons > div + div, div.hyperaudio-buttons > div + button, div.hyperaudio-buttons > button + button {
+       margin-left: 10px;
+     }
+
+     .hyperaudio-buttons > button {
+       background-color: #e10600;
+       color: white;
      }
 
     .hyperaudio-source input {
@@ -293,20 +332,82 @@
       border-bottom: 1px solid red;
     } */
 
+    div.hyperaudio-transport {
+      /* flex-direction: row; */
+      display: flex;
+      background-color: #191919;
+      color: #aaaaaa;
+      height: 32px;
+      align-items: baseline;
+    }
+
+    .hyperaudio-controls {
+    }
+
     .hyperaudio-progress {
-      /* position: absolute;
-      bottom: 0; */
-      width: 100%;
-      background-color: gray;
-      height: 10px;
+      flex-grow: 1;
+      background-color: #dbdddc;
+      height: 6px;
       cursor: pointer;
     }
 
     .hyperaudio-progress-bar {
-      background-color: red;
-      height: 10px;
+      background-color: #e10600;
+      height: 6px;
       cursor: pointer;
     }
+
+    .hyperaudio-time {
+    }
+
+    div.hyperaudio-search {
+      background-color: #f4f4f4;
+      display: block;
+      padding: 10px;
+    }
+
+    div.hyperaudio-search input {
+      height: 38px;
+      border: 1px solid #d3d3d3;
+      font-size: 24px !important;
+      font-family: sans-serif !important;
+    }
+
+    .hyperaudio-player > div.hyperaudio-title {
+      padding-left: 1em;
+      padding-right: 1em;
+    }
+
+    .hyperaudio-player > div.hyperaudio-title > h1 {
+      font-size: 24px;
+    }
+
+    .hyperaudio-player > div.hyperaudio-title > h1:empty {
+      display: none;
+    }
+
+    .hyperaudio-pause-button {
+      display: none;
+    }
+
+    .hyperaudio-playing .hyperaudio-play-button {
+      display: none;
+    }
+
+    .hyperaudio-playing .hyperaudio-pause-button {
+      display: block;
+    }
+
+    /* .hyperaudio-player > div.hyperaudio-title > p:empty {
+      display: none;
+    }
+
+    .hyperaudio-player > div.hyperaudio-title > p {
+      font-size: 16px;
+      color: #8c8c8c;
+      margin: 0;
+      padding: .5em 0;
+    } */
 
     /* .hyperaudio-match-start {
       background-color: lightyellow;
@@ -344,12 +445,27 @@
       <header class="hyperaudio-media">
         <img src="https://studsterkel.wfmt.com/modules/starchive/starchive/images/stra-program-transcript.jpg" />
       </header>
-      <div class="hyperaudio-progress">
-        <div class="hyperaudio-progress-bar" style="width: 0%">
+      <div class="hyperaudio-transport-wrapper">
+        <div class="hyperaudio-transport">
+          <div class="hyperaudio-controls">
+            <a class="hyperaudio-play-button">play</a>
+            <a class="hyperaudio-pause-button">pause</a>
+          </div>
+          <div class="hyperaudio-progress">
+            <div class="hyperaudio-progress-bar" style="width: 0%"></div>
+          </div>
+          <div class="hyperaudio-time">
+            <span class="hyperaudio-elapsed"></span>
+            <span class="hyperaudio-duration"></span>
+          </div>
         </div>
       </div>
       <div class="hyperaudio-search">
         <input id="transcript-search" type="search" />
+      </div>
+      <div class="hyperaudio-title">
+        <h1></h1>
+        <!-- <p></p> -->
       </div>
       <article>
       </article>
@@ -360,15 +476,28 @@
       <header class="hyperaudio-media">
         <img src="https://studsterkel.wfmt.com/modules/starchive/starchive/images/stra-program-transcript.jpg" />
       </header>
-      <div class="hyperaudio-progress">
-        <div class="hyperaudio-progress-bar" style="width: 0%">
+      <div class="hyperaudio-transport-wrapper">
+        <div class="hyperaudio-transport">
+          <div class="hyperaudio-controls">
+            <a class="hyperaudio-play-button">play</a>
+            <a class="hyperaudio-pause-button">pause</a>
+          </div>
+          <div class="hyperaudio-progress">
+            <div class="hyperaudio-progress-bar" style="width: 0%"></div>
+          </div>
+          <div class="hyperaudio-time">
+            <span class="hyperaudio-elapsed"></span>
+            <span class="hyperaudio-duration"></span>
+          </div>
         </div>
       </div>
-      <div class="hyperaudio-buttons">
-        <div class="hyperaudio-effect-source" data-type="fade">Fade</div>
-        <div class="hyperaudio-effect-source" data-type="trim">Trim</div>
-        <button class="hyperaudio-twitter-share">Share on Twitter</button>
-        <button class="hyperaudio-fb-share">Share on Facebook</button>
+      <div class="hyperaudio-buttons-wrapper">
+        <div class="hyperaudio-buttons">
+          <div class="hyperaudio-effect-source" data-type="fade">Fade</div>
+          <div class="hyperaudio-effect-source" data-type="trim">Trim</div>
+          <button class="hyperaudio-twitter-share">Share on Twitter</button>
+          <button class="hyperaudio-fb-share">Share on Facebook</button>
+        </div>
       </div>
 
       <article>
@@ -383,6 +512,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/jquery.easy-autocomplete.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.5.2/qs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.2/rangeslider.js"></script>
   <script src="hyperaudio.js"></script>
 
 
@@ -418,6 +548,7 @@
       });
 
       function loadTranscript(nid, starchiveId) {
+        $('.hyperaudio-title h1').empty();
         $('.hyperaudio-source article').empty().append('<p>loading…</p>');
 
         var url = 'https://api.contextubot.net/proxy?url=' + escape('https://live-stra-jell.pantheonsite.io/api/programs/nid/' + nid + '?_format=json');
@@ -429,6 +560,9 @@
           var transcript = JSON.parse(data[0].transcript);
           if (data[0].starchive_id) starchiveId = data[0].starchive_id;
           if (data[0].nid) nid = data[0].nid;
+
+          console.log(transcript);
+          $('.hyperaudio-title h1').text(transcript.title);
 
           var $section = $('<section></section>');
           $section.addClass('hyperaudio-transcript')

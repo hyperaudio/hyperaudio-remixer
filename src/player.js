@@ -34,6 +34,13 @@ export default class Player {
     this.root
       .querySelector('.hyperaudio-progress')
       .addEventListener('click', this.onSeek.bind(this));
+
+    this.root
+      .querySelector('.hyperaudio-play-button')
+      .addEventListener('click', this.play.bind(this));
+    this.root
+      .querySelector('.hyperaudio-pause-button')
+      .addEventListener('click', this.pause.bind(this));
   }
 
   setup(item: Object) {
@@ -227,6 +234,16 @@ export default class Player {
     this.progress(time);
   }
 
+  play() {
+    const media = Array.from(this.root.querySelectorAll('video, audio')).find(el => el.style.display !== 'none');
+    if (media) media.play();
+  }
+
+  pause() {
+    const media = Array.from(this.root.querySelectorAll('video, audio')).find(el => el.style.display !== 'none');
+    if (media) media.pause();
+  }
+
   onSeek(event: Object) {
     let element = event.target;
     if (element.classList.contains('hyperaudio-progress-bar')) element = element.parentElement;
@@ -268,14 +285,17 @@ export default class Player {
       if (media) time = media.currentTime;
     }
 
+    const durationEl = this.root.querySelector('.hyperaudio-duration');
+    if (durationEl) durationEl.textContent = `/ ${duration}`;
+    const timeEl = this.root.querySelector('.hyperaudio-elapsed');
+
     let currentIndex = sections.findIndex(section => section.classList.contains('hyperaudio-current'));
     if (currentIndex === -1 && media) currentIndex = sections.findIndex(section => section.getAttribute('data-src') === media.getAttribute('data-src'));
-    // console.log(duration, currentIndex);
     const bar = this.root.querySelector('.hyperaudio-progress-bar');
     if (currentIndex > -1) {
       const currentSection = sections[currentIndex];
       let progress = time - parseFloat(currentSection.getAttribute('data-start'), 10) + sections.slice(0, currentIndex).reduce((acc, section) => acc + parseFloat(section.getAttribute('data-duration'), 10), 0);
-      // console.log(duration, progress);
+      if (timeEl) timeEl.textContent = progress;
       progress = progress * 100 / duration;
       if (progress > 100) progress = 100;
       if (bar) bar.style.width = `${progress}%`;
@@ -383,6 +403,19 @@ export default class Player {
         const start = parseFloat(first.getAttribute('data-t').split(',')[0]);
         media.currentTime = start;
       });
+
+      media.addEventListener('play', (event) => {
+        // if (event.target.style.display !== 'none') return;
+        const t = this.root.querySelector(`.hyperaudio-transport`);
+        t.classList.add('hyperaudio-playing');
+      });
+
+      media.addEventListener('pause', (event) => {
+        // if (event.target.style.display !== 'none') return;
+        const t = this.root.querySelector(`.hyperaudio-transport`);
+        t.classList.remove('hyperaudio-playing');
+      });
+
 
       media.classList.add('hyperaudio-enabled');
     }

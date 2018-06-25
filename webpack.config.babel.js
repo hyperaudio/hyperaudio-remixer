@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 import path from 'path';
 
 // import info from './package.json';

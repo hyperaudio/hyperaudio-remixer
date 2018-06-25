@@ -54,13 +54,25 @@ export default class Sink extends Player {
       item.classList.contains('hyperaudio-effect') &&
       item.querySelector('input')
     ) {
-      item.querySelector('input').addEventListener('input', event => {
-        const value = event.target.value;
-        item.querySelector('span').innerText = value;
-        event.target.setAttribute('value', value);
-        item.setAttribute('data-value', value);
-        this.exposeURL();
-      });
+      if (jQuery && jQuery('input[type="range"]').rangeslider) {
+        jQuery('input[type="range"]').rangeslider({
+          polyfill: false,
+          onSlide: (position, value) => {
+            item.querySelector('span').innerText = value;
+            event.target.setAttribute('value', value);
+            item.setAttribute('data-value', value);
+            this.exposeURL();
+          },
+        });
+      } else {
+        item.querySelector('input').addEventListener('input', event => {
+          const value = event.target.value;
+          item.querySelector('span').innerText = value;
+          event.target.setAttribute('value', value);
+          item.setAttribute('data-value', value);
+          this.exposeURL();
+        });
+      }
     }
 
     this.exposeURL();
