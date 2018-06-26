@@ -5,6 +5,7 @@
   <meta charset='utf-8' />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    /* custom reset */
     .hyperaudio-pad {
       box-sizing: border-box;
       background-color: transparent;
@@ -111,7 +112,8 @@
   </style>
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.2/rangeslider.css" /> -->
   <link rel="stylesheet" href="./rangeslider.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/easy-autocomplete.css">
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/easy-autocomplete.css"> -->
+  <link rel="stylesheet" href="./easy-autocomplete.css">
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/easy-autocomplete.themes.css"> -->
   <style>
     /* demo layout */
@@ -121,6 +123,7 @@
       line-height: 1.66em;
     }
 
+    /* main container */
     .hyperaudio-pad {
       display: flex;
       flex-direction: column;
@@ -135,6 +138,7 @@
       display: flex;
     }
 
+    /* each column */
     .hyperaudio-pad > div > section {
       flex-basis: 50%;
       display: flex;
@@ -143,6 +147,7 @@
       border: 2px solid #d8d8d8;
     }
 
+    /* space between column */
     .hyperaudio-pad > div > section + section {
       margin-left: 2em;
     }
@@ -151,16 +156,18 @@
       flex-basis: 100%;
     }
 
+    /* selection colour */
     ::selection {
       background: #87d8e7;
       text-shadow: none;
     }
 
-    /* hyperaudio styles */
+    /* effects: default no show */
     .hyperaudio-effect {
       display: none;
     }
 
+    /* effects: show in right pad only */
     .hyperaudio-sink .hyperaudio-effect {
       display: block;
       background-color: #f4f4f4;
@@ -169,6 +176,7 @@
       margin-right: 1em;
     }
 
+    /* FIXME */
     /* .hyperaudio-sink .hyperaudio-effect:empty {
       display: none;
     } */
@@ -179,6 +187,7 @@
       align-items: baseline;
     }
 
+    /* vertical alingn fix for slider */
     .hyperaudio-effect > label .hyperaudio-range {
       flex-grow: 1;
       padding-bottom: 3px;
@@ -186,6 +195,7 @@
       padding-right: 10px;
     }
 
+    /* fix for duplication on DnD reordering */
     .rangeslider + .rangeslider {
       display: none;
     }
@@ -194,6 +204,7 @@
       outline: none;
     }
 
+    /* transcript blocks */
     .hyperaudio-source .hyperaudio-transcript {
       border-left: 1px solid transparent;
       border-right: 1px solid transparent;
@@ -218,6 +229,7 @@
       outline: none;
     }
 
+    /* border-top is a "drop zone" effect */
     .hyperaudio-transcript {
       border-top: 0 solid white;
       transition: border-top 0.15s;
@@ -228,77 +240,63 @@
       transition: border-top 0.15s;
     }
 
+    /* container for media */
     .hyperaudio-player header {
-      /* flex-basis: 360px; */
-      /*max-width: 634px;*/
-      /* max-height: 360px; */
-      /* margin-bottom: 2em; */
-      /* background-color: black; */
-      /* position: relative; */
       background-color: #f4f4f4;
     }
 
+    /* hide img placeholder once we have media */
     .hyperaudio-player header video + img, .hyperaudio-player header audio + img {
       display: none;
     }
 
+    /* keep selection cursor as text for left pad */
     .hyperaudio-player:not(.hyperaudio-source) *[data-t] {
         cursor: pointer;
     }
 
+    /* media, clickable hint */
     .hyperaudio-player video, .hyperaudio-player audio {
-      /* position: relative; */
       width: 100%;
       height: auto;
       cursor: pointer;
     }
 
     .hyperaudio-player p {
-      /* color: #658898; */
       margin: 0;
       padding: .5em 0;
       line-height: 1.66em;
     }
 
-    /* .hyperaudio-player .hyperaudio-past {
-      color: black;
-    } */
-
+    /* speaker name */
     .hyperaudio-player .speaker {
       font-weight: bold;
       color: black;
       margin-right: .3em;
     }
 
+    /* speaker decoration */
     .hyperaudio-player .speaker::after {
       /* content: ':'; */
       /* margin-right: .2em; */
     }
 
+    /* active section */
     .hyperaudio-player .hyperaudio-active {
       color: #d74b36;
     }
 
-    /* .hyperaudio-player .hyperaudio-active:not(:nth-child(2)) {
-      color: #d74b36;
-    } */
-
-    /* .hyperaudio-player .hyperaudio-duration {
-      color: #d74b36;
-      text-decoration: underline;
-    } */
-
+    /* text selection */
     .hyperaudio-source .hyperaudio-selected, hyperaudio-player .hyperaudio-active.hyperaudio-selected {
-      /*background-color: lightpink;*/
       background: #87d8e7;
       text-shadow: none;
-      /*color: white;*/
     }
 
     .hyperaudio-fade {
       opacity: 0;
     }
 
+    /* right pad buttons */
      div.hyperaudio-buttons {
        display: flex;
        background-color: #f4f4f4;
@@ -306,10 +304,6 @@
      }
 
      div.hyperaudio-buttons > div, .hyperaudio-buttons > button {
-       /* display: flex; */
-       /* flex-basis: 20%; */
-       /* flex-direction: column; */
-       /* justify-content: flex-start; */
        height: 38px;
        border: 1px solid #d3d3d3;
        flex-grow: 1;
@@ -319,7 +313,6 @@
      }
 
      div.hyperaudio-buttons > div {
-       /* height: 38px; */
        background-color: white;
        padding-top: 10px;
      }
@@ -337,28 +330,27 @@
       width: 100%;
     }
 
-
+    /* default "played" colour */
     .hyperaudio-transcript {
       color: black;
     }
 
+    /* unplayed colour */
     .hyperaudio-current {
       color: #658898;
-      /* border-left: 1px solid red !important; */
     }
 
+    /* played words in current segment */
     .hyperaudio-current .hyperaudio-past {
       color: black;
     }
 
+    /* unplayed colour for future segments */
     .hyperaudio-current ~ .hyperaudio-transcript {
       color: #658898;
     }
 
-    /* .hyperaudio-current ~ .hyperaudio-transcript .hyperaudio-past {
-      border-bottom: 1px solid red;
-    } */
-
+    /* player ui: buttons, progress */
     div.hyperaudio-transport {
       /* flex-direction: row; */
       display: flex;
@@ -368,9 +360,24 @@
       align-items: baseline;
     }
 
-    .hyperaudio-controls {
+    /* hide/show play/pause */
+    .hyperaudio-pause-button {
+      display: none;
     }
 
+    .hyperaudio-playing .hyperaudio-play-button {
+      display: none;
+    }
+
+    .hyperaudio-playing .hyperaudio-pause-button {
+      display: block;
+    }
+
+
+    /* .hyperaudio-controls {
+    } */
+
+    /* progress bar */
     .hyperaudio-progress {
       flex-grow: 1;
       background-color: #dbdddc;
@@ -384,9 +391,10 @@
       cursor: pointer;
     }
 
-    .hyperaudio-time {
-    }
+    /* .hyperaudio-time {
+    } */
 
+    /* left-pad search box wrapper */
     div.hyperaudio-search {
       background-color: #f4f4f4;
       display: block;
@@ -400,6 +408,7 @@
       font-family: sans-serif !important;
     }
 
+    /* left pad transcript itle */
     .hyperaudio-player > div.hyperaudio-title {
       padding-left: 1em;
       padding-right: 1em;
@@ -410,32 +419,11 @@
       line-height: 1.66em;
     }
 
+    /* hide title if empty */
     .hyperaudio-player > div.hyperaudio-title > h1:empty {
       display: none;
     }
 
-    .hyperaudio-pause-button {
-      display: none;
-    }
-
-    .hyperaudio-playing .hyperaudio-play-button {
-      display: none;
-    }
-
-    .hyperaudio-playing .hyperaudio-pause-button {
-      display: block;
-    }
-
-    /* .hyperaudio-player > div.hyperaudio-title > p:empty {
-      display: none;
-    }
-
-    .hyperaudio-player > div.hyperaudio-title > p {
-      font-size: 16px;
-      color: #8c8c8c;
-      margin: 0;
-      padding: .5em 0;
-    } */
 
     /* .hyperaudio-match-start {
       background-color: lightyellow;
@@ -462,6 +450,7 @@
       border-bottom: 1px solid red;
     } */
 
+    /* transcript zone size and scrollbar */
     .hyperaudio-player article {
       height: 350px;
       overflow-y: scroll;
@@ -572,13 +561,14 @@
           return 'https://api.contextubot.net/proxy?url=' + escape('https://live-stra-jell.pantheonsite.io/api/programs/search/?_format=json&keywords=' + escape(phrase)) ;
         },
         getValue: 'title',
-        requestDelay: 200,
+        requestDelay: 100,
         adjustWidth: false,
         list: {
           maxNumberOfElements: 32,
           match: { enabled: true },
           onChooseEvent: function() {
             var nid = $('#transcript-search').getSelectedItemData().nid;
+            $('#transcript-search').val('');
             loadTranscript(nid, null);
           }
         }
