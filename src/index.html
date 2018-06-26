@@ -257,9 +257,10 @@
       transition: border-top 0.15s;
     }
 
-    /* .hyperaudio-sink article.hyperaudio-over {
-      background-color: #e9f8fb;
-    } */
+    .hyperaudio-sink article.hyperaudio-over {
+      /* background-color: #e9f8fb; */
+      padding-bottom: 5em;
+    }
 
     /* .hyperaudio-sink article.hyperaudio-over .hyperaudio-transcript:last-child::after {
       display: block;
@@ -791,6 +792,17 @@
 
           if (segment.split(':').length > 2) {
             var effect = segment.split(':')[2];
+            var effectName = effect.startsWith('f') ? 'fade' : 'trim';
+            var effectValue = parseFloat(effect.substring(1));
+            var $template = $(window.SinkTemplates[effectName]);
+
+            $template.attr('data-value', effectValue);
+            $template.find('span').text(effectValue);
+            $template.find('input').val(effectValue);
+            $article.append($template);
+          }
+          if (segment.split(':').length > 3) {
+            var effect = segment.split(':')[3];
             var effectName = effect.startsWith('f') ? 'fade' : 'trim';
             var effectValue = parseFloat(effect.substring(1));
             var $template = $(window.SinkTemplates[effectName]);

@@ -56,7 +56,7 @@ export default class Sink extends Player {
     ) {
       if (jQuery && jQuery('input[type="range"]').rangeslider) {
         // if (item.querySelector('.rangeslider')) jQuery(item).find('.rangeslider').remove();
-        jQuery('input[type="range"]').rangeslider({
+        jQuery(item).find('input[type="range"]').rangeslider({
           polyfill: false,
           onSlide: (position, value) => {
             item.querySelector('span').innerText = value;
@@ -158,6 +158,7 @@ export default class Sink extends Player {
 
   onDragEnd2(event: Object) {
     event.target.remove();
+    this.exposeURL();
   }
 
   onDragOver(event: Object) {
@@ -201,6 +202,7 @@ export default class Sink extends Player {
     this.root
       .querySelectorAll('.hyperaudio-over')
       .forEach(item => item.classList.remove('hyperaudio-over'));
+    this.exposeURL();
   }
 
   onDrop(event: Object) {
@@ -217,15 +219,10 @@ export default class Sink extends Player {
 
     const item = wrapper.children[0];
 
-    // const controls = document.createElement('div');
-    // controls.innerHTML = '<input type="range" />';
-    // item.append(controls);
-
-    // FIXME
-    if (target.nodeName === 'DIV') target = target.parentElement;
+    // if (target.nodeName === 'DIV') target = target.parentElement;
     if (target.nodeName === 'ARTICLE') {
-      // target.appendChild(item);
-      target.insertBefore(item, target.querySelector('div'));
+      target.appendChild(item);
+      // target.insertBefore(item, target.querySelector('div'));
       this.setup(item);
     } else {
       // FIXME

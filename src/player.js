@@ -408,6 +408,10 @@ export default class Player {
         // if (event.target.style.display !== 'none') return;
         const t = this.root.querySelector(`.hyperaudio-transport`);
         t.classList.add('hyperaudio-playing');
+        if (!this.root.querySelector('.hyperaudio-current') && this.root.querySelector('.hyperaudio-transcript')) {
+          this.root.querySelector('.hyperaudio-transcript').classList.add('hyperaudio-current');
+        }
+
       });
 
       media.addEventListener('pause', (event) => {
