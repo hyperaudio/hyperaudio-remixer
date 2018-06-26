@@ -8,7 +8,7 @@
     /* custom reset */
     .hyperaudio-pad {
       box-sizing: border-box;
-      background-color: transparent;
+      background-color: white;
       margin: 0;
       padding: 0;
       border: 0;
@@ -17,7 +17,6 @@
       font-weight: 400;
       line-height: 1;
       vertical-align: baseline;
-      background-color: transparent;
       text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -118,7 +117,7 @@
   <style>
     /* demo layout */
     html, body {
-      background-color: black;
+      /* background-color: black; */
       font-family: 'Kepler Std', 'Kepler W01 Regular', Georgia, "Times New Roman", Times, serif;
       line-height: 1.66em;
     }
@@ -177,14 +176,26 @@
     }
 
     /* FIXME */
-    /* .hyperaudio-sink .hyperaudio-effect:empty {
+    .hyperaudio-sink .hyperaudio-effect {
       display: none;
-    } */
+    }
+
+    .hyperaudio-sink .hyperaudio-effect[data-type] {
+      display: block;
+    }
+
+    .hyperaudio-sink .hyperaudio-effect {
+      display: none;
+    }
 
     .hyperaudio-effect > label {
       display: flex;
       flex-wrap: nowrap;
       align-items: baseline;
+    }
+
+    .hyperaudio-effect input {
+      display: none;
     }
 
     /* vertical alingn fix for slider */
@@ -231,14 +242,37 @@
 
     /* border-top is a "drop zone" effect */
     .hyperaudio-transcript {
-      border-top: 0 solid white;
+      border-top: 0 solid #e9f8fb;
       transition: border-top 0.15s;
+      background-color: white;
     }
+
+    /* .hyperaudio-transcript:last-child {
+      border-bottom: 0 solid #e9f8fb;
+      transition: border-bottom 0.15s;
+    } */
 
     .hyperaudio-sink .hyperaudio-transcript.hyperaudio-over {
       border-top: 2em solid #e9f8fb;
       transition: border-top 0.15s;
     }
+
+    /* .hyperaudio-sink article.hyperaudio-over {
+      background-color: #e9f8fb;
+    } */
+
+    /* .hyperaudio-sink article.hyperaudio-over .hyperaudio-transcript:last-child::after {
+      display: block;
+      content: 'append here…';
+      border-bottom: 4em solid #e9f8fb;
+      transition: border-bottom 0.15s;
+    }
+
+    .hyperaudio-sink article.hyperaudio-over .hyperaudio-transcript.hyperaudio-over:last-child::after {
+      display: none;
+      border-bottom: 0 solid #e9f8fb;
+      transition: border-bottom 0.15s;
+    } */
 
     /* container for media */
     .hyperaudio-player header {
@@ -471,6 +505,14 @@
       background-color: #a6a9aa;
     }
 
+    div.hyperaudio-drag {
+      position: absolute;
+      top: 0;
+      left: -1000px;
+      background-color: yellow;
+      outline: 1px solid red;
+    }
+
   </style>
 
 </head>
@@ -506,6 +548,7 @@
       </div>
       <article>
       </article>
+      <div class="hyperaudio-drag"></div>
     </section>
 
     <!-- Remixer -->

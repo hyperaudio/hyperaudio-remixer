@@ -188,6 +188,9 @@ export default class Sink extends Player {
     }
 
     target.classList.add('hyperaudio-over');
+    setTimeout(() => {
+      target.classList.remove('hyperaudio-over');
+    }, 4000);
     // flow-disable-next-line
     this.root.querySelector('article').classList.add('hyperaudio-over');
   }

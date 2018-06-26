@@ -150,8 +150,10 @@ export default class Source extends Player {
     // itemClone.style.left = '-100px';
     // document.body.appendChild(itemClone);
 
-    // FIXME
-    this.root.appendChild(itemClone);
+    var dragItems = this.root.querySelector('.hyperaudio-drag');
+    var width = this.root.querySelector('article').getBoundingClientRect().width;
+    dragItems.style.width = `${width}px`;
+    dragItems.appendChild(itemClone);
     event.dataTransfer.setDragImage(itemClone, 0, 0);
   }
 
