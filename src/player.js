@@ -108,6 +108,7 @@ export default class Player {
       .querySelectorAll('.hyperaudio-current')
       .forEach(active => active.classList.remove('hyperaudio-current'));
     item.classList.add('hyperaudio-current');
+    // if (jQuery && jQuery().scrollTo) jQuery().scrollTo(item, { duration: 1 });
 
     const [start, duration] = t.split(',');
     // event.target.classList.add('hyperaudio-duration');
@@ -231,6 +232,8 @@ export default class Player {
           tokenFound = true;
           exactTokenFound = true;
           candidates[i].classList.add('hyperaudio-past');
+
+          candidates[i].parentElement.scrollIntoView({ behavior: 'smooth' });
         }
 
         if (t > time) break;
@@ -309,6 +312,7 @@ export default class Player {
     const targetToken = Array.from(targetSection.querySelectorAll('*[data-t]')).find(token => parseFloat(token.getAttribute('data-t'), 10) >= localTime);
     // console.log(time, localTime, targetToken);
     targetToken.dispatchEvent(click);
+    // targetToken.scrollIntoView({ behavior: 'smooth' });
   }
 
   formatTime(time) {
