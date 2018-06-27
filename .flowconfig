@@ -2,4 +2,5 @@
 suppress_comment= \\(.\\|\n\\)*\\flow-disable-next-line
 
 [ignore]
+<PROJECT_ROOT>/src/.*
 <PROJECT_ROOT>/node_modules/.*

@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable class-methods-use-this, no-unused-vars, no-plusplus, no-continue, no-param-reassign */
+/* eslint-disable max-len,class-methods-use-this, no-unused-vars, no-plusplus, no-continue, no-param-reassign */
 
 export default class Player {
   root: Element;
@@ -152,7 +152,7 @@ export default class Player {
       const last = candidates[candidates.length - 1];
 
       const [t0] = first.getAttribute('data-t').split(',');
-      if (parseFloat(parseFloat(time).toFixed(2)) < parseFloat(t0)) {
+      if (time < parseFloat(t0) && parseFloat(parseFloat(time).toFixed(2)) < parseFloat(t0)) {
         // console.log(time, t0);
         continue;
       }
@@ -167,6 +167,16 @@ export default class Player {
         if (isNaN(trim)) trim = 0;
       }
 
+      if (
+        item.nextElementSibling &&
+        item.nextElementSibling.nextElementSibling &&
+        item.nextElementSibling.nextElementSibling.classList.contains('hyperaudio-effect') &&
+        item.nextElementSibling.nextElementSibling.getAttribute('data-type') === 'trim'
+      ) {
+        trim = parseFloat(item.nextElementSibling.nextElementSibling.getAttribute('data-value'));
+        if (isNaN(trim)) trim = 0;
+      }
+
       let fade = 0;
       if (
         item.nextElementSibling &&
@@ -174,6 +184,16 @@ export default class Player {
         item.nextElementSibling.getAttribute('data-type') === 'fade'
       ) {
         fade = parseFloat(item.nextElementSibling.getAttribute('data-value'));
+        if (isNaN(fade)) fade = 0;
+      }
+
+      if (
+        item.nextElementSibling &&
+        item.nextElementSibling.nextElementSibling &&
+        item.nextElementSibling.nextElementSibling.classList.contains('hyperaudio-effect') &&
+        item.nextElementSibling.nextElementSibling.getAttribute('data-type') === 'fade'
+      ) {
+        fade = parseFloat(item.nextElementSibling.nextElementSibling.getAttribute('data-value'));
         if (isNaN(fade)) fade = 0;
       }
 
@@ -238,120 +258,16 @@ export default class Player {
     this.progress(time);
   }
 
-  setHeadOLD(time: number, src: string) {
-    this.currentSrc = src;
-    let found = false;
-
-    const items = this.root.querySelectorAll(
-      `.hyperaudio-transcript[data-src="${src}"]`,
-    );
-
-    for (let j = 0; j < items.length; j++) {
-      const item = items[j];
-
-      item
-        .querySelectorAll('.hyperaudio-past')
-        .forEach(active => active.classList.remove('hyperaudio-past'));
-      // item
-      //   .querySelectorAll('.hyperaudio-active')
-      //   .forEach(active => active.classList.remove('hyperaudio-active'));
-
-      const candidates = item.querySelectorAll('*[data-t]');
-
-      const first = candidates[0];
-      const last = candidates[candidates.length - 1];
-
-      // flow-disable-next-line
-      const [t0] = first.getAttribute('data-t').split(',');
-      if (time < parseFloat(t0)) continue;
-
-      let trim = 0;
-      if (
-        item.nextElementSibling &&
-        item.nextElementSibling.classList.contains('hyperaudio-effect') &&
-        item.nextElementSibling.getAttribute('data-type') === 'trim'
-      ) {
-        trim = parseFloat(item.nextElementSibling.getAttribute('data-value'));
-        if (isNaN(trim)) trim = 0;
-      }
-
-      let fade = 0;
-      if (
-        item.nextElementSibling &&
-        item.nextElementSibling.classList.contains('hyperaudio-effect') &&
-        item.nextElementSibling.getAttribute('data-type') === 'fade'
-      ) {
-        fade = parseFloat(item.nextElementSibling.getAttribute('data-value'));
-        if (isNaN(fade)) fade = 0;
-      }
-
-      // flow-disable-next-line
-      const [ti, di] = last.getAttribute('data-t').split(',');
-      if (time > parseFloat(ti) + parseFloat(di) + trim) continue;
-
-      if (time > parseFloat(ti) + parseFloat(di) - fade) {
-        const media = this.getMedia(src);
-        if (media && !media.classList.contains('hyperaudio-fade')) {
-          media.classList.add('hyperaudio-fade');
-          media.style.transition = `opacity ${parseFloat(ti) + parseFloat(di) - time}s ease-in-out`;
-          media.style.opacity = '0';
-        }
-      }
-
-      found = true;
-      this.lastSegment = item;
-
-      for (let i = 0; i < candidates.length; i++) {
-        const tc = candidates[i].getAttribute('data-t');
-        // flow-disable-next-line
-        let [t, d] = tc.split(',');
-        t = parseFloat(t);
-        d = parseFloat(d) + (i === candidates.length - 1 ? trim : 0);
-
-        if (t < time) {
-          candidates[i].classList.add('hyperaudio-past');
-        }
-
-        if (t <= time && time < t + d) {
-          // console.log(time - (t + d) * 1e3);
-          candidates[i].classList.add('hyperaudio-past');
-
-          // candidates[i].classList.add('hyperaudio-active');
-          // if (!candidates[i].classList.contains('hyperaudio-duration'))
-          //   setTimeout(() => {
-          //     candidates[i].classList.remove('hyperaudio-duration');
-          //     candidates[i].classList.remove('hyperaudio-active');
-          //   }, (d - (time - t)) * 1e3);
-          // candidates[i].classList.add('hyperaudio-duration');
-        }
-
-        if (t > time) break;
-      }
-    }
-
-    if (!found) {
-      // flow-disable-next-line
-      const media = this.getMedia(src);
-      // flow-disable-next-line
-      media.pause();
-
-      const allItems = this.root.querySelectorAll('.hyperaudio-transcript');
-      for (let k = 0; k < allItems.length - 1; k++) {
-        if (allItems[k] === this.lastSegment) {
-          const event = document.createEvent('HTMLEvents');
-          event.initEvent('click', true, false);
-          // flow-disable-next-line
-          allItems[k + 1].querySelector('*[data-t]').dispatchEvent(event);
-          break;
-        }
-      }
-    }
-    this.progress(time);
-  }
-
   play() {
     const media = Array.from(this.root.querySelectorAll('video, audio')).find(el => el.style.display !== 'none');
-    if (media) media.play();
+    if (!this.root.querySelector('.hyperaudio-current') && this.root.querySelector('.hyperaudio-transcript')) {
+      // this.root.querySelector('.hyperaudio-transcript').classList.add('hyperaudio-current');
+      const event = document.createEvent('HTMLEvents');
+      event.initEvent('click', true, false);
+      this.root.querySelector('.hyperaudio-transcript').querySelector('*[data-t]').dispatchEvent(event);
+    } else if (media) {
+      media.play();
+    }
   }
 
   pause() {
@@ -363,7 +279,7 @@ export default class Player {
     let element = event.target;
     if (element.classList.contains('hyperaudio-progress-bar')) element = element.parentElement;
     const { x, width } = element.getClientRects()[0];
-    console.log(x, width, event.clientX, element);
+    // console.log(x, width, event.clientX, element);
     const progress = (event.clientX - x) / width;
 
     const sections = Array.from(this.root.querySelectorAll('section[data-duration]'));
@@ -374,11 +290,11 @@ export default class Player {
     const targetSection = sections.find((section, index) => {
       const timeOffset = sections.slice(0, index).reduce((acc, section) => acc + parseFloat(section.getAttribute('data-duration'), 10), 0);
       localTime = time - timeOffset + parseFloat(section.getAttribute('data-start'), 10);
-      console.log(time, timeOffset, localTime, section);
+      // console.log(time, timeOffset, localTime, section);
       return localTime >= parseFloat(section.getAttribute('data-start'), 10) && localTime < parseFloat(section.getAttribute('data-end'), 10);
     });
 
-    console.log(time, targetSection);
+    // console.log(time, targetSection);
     if (!targetSection) return;
 
     const click = document.createEvent('HTMLEvents');
@@ -386,12 +302,29 @@ export default class Player {
     // targetSection.querySelector('*[data-t]').dispatchEvent(click);
 
     const targetToken = Array.from(targetSection.querySelectorAll('*[data-t]')).find(token => parseFloat(token.getAttribute('data-t'), 10) >= localTime);
-    console.log(time, localTime, targetToken);
+    // console.log(time, localTime, targetToken);
     targetToken.dispatchEvent(click);
   }
 
   formatTime(time) {
+    if (time < 0) return '00:00';
+    let h = 0;
+    let m = 0;
+    let s = 0;
+    if (time >= 3600) {
+      h = Math.floor(time / 3600);
+      time = time - (h * 3600);
+    }
+    if (time >= 60) {
+      m = Math.floor(time / 60);
+      time = time - (m * 60);
+    }
+    s = Math.floor(time);
 
+    if (m < 10) m = `0${m}`;
+    if (s < 10) s = `0${s}`;
+
+    return h > 0 ? `${h}:${m}:${s}` : `${m}:${s}`;
   }
 
   progress(time) {
@@ -405,21 +338,29 @@ export default class Player {
     }
 
     const durationEl = this.root.querySelector('.hyperaudio-duration');
-    if (durationEl) durationEl.textContent = `/ ${duration}`;
+    if (durationEl) durationEl.textContent = `/ ${this.formatTime(duration)}`;
     const timeEl = this.root.querySelector('.hyperaudio-elapsed');
 
     let currentIndex = sections.findIndex(section => section.classList.contains('hyperaudio-current'));
-    if (currentIndex === -1 && media) currentIndex = sections.findIndex(section => section.getAttribute('data-src') === media.getAttribute('data-src'));
+    // if (currentIndex === -1 && media) currentIndex = sections.findIndex(section => section.getAttribute('data-src') === media.getAttribute('data-src'));
     const bar = this.root.querySelector('.hyperaudio-progress-bar');
     if (currentIndex > -1) {
       const currentSection = sections[currentIndex];
-      let progress = time - parseFloat(currentSection.getAttribute('data-start'), 10) + sections.slice(0, currentIndex).reduce((acc, section) => acc + parseFloat(section.getAttribute('data-duration'), 10), 0);
-      if (timeEl) timeEl.textContent = progress;
+      const start = parseFloat(currentSection.getAttribute('data-start'), 10);
+      const duration2 = sections.slice(0, currentIndex).reduce((acc, section) => acc + parseFloat(section.getAttribute('data-duration'), 10), 0);
+      let progress = time - start + duration2;
+      // console.log(progress * 100 / duration, time, start, duration2, duration);
+      if (timeEl) timeEl.textContent = this.formatTime(progress);
+
       progress = progress * 100 / duration;
       if (progress > 100) progress = 100;
-      if (bar) bar.style.width = `${progress}%`;
+      if (bar) bar.style.width = `${parseFloat(progress).toFixed(1)}%`;
     } else {
-      if (bar) bar.style.width = '0%';
+      if (bar && this.lastSegment) {
+        bar.style.width = '100%';
+      } else {
+        bar.style.width = '0%';
+      }
     }
   }
 
@@ -507,19 +448,19 @@ export default class Player {
 
     if (media && !media.classList.contains('hyperaudio-enabled')) {
       media.addEventListener('timeupdate', this.onTimeUpdate.bind(this));
-      media.addEventListener('click', () => {
-        if (media.paused) {
-          media.play();
-          document
-            .querySelectorAll(`video:not([src="${src}"]), audio:not([src="${src}"])`)
-            .forEach(media2 => {
-              // flow-disable-next-line
-              media2.pause();
-            });
-        } else {
-          media.pause();
-        }
-      });
+      // media.addEventListener('click', () => {
+      //   if (media.paused) {
+      //     media.play();
+      //     document
+      //       .querySelectorAll(`video:not([src="${src}"]), audio:not([src="${src}"])`)
+      //       .forEach(media2 => {
+      //         // flow-disable-next-line
+      //         media2.pause();
+      //       });
+      //   } else {
+      //     media.pause();
+      //   }
+      // });
       media.setAttribute('data-src', src);
 
       media.addEventListener('loadedmetadata', (event) => {
@@ -536,7 +477,6 @@ export default class Player {
         if (!this.root.querySelector('.hyperaudio-current') && this.root.querySelector('.hyperaudio-transcript')) {
           this.root.querySelector('.hyperaudio-transcript').classList.add('hyperaudio-current');
         }
-
       });
 
       media.addEventListener('pause', (event) => {

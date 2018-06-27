@@ -291,11 +291,10 @@
         cursor: pointer;
     }
 
-    /* media, clickable hint */
+    /* media */
     .hyperaudio-player video, .hyperaudio-player audio {
       width: 100%;
       height: auto;
-      cursor: pointer;
     }
 
     .hyperaudio-player p {
@@ -374,7 +373,7 @@
     /* unplayed colour */
     section.hyperaudio-current {
       color: #658898;
-      border-left: 10px solid red !important;
+      /* border-left: 10px solid red !important; */
     }
 
     /* played words in current segment */
@@ -385,7 +384,7 @@
     /* unplayed colour for future segments */
     section.hyperaudio-current ~ section.hyperaudio-transcript {
       color: #658898;
-      border-right: 10px solid blue;
+      /* border-right: 10px solid blue; */
     }
 
     /* player ui: buttons, progress */
@@ -427,10 +426,12 @@
       background-color: #e10600;
       height: 6px;
       cursor: pointer;
+      transition: width .2s;
     }
 
-    /* .hyperaudio-time {
-    } */
+    .hyperaudio-time, .hyperaudio-transport {
+      font-family: sans-serif;
+    }
 
     /* left-pad search box wrapper */
     div.hyperaudio-search {
@@ -538,8 +539,8 @@
             <div class="hyperaudio-progress-bar" style="width: 0%"></div>
           </div>
           <div class="hyperaudio-time">
-            <span class="hyperaudio-elapsed"></span>
-            <span class="hyperaudio-duration"></span>
+            <span class="hyperaudio-elapsed">00:00</span>
+            <span class="hyperaudio-duration">00:00</span>
           </div>
         </div>
       </div>
@@ -569,8 +570,8 @@
             <div class="hyperaudio-progress-bar" style="width: 0%"></div>
           </div>
           <div class="hyperaudio-time">
-            <span class="hyperaudio-elapsed"></span>
-            <span class="hyperaudio-duration"></span>
+            <span class="hyperaudio-elapsed">00:00</span>
+            <span class="hyperaudio-duration">00:00</span>
           </div>
         </div>
       </div>
