@@ -200,12 +200,16 @@ export default class Player {
       const [ti, di] = last.getAttribute('data-t').split(',');
       if (time > parseFloat(ti) + parseFloat(di) + trim) continue;
 
-      if (time > parseFloat(ti) + parseFloat(di) - fade) {
+      if (fade > 0 && time > parseFloat(ti) + parseFloat(di) - fade) {
         const media = this.getMedia(src);
         if (media && !media.classList.contains('hyperaudio-fade')) {
           media.classList.add('hyperaudio-fade');
           media.style.transition = `opacity ${parseFloat(ti) + parseFloat(di) - time}s ease-in-out`;
           media.style.opacity = '0';
+          // setTimeout(() => {
+          //   media.style.transition = 'none';
+          //   media.classList.remove('hyperaudio-fade');
+          // }, 1000 * (parseFloat(ti) + parseFloat(di) - time));
         }
       }
 
@@ -254,8 +258,9 @@ export default class Player {
       }
 
       if (!found) allItems[allItems.length - 1].classList.remove('hyperaudio-current');
+    } else {
+      this.progress(time);
     }
-    this.progress(time);
   }
 
   play() {
@@ -358,6 +363,7 @@ export default class Player {
     } else {
       if (bar && this.lastSegment) {
         bar.style.width = '100%';
+        // bar.style.width = '0%';
       } else {
         bar.style.width = '0%';
       }
