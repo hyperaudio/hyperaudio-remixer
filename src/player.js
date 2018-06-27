@@ -233,7 +233,12 @@ export default class Player {
           exactTokenFound = true;
           candidates[i].classList.add('hyperaudio-past');
 
-          candidates[i].parentElement.scrollIntoView({ behavior: 'smooth' });
+          if (!candidates[i].parentElement.classList.contains('hyperaudio-scroll')) {
+            candidates[i].parentElement.classList.add('hyperaudio-scroll');
+            // candidates[i].parentElement.scrollIntoView({ behavior: 'smooth' });
+            candidates[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            Array.from(this.root.querySelectorAll('.hyperaudio-scroll')).filter(s => s !== candidates[i].parentElement).forEach(s => s.classList.remove('hyperaudio-scroll'));
+          }
         }
 
         if (t > time) break;
