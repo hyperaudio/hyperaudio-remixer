@@ -152,7 +152,7 @@
     }
 
     .hyperaudio-pad > div > section > article {
-      flex-basis: 100%;
+      /* flex-basis: 100%; */
     }
 
     /* selection colour */
@@ -277,7 +277,8 @@
 
     /* container for media */
     .hyperaudio-player header {
-      background-color: #f4f4f4;
+      /* background-color: #f4f4f4; */
+      background-color: black;
     }
 
     /* hide img placeholder once we have media */
@@ -366,23 +367,25 @@
     }
 
     /* default "played" colour */
-    .hyperaudio-transcript {
+    section.hyperaudio-transcript {
       color: black;
     }
 
     /* unplayed colour */
-    .hyperaudio-current {
+    section.hyperaudio-current {
       color: #658898;
+      border-left: 10px solid red !important;
     }
 
     /* played words in current segment */
-    .hyperaudio-current .hyperaudio-past {
+    section.hyperaudio-current .hyperaudio-past {
       color: black;
     }
 
     /* unplayed colour for future segments */
-    .hyperaudio-current ~ .hyperaudio-transcript {
+    section.hyperaudio-current ~ section.hyperaudio-transcript {
       color: #658898;
+      border-right: 10px solid blue;
     }
 
     /* player ui: buttons, progress */
@@ -444,7 +447,7 @@
     }
 
     /* left pad transcript itle */
-    .hyperaudio-player > div.hyperaudio-title {
+    div.hyperaudio-title {
       padding-left: 1em;
       padding-right: 1em;
     }
@@ -543,11 +546,10 @@
       <div class="hyperaudio-search">
         <input id="transcript-search" type="search" />
       </div>
-      <div class="hyperaudio-title">
-        <h1></h1>
-        <!-- <p></p> -->
-      </div>
       <article>
+        <div class="hyperaudio-title">
+          <h1></h1>
+        </div>
       </article>
       <div class="hyperaudio-drag"></div>
     </section>
@@ -643,8 +645,8 @@
           if (data[0].starchive_id) starchiveId = data[0].starchive_id;
           if (data[0].nid) nid = data[0].nid;
 
-          console.log(transcript);
-          $('.hyperaudio-title h1').text(transcript.title);
+          // console.log(transcript);
+          // $('.hyperaudio-title h1').text(transcript.title);
 
           var $section = $('<section></section>');
           $section.addClass('hyperaudio-transcript')
@@ -672,7 +674,9 @@
           //   }
           // });
 
-          $('.hyperaudio-source article').empty().append($section);
+          $('.hyperaudio-source article').empty().append('<div class="hyperaudio-title"><h1></h1></div>');
+          $('.hyperaudio-title h1').text(transcript.title);
+          $('.hyperaudio-source article').append($section);
           document.querySelectorAll('.hyperaudio-source').forEach(function(sourceNode) { new window.Source(sourceNode); });
         });
       }
