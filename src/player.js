@@ -218,14 +218,14 @@ export default class Player {
       media.pause();
 
       const allItems = this.root.querySelectorAll('.hyperaudio-transcript');
-      console.log('not found, items', allItems);
+      // console.log('not found, items', allItems);
       for (let k = 0; k < allItems.length - 1; k++) {
         if (allItems[k] === this.lastSegment) {
           found = true;
-          console.log('last item', allItems[k]);
+          // console.log('last item', allItems[k]);
           const event = document.createEvent('HTMLEvents');
           event.initEvent('click', true, false);
-          console.log('NEXT item', allItems[k + 1]);
+          // console.log('NEXT item', allItems[k + 1]);
           // setTimeout(() => {
           allItems[k + 1].querySelector('*[data-t]').dispatchEvent(event);
           // }, 250);
@@ -388,6 +388,10 @@ export default class Player {
     const targetToken = Array.from(targetSection.querySelectorAll('*[data-t]')).find(token => parseFloat(token.getAttribute('data-t'), 10) >= localTime);
     console.log(time, localTime, targetToken);
     targetToken.dispatchEvent(click);
+  }
+
+  formatTime(time) {
+
   }
 
   progress(time) {
