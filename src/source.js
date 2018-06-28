@@ -1,4 +1,3 @@
-// @flow
 /* eslint-disable class-methods-use-this, no-param-reassign */
 
 import Player from './player';

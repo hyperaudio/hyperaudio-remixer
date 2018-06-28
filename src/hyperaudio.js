@@ -1,4 +1,3 @@
-// @flow
 /* eslint-disable no-new */
 
 import Player from './player';

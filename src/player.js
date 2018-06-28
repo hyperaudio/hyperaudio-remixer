@@ -1,4 +1,3 @@
-// @flow
 /* eslint-disable max-len,class-methods-use-this, no-unused-vars, no-plusplus, no-continue, no-param-reassign */
 
 export default class Player {
@@ -279,6 +278,12 @@ export default class Player {
       event.initEvent('click', true, false);
       this.root.querySelector('.hyperaudio-transcript').querySelector('*[data-t]').dispatchEvent(event);
     } else if (media) {
+      const src = media.getAttribute('data-src');
+      document
+        .querySelectorAll(`video, audio`)
+        .forEach(media2 => {
+          if (media !== media2) media2.pause();
+        });
       media.play();
     }
   }
@@ -463,19 +468,21 @@ export default class Player {
 
     if (media && !media.classList.contains('hyperaudio-enabled')) {
       media.addEventListener('timeupdate', this.onTimeUpdate.bind(this));
-      // media.addEventListener('click', () => {
-      //   if (media.paused) {
-      //     media.play();
-      //     document
-      //       .querySelectorAll(`video:not([src="${src}"]), audio:not([src="${src}"])`)
-      //       .forEach(media2 => {
-      //         // flow-disable-next-line
-      //         media2.pause();
-      //       });
-      //   } else {
-      //     media.pause();
-      //   }
-      // });
+      media.addEventListener('click', () => {
+        if (media.paused) {
+          // media.play();
+          this.play();
+          // document
+          //   .querySelectorAll(`video:not([src="${src}"]), audio:not([src="${src}"])`)
+          //   .forEach(media2 => {
+          //     // flow-disable-next-line
+          //     media2.pause();
+          //   });
+        } else {
+          // media.pause();
+          this.pause();
+        }
+      });
       media.setAttribute('data-src', src);
 
       media.addEventListener('loadedmetadata', (event) => {
