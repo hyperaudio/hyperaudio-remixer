@@ -3,7 +3,7 @@
 import Player from './player';
 
 export const templates = {
-  trim:  '<section class="hyperaudio-effect" data-type="trim" data-value="1"><label><div>Trim</div><div class="hyperaudio-range"><input type="range" value="1" min="0.5" max="7" step="0.1"></div><div><span>1</span>s</div></label></section>',
+  trim:  '<section class="hyperaudio-effect" data-type="trim" data-value="0"><label><div>Trim</div><div class="hyperaudio-range"><input type="range" value="0" min="0" max="7" step="0.1"></div><div><span>0</span>s</div></label></section>',
   fade:  '<section class="hyperaudio-effect" data-type="fade" data-value="1"><label><div>Fade</div><div class="hyperaudio-range"><input type="range" value="1" min="0.5" max="7" step="0.1"></div><div><span>1</span>s</div></label></section>',
 };
 

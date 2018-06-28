@@ -157,14 +157,14 @@ export default class Player {
         continue;
       }
 
-      let trim = 0;
+      let trim = -1;
       if (
         item.nextElementSibling &&
         item.nextElementSibling.classList.contains('hyperaudio-effect') &&
         item.nextElementSibling.getAttribute('data-type') === 'trim'
       ) {
         trim = parseFloat(item.nextElementSibling.getAttribute('data-value'));
-        if (isNaN(trim)) trim = 0;
+        if (isNaN(trim)) trim = -1;
       }
 
       if (
@@ -174,7 +174,7 @@ export default class Player {
         item.nextElementSibling.nextElementSibling.getAttribute('data-type') === 'trim'
       ) {
         trim = parseFloat(item.nextElementSibling.nextElementSibling.getAttribute('data-value'));
-        if (isNaN(trim)) trim = 0;
+        if (isNaN(trim)) trim = -1;
       }
 
       let fade = 0;
@@ -198,7 +198,8 @@ export default class Player {
       }
 
       const [ti, di] = last.getAttribute('data-t').split(',');
-      if (time > parseFloat(ti) + parseFloat(di) + trim) continue;
+      // if (time > parseFloat(ti) + parseFloat(di) + trim) continue;
+      if (time > parseFloat(ti) + (trim > -1 ? trim : parseFloat(di))) continue;
 
       if (fade > 0 && time > parseFloat(ti) + parseFloat(di) - fade) {
         const media = this.getMedia(src);
@@ -220,7 +221,9 @@ export default class Player {
         const tc = candidates[i].getAttribute('data-t');
         let [t, d] = tc.split(',');
         t = parseFloat(t);
-        d = parseFloat(d) + (i === candidates.length - 1 ? trim : 0);
+        // d = parseFloat(d) + (i === candidates.length - 1 ? trim : 0);
+        d = parseFloat(d);
+        if (i === candidates.length - 1 && trim > -1) d = trim;
 
         if (t < time) {
           tokenFound = true;
