@@ -366,7 +366,8 @@ export default class Player {
     if (durationEl) durationEl.textContent = `/ ${this.formatTime(duration)}`;
     const timeEl = this.root.querySelector('.hyperaudio-elapsed');
 
-    let currentIndex = sections.findIndex(section => section.classList.contains('hyperaudio-current'));
+    // let currentIndex = sections.findIndex(section => section.classList.contains('hyperaudio-current'));
+    let currentIndex = sections.findIndex(section => section === this.lastSegment);
     // if (currentIndex === -1 && media) currentIndex = sections.findIndex(section => section.getAttribute('data-src') === media.getAttribute('data-src'));
     const bar = this.root.querySelector('.hyperaudio-progress-bar');
     if (currentIndex > -1) {
