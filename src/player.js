@@ -30,6 +30,7 @@ export default class Player {
         .parentElement.addEventListener('click', this.onClick.bind(this));
 
       this.lockTimeUpdate = true;
+      this.prevProgress = 0;
     }
 
     this.root
@@ -267,6 +268,8 @@ export default class Player {
         }
       }
 
+      if (!found) this.progress(time);
+
       if (!found) allItems[allItems.length - 1].classList.remove('hyperaudio-current');
     } else {
       this.progress(time);
@@ -376,6 +379,12 @@ export default class Player {
 
       progress = progress * 100 / duration;
       if (progress > 100) progress = 100;
+      // dampen progress
+      // if (progress > this.prevProgress + 10) {
+      //   progress = (progress + this.prevProgress) / 2;
+      // }
+      this.prevProgress = progress;
+
       if (bar) bar.style.width = `${parseFloat(progress).toFixed(1)}%`;
     } else {
       if (bar && this.lastSegment) {
