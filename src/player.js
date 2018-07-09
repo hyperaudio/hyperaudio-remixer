@@ -118,7 +118,14 @@ export default class Player {
     this.lockTimeUpdate = false;
 
     // flow-disable-next-line
-    if (media.paused) media.play();
+    if (media.paused) {
+      document
+        .querySelectorAll(`video, audio`)
+        .forEach(media2 => {
+          if (media !== media2) media2.pause();
+        });
+      media.play();
+    }
 
     // const first = event.target.previousElementSibling === null && event.target.parentElement.previousElementSibling === null;
 
