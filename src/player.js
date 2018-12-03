@@ -31,6 +31,7 @@ export default class Player {
 
       this.lockTimeUpdate = true;
       this.prevProgress = 0;
+      this.scrolling = false;
     }
 
     this.root
@@ -244,10 +245,68 @@ export default class Player {
           candidates[i].classList.add('hyperaudio-past');
 
           if (!candidates[i].parentElement.classList.contains('hyperaudio-scroll')) {
+            //  && !this.root.querySelector('.velocity-animating')
+            // if (!candidates[i].classList.contains('hyperaudio-scroll')) {
             candidates[i].parentElement.classList.add('hyperaudio-scroll');
-            // candidates[i].parentElement.scrollIntoView({ behavior: 'smooth' });
-            candidates[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
-            Array.from(this.root.querySelectorAll('.hyperaudio-scroll')).filter(s => s !== candidates[i].parentElement).forEach(s => s.classList.remove('hyperaudio-scroll'));
+            // candidates[i].classList.add('hyperaudio-scroll');
+            // if (jQuery && jQuery.Velocity) {
+            // if (jQuery) {
+            //   // jQuery.Velocity(candidates[i].parentElement, 'scroll', {
+            //   //   duration: 500,
+            //   //   delay: 0,
+            //   //   easing: 'ease-in-out',
+            //   //   container: this.root.querySelector('article'),
+            //   //   offset: - jQuery(this.root.querySelector('article')).scrollTop() + (this.root.querySelector('.hyperaudio-title') ? jQuery(this.root.querySelector('.hyperaudio-title')).height() : 0)
+            //   // });
+            //   const $scrollingContainer = jQuery(this.root.querySelector('article'));
+            //   const vpHeight = $scrollingContainer.height();
+            //   const scrollTop = $scrollingContainer.scrollTop();
+            //   const link = jQuery(candidates[i].parentElement);
+            //   const position = link.position();
+            //
+            //   this.scrolling = true;
+            //   $scrollingContainer.animate({
+            //     scrollTop: (position.top + scrollTop),
+            //     start: () => { this.scrolling = true; },
+            //     always: () => { this.scrolling = false; }
+            //   }, 500);
+            // } else {
+              candidates[i].parentElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            // }
+            Array.from(this.root.querySelectorAll('p.hyperaudio-scroll')).filter(s => s !== candidates[i].parentElement).forEach(s => s.classList.remove('hyperaudio-scroll'));
+            // Array.from(this.root.querySelectorAll('.hyperaudio-scroll')).filter(s => s !== candidates[i]).forEach(s => s.classList.remove('hyperaudio-scroll'));
+          } else {
+            const aRect = this.root.querySelector('article').getBoundingClientRect();
+            const fold = aRect.height + aRect.y;
+            const rect = candidates[i].getBoundingClientRect();
+            if (rect.y > fold && !candidates[i].classList.contains('hyperaudio-scroll')) { // FIXME
+              //  && !this.root.querySelector('.velocity-animating')
+              candidates[i].classList.add('hyperaudio-scroll');
+              // if (jQuery && jQuery.Velocity) {
+              // if (jQuery) {
+              //   // jQuery.Velocity(candidates[i], 'scroll', {
+              //   //   duration: 500,
+              //   //   delay: 0,
+              //   //   easing: 'ease-in-out',
+              //   //   container: this.root.querySelector('article'),
+              //   //   offset: - jQuery(this.root.querySelector('article')).scrollTop() + jQuery(this.root.querySelector('.hyperaudio-title')).height()
+              //   // });
+              //   const $scrollingContainer = jQuery(this.root.querySelector('article'));
+              //   const vpHeight = $scrollingContainer.height();
+              //   const scrollTop = $scrollingContainer.scrollTop();
+              //   const link = jQuery(candidates[i]);
+              //   const position = link.position();
+              //   this.scrolling = true;
+              //   $scrollingContainer.animate({
+              //     scrollTop: (position.top + scrollTop),
+              //     start: () => { this.scrolling = true; },
+              //     always: () => { this.scrolling = false; }
+              //   }, 500);
+              // } else {
+                candidates[i].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              // }
+              Array.from(this.root.querySelectorAll('span.hyperaudio-scroll')).filter(s => s !== candidates[i]).forEach(s => s.classList.remove('hyperaudio-scroll'));
+            }
           }
         }
 
@@ -290,6 +349,16 @@ export default class Player {
       const event = document.createEvent('HTMLEvents');
       event.initEvent('click', true, false);
       this.root.querySelector('.hyperaudio-transcript').querySelector('*[data-t]').dispatchEvent(event);
+    } else if (this.root.querySelector('.hyperaudio-current.hyperaudio-transcript')) {
+      const event = document.createEvent('HTMLEvents');
+      event.initEvent('click', true, false);
+
+      const pastWords = this.root.querySelectorAll('.hyperaudio-current.hyperaudio-transcript .hyperaudio-past');
+      if (pastWords && pastWords.length > 0) {
+        Array.from(pastWords).pop().dispatchEvent(event);
+      } else {
+        this.root.querySelector('.hyperaudio-current.hyperaudio-transcript').querySelector('*[data-t]').dispatchEvent(event);
+      }
     } else if (media) {
       const src = media.getAttribute('data-src');
       document
@@ -301,9 +370,15 @@ export default class Player {
     }
   }
 
-  pause() {
-    const media = Array.from(this.root.querySelectorAll('video, audio')).find(el => el.style.display !== 'none');
-    if (media) media.pause();
+  pause(skipCurrent) {
+    if (skipCurrent) {
+      const media = Array.from(this.root.querySelectorAll('video, audio')).find(el => el.style.display !== 'none');
+      if (media) media.pause();
+    } else {
+      this.root
+        .querySelectorAll(`video, audio`)
+        .forEach(media => media2.pause());
+    }
   }
 
   onSeek(event: Object) {
@@ -470,7 +545,19 @@ export default class Player {
     // flow-disable-next-line
     // this.root.querySelector('header').appendChild(media);
     const header = this.root.querySelector('header');
-    header.insertBefore(media, header.firstChild);
+
+    if (this.root.querySelector('.hyperaudio-current.hyperaudio-transcript')) {
+      const activeMedia = Array.from(this.root.querySelectorAll('video, audio')).find(el => el.style.display !== 'none');
+      if (activeMedia) {
+        media.style.display = 'none';
+        media.style.opacity = '1';
+        header.appendChild(media);
+      } else {
+        header.insertBefore(media, header.firstChild);
+      }
+    } else {
+      header.insertBefore(media, header.firstChild);
+    }
 
     return media;
   }
@@ -478,7 +565,7 @@ export default class Player {
   getMedia(src: string, type: string) {
     const media = this.findMedia(src) || this.createMedia(src, type);
 
-    if (media) {
+    if (media && !(this.root.querySelector('.hyperaudio-current.hyperaudio-transcript') && !media.classList.contains('hyperaudio-enabled'))) {
       this.hideOtherMediaThan(src);
       // flow-disable-next-line
       media.style.display = '';
@@ -500,7 +587,7 @@ export default class Player {
           //   });
         } else {
           // media.pause();
-          this.pause();
+          this.pause(true);
         }
       });
       media.setAttribute('data-src', src);
